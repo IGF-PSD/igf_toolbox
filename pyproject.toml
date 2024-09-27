@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "igf_toolbox"
+version = "0.1"
+description = "Utilitaires python"
+authors = [{name="Pôle Science des données de l'IGF", email="igf.science-donnees@igf.finances.gouv.fr"}]
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    'numpy',
+    'pandas',
+    'numba',
+    'boto3',
+    's3fs',
+    'urllib3',
+    'geopandas',
+    'matplotlib',
+    'openpyxl',
+    'scikit-learn',
+    'statsmodels',
+    'linearmodels',
+    'xlsxwriter'
+]
+
+[tool.setuptools.packages.find]
+include = ["igf_toolbox"]

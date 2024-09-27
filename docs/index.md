@@ -3,6 +3,7 @@
 ## Objectives
 
 This package contains a set of Python utilities for :
+
 - easy data loading ;
 - descriptive statistics iteration ;
 - implementation of econometric methods.

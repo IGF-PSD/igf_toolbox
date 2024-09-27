@@ -1,0 +1,1 @@
+::: igf_toolbox.graphs.styles.set_igf_style

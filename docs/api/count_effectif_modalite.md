@@ -1,0 +1,1 @@
+::: igf_toolbox.utils.base.count_effectif_modalite

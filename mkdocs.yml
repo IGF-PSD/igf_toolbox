@@ -1,0 +1,118 @@
+site_name: IGF Toolbox
+site_url: https://igf-toolbox.lab.incubateur.finances.rie.gouv.fr/
+repo_url: https://git.lab.sspcloud.fr/igf/outils1/igf_toolbox_python.git
+site_dir: site
+theme:
+  name: material
+  features:
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - navigation.sections
+    #- navigation.expand
+    - navigation.path
+  #logo: assets/logo.png
+  palette:
+   # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings
+  # - mkdocs-material
+
+nav:
+  - Package description: index.md
+  - API Documentation:
+    - Estimators:
+      - Classifiers:
+        - ProbitClassifier: api/ProbitClassifier.md
+        - LogitClassifier: api/LogitClassifier.md
+      - Decomposers:
+        - OaxacaBlinder: api/OaxacaBlinder.md
+      - Regressors:
+        - LeastSquaresEstimator: api/LeastSquaresEstimator.md
+        - PanelLeastSquaresEstimator: api/PanelLeastSquaresEstimator.md
+    - Graphs:
+      - Styles:
+        - set_igf_style: api/set_igf_style.md
+        - get_scalar_mappable: api/get_scalar_mappable.md
+    - Model selection:
+      - Inference: 
+        - estimate_summarize: api/estimate_summarize.md
+      - Prediction: 
+        - crossval_predict: api/crossval_predict.md
+        - _fit_and_predict: api/_fit_and_predict.md
+    - Preprocessing:
+      - Excluders:
+        - ForestOutliersIsolation: api/ForestOutliersIsolation.md
+        - ThresholdExcluder: api/ThresholdExcluder.md
+        - QuantileExcluder: api/QuantileExcluder.md
+        - ColumnExcluder: api/ColumnExcluder.md
+      - Transformers: 
+        - OneHotEncoder: api/OneHotEncoder.md
+        - StandardScalerTransformer: api/StandardScalerTransformer.md
+        - ClusteringTransformer: api/ClusteringTransformer.md
+        - LogTransformer: api/LogTransformer.md
+        - AddConstante: api/AddConstante.md
+        - AddFixedEffect: api/AddFixedEffect.md
+        - AddInteraction: api/AddInteraction.md
+    - S3:
+      - Connection:
+        - _S3Connection: api/_S3Connection.md
+      - Loaders:
+        - S3Loader: api/S3Loader.md
+      - Savers:
+        - S3Saver: api/S3Saver.md
+    - Descriptive statistics:
+      - Control secret stat:
+        - PrimarySecretStatController: api/PrimarySecretStatController.md
+        - SecondarySecretStatController: api/SecondarySecretStatController.md
+        - SecretStatEstimator: api/SecretStatEstimator.md
+      - Base:
+        - StatDesGroupBy : api/StatDesGroupBy.md
+        - nest_groupby : api/nest_groupby.md
+      - Weighted:
+        - weighted_std: api/weighted_std.md
+        - weighted_quantile: api/weighted_quantile.md
+        - _weighted_quantile_array: api/_weighted_quantile_array.md
+        - assign_quantile: api/assign_quantile.md
+        - _assign_quantile_array: api/_assign_quantile_array.md
+        - create_pond_data: api/create_pond_data.md
+    - Utils:
+      - Auxiliary:
+        - _separate_category_modality_from_dummy: api/_separate_category_modality_from_dummy.md
+        - create_dict_suffix: api/create_dict_suffix.md
+        - _sort_index_with_total: api/_sort_index_with_total.md
+        - _sort_level_with_total: api/_sort_level_with_total.md
+      - Base:
+        - FrozenDict: api/FrozenDict.md
+        - divide_by_total: api/divide_by_total.md
+        - apply_stars: api/apply_stars.md
+        - convert_pvalues_to_stars: api/convert_pvalues_to_stars.md
+        - count_effectif_modalite: api/count_effectif_modalite.md
+      - Logger:
+        - _init_logger: api/_init_logger.md
+

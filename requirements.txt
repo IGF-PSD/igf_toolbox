@@ -1,0 +1,12 @@
+numpy
+pandas
+numba
+boto3
+urllib3
+geopandas
+matplotlib
+openpyxl
+statsmodels
+linearmodels
+xlsxwriter
+pyarrow

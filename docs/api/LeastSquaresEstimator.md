@@ -1,0 +1,1 @@
+::: igf_toolbox.estimators.regressors.LeastSquaresEstimator

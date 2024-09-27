@@ -1,0 +1,1 @@
+::: igf_toolbox.utils.base.apply_stars

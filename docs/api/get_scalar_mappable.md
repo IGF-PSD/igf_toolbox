@@ -1,0 +1,1 @@
+::: igf_toolbox.graphs.styles.get_scalar_mappable
