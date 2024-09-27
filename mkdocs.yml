@@ -1,5 +1,5 @@
 site_name: IGF Toolbox
-site_url: https://igf-toolbox.lab.incubateur.finances.rie.gouv.fr/
+site_url: https://igf-psd.github.io/igf_toolbox/
 repo_url: https://github.com/IGF-PSD/igf_toolbox
 site_dir: site
 theme:
