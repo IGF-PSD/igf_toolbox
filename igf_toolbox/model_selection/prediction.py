@@ -16,7 +16,7 @@ from sklearn.model_selection._validation import _enforce_prediction_order
 from sklearn.utils import indexable, resample
 from sklearn.utils._joblib import Parallel, delayed
 from sklearn.utils.metaestimators import _safe_split
-from sklearn.utils.validation import _check_method_params
+# from sklearn.utils.validation import _check_method_params
 
 
 # La crossVal n'est pas faite pour le Online Learning car on clone à chaque fois l'estimateur initial
@@ -188,7 +188,7 @@ def _fit_and_predict(
     """
     # Ajuste la longeur des vecteurs de poids sur les observations
     fit_params = fit_params if fit_params is not None else {}
-    fit_params = _check_method_params(X, fit_params, train)
+    # fit_params = _check_method_params(X, fit_params, train)
 
     # Extraction des observations correspondant au Train
     X_train, y_train = _safe_split(estimator, X, y, train)

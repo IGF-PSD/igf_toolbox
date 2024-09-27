@@ -947,7 +947,7 @@ class SecretStatEstimator(
         iterable_operations: Union[dict, list],
         include_total: Optional[bool] = True,
         drop: Optional[bool] = True,
-        fill_value: Optional[Union[int, float, str, np.nan]] = np.nan,
+        fill_value: Optional[Union[int, float, str]] = np.nan,
         nest: Optional[bool] = False,
     ) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
