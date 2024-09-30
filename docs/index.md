@@ -11,6 +11,7 @@ This package contains a set of Python utilities for :
 ## Organization
 
 The repository is organized as follow :
+
 - the `s3` module contains a set of functions for importing or exporting files in various formats from or to an s3 bucket on the Nubonyxia platform;
 - the `stats_des` module contains functions to complement those integrated by default in pandas for descriptive statistics (addition of totals, weighted statistics, verification of statistical confidentiality, etc.).
 - the `preprocessing` module contains a set of classes that can be integrated into a `sklearn.pipeline` to perform various data transformation operations
