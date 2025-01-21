@@ -6,7 +6,6 @@ import pandas as pd
 # Modules sklearn
 from sklearn.base import TransformerMixin
 
-
 # Fonction d'estimation d'un modèle de régression
 def estimate_summarize(
     estimator,
@@ -22,44 +21,40 @@ def estimate_summarize(
     This function allows for optional transformation and exclusion of data
     before fitting the model. It also allows for optional weighting of observations.
 
-    Parameters:
-    -----------
-    estimator : object
-        A regression estimator with fit, summary, and rsquared methods.
+    Args:
+        estimator (object):
+            A regression estimator with fit, summary, and rsquared methods.
 
-    X : DataFrame
-        The feature matrix.
-        Missing values in the DataFrame should be removed or imputed before passing to this function.
+        X (DataFrame):
+            The feature matrix.
+            Missing values in the DataFrame should be removed or imputed before passing to this function.
 
-    y : Series
-        The target variable.
+        y (Series):
+            The target variable.
 
-    transformer : TransformerMixin, default=None
-        An optional transformer object that has a fit_transform method.
-        If provided, it will be used to transform X.
+        transformer (TransformerMixin, optional):
+            An optional transformer object that has a fit_transform method.
+            If provided, it will be used to transform X.
 
-    excluder : TransformerMixin, default=None
-        An optional column excluder object with a fit_transform method.
-        If provided, it will be used to exclude certain columns from the data.
+        excluder (TransformerMixin, optional):
+            An optional column excluder object with a fit_transform method.
+            If provided, it will be used to exclude certain columns from the data.
 
-    sample_weight : Series, default=None
-        Optional series of sample weights. If provided, these will be used to weight
-        the observations during model fitting.
+        sample_weight (Series, optional):
+            Optional series of sample weights. If provided, these will be used to weight
+            the observations during model fitting.
 
     Returns:
-    --------
-    tuple
-        A tuple containing:
-        - model summary (as returned by estimator.summary())
-        - R-squared value (as returned by estimator.rsquared())
+        (tuple): A tuple containing:
+            - model summary (as returned by estimator.summary())
+            - R-squared value (as returned by estimator.rsquared())
 
     Examples:
-    ---------
-    >>> est = OLS(...)
-    >>> X = ...
-    >>> y = ...
-    >>> transformer = ...
-    >>> summary, r2 = estimate_summarize(est, X, y, transformer=transformer)
+        >>> est = OLS(...)
+        >>> X = ...
+        >>> y = ...
+        >>> transformer = ...
+        >>> summary, r2 = estimate_summarize(est, X, y, transformer=transformer)
     """
 
     # Transformation des données

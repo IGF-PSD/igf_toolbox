@@ -1,20 +1,20 @@
-"""
-TO DO :
-- Vérifier la Gestion des Nan dans la classe StatDesGroupby
-"""
-
-from itertools import combinations
-from typing import List, Optional, Union
-
 # Importation des modules
 # Modules de base
-import numpy as np
+from io import BytesIO
+# Module de gestion du format JSON
+from json import dumps
+# Module de gestion du format pickle
+from pickle import dump
+from typing import Optional, Union
+
+import geopandas as gpd
 import pandas as pd
+import xlsxwriter
+# Module de gestion des données graphiques
+from matplotlib.pyplot import close, savefig
 
-# Utilitaire
-from ..utils._auxiliary import _sort_index_with_total, create_dict_suffix
-from .weighted import create_pond_data, weighted_quantile
-
+# Importation du module de connection
+from ._connection import _S3Connection
 
 # Classe de statistiques descriptives
 class StatDesGroupBy(object):
@@ -24,26 +24,26 @@ class StatDesGroupBy(object):
 
     Attributes:
     -----------
-    list_var_groupby : list
+    list_var_groupby (list):
         List of variables to group data by.
-    list_var_of_interest : list
+    list_var_of_interest (list):
         List of variables for which descriptive statistics will be computed.
-    var_individu : str, optional
+    var_individu (str, optional):
         Variable representing individual data.
-    var_entreprise : str, optional
+    var_entreprise (str, optional):
         Variable representing enterprise data.
-    var_weights : str, optional
+    var_weights (str, optional):
         Variable representing the weights for each data entry.
-    data_source : DataFrame
+    data_source (DataFrame):
         Data source after initialization and cleaning.
 
     Methods:
     --------
-    iterate_with_total(iterable_operations)
+    iterate_with_total(iterable_operations):
         Computes descriptive statistics and returns results with subtotals and a grand total.
-    iterate_without_total(iterable_operations)
+    iterate_without_total(iterable_operations):
         Computes descriptive statistics without subtotals or a grand total and returns results.
-    add_under_total(iterable_operations)
+    add_under_total(iterable_operations):
         Generates and returns subtotals for combinations of grouping variables.
     """
 
@@ -60,20 +60,19 @@ class StatDesGroupBy(object):
         """
         Initialize the StatDesGroupBy class with data and parameters.
 
-        Parameters:
-        -----------
-        data_source : DataFrame
-            Source data for computing statistics.
-        list_var_groupby : list
-            List of variables to group data by.
-        list_var_of_interest : list
-            List of variables for which descriptive statistics will be computed.
-        var_individu : str, optional
-            Variable representing individual data.
-        var_entreprise : str, optional
-            Variable representing enterprise data.
-        var_weights : str, optional
-            Variable representing the weights for each data entry.
+        Args:
+            data_source (DataFrame):
+                Source data for computing statistics.
+            list_var_groupby (list):
+                List of variables to group data by.
+            list_var_of_interest (list):
+                List of variables for which descriptive statistics will be computed.
+            var_individu (str, optional):
+                Variable representing individual data.
+            var_entreprise (str, optional):
+                Variable representing enterprise data.
+            var_weights (str, optional):
+                Variable representing the weights for each data entry.
         """
         # Initialisation des paramètres
         self.list_var_groupby = list_var_groupby
@@ -133,15 +132,13 @@ class StatDesGroupBy(object):
         """
         Computes descriptive statistics and returns results with subtotals and a grand total.
 
-        Parameters:
-        -----------
-        iterable_operations : iterable
-            Operations or functions to apply to the grouped data.
+        Args:
+            iterable_operations (iterable):
+                Operations or functions to apply to the grouped data.
 
         Returns:
-        --------
-        DataFrame
-            Descriptive statistics with subtotals and a grand total.
+            (DataFrame):
+                Descriptive statistics with subtotals and a grand total.
         """
         # Disjonction de cas suivant la longueur de la liste de groupby
         if len(self.list_var_groupby) == 0:
@@ -186,15 +183,13 @@ class StatDesGroupBy(object):
         """
         Computes descriptive statistics without subtotals or a grand total and returns results.
 
-        Parameters:
-        -----------
-        iterable_operations : iterable
-            Operations or functions to apply to the grouped data.
+        Args:
+            iterable_operations (iterable):
+                Operations or functions to apply to the grouped data.
 
         Returns:
-        --------
-        DataFrame
-            Descriptive statistics without subtotals or a grand total.
+            (DataFrame):
+                Descriptive statistics without subtotals or a grand total.
         """
         return self.iterate_operations(
             iterable_operations=iterable_operations,
@@ -208,15 +203,13 @@ class StatDesGroupBy(object):
         """
         Generates and returns subtotals for combinations of grouping variables.
 
-        Parameters:
-        -----------
-        iterable_operations : iterable
-            Operations or functions to apply to the grouped data to compute subtotals.
+        Args:
+            iterable_operations (iterable):
+                Operations or functions to apply to the grouped data to compute subtotals.
 
         Returns:
-        --------
-        DataFrame
-            Descriptive statistics with subtotals for combinations of grouping variables.
+            (DataFrame):
+                Descriptive statistics with subtotals for combinations of grouping variables.
         """
 
         # Parcours de toutes les combinaisons possibles de niveaux
@@ -281,22 +274,21 @@ class StatDesGroupBy(object):
         """
         Perform a series of global aggregate operations on the data and concatenate the results.
 
-        The function goes through the specified operations (either as strings for basic operations or tuples for
-        operations with extra parameters) and applies them on the data_source. The result of each operation is
-        appended to a list. At the end, the results are concatenated and returned as a single DataFrame.
-
-        Parameters:
-        - iterable_operations (dict or list): Operations to be applied on the data. If a dictionary, the keys
-        represent the operation and values represent variables of interest. If a list, it contains either
-        operations as strings or tuples where the first element is the operation and the second is a dictionary
-        of parameters.
+        Args:
+            iterable_operations (dict or list):
+                Operations to be applied on the data. If a dictionary, the keys
+                represent the operation and values represent variables of interest. If a list, it contains either
+                operations as strings or tuples where the first element is the operation and the second is a dictionary
+                of parameters.
 
         Returns:
-        - pd.DataFrame: A DataFrame containing aggregated results after applying all the operations, indexed by
-        either 'Total' or a MultiIndex version of it based on the length of list_var_groupby.
+            (DataFrame):
+                A DataFrame containing aggregated results after applying all the operations, indexed by
+                either 'Total' or a MultiIndex version of it based on the length of list_var_groupby.
 
         Raises:
-        - ValueError: If the provided type for iterable_operations is neither dict nor list.
+            ValueError:
+                If the provided type for iterable_operations is neither dict nor list.
 
         Example:
         ```python
@@ -770,22 +762,23 @@ class StatDesGroupBy(object):
         """
         Iteratively perform a set of operations on the data grouped by given variables.
 
-        This function first creates a nomenclature with categorical variables and then, based on the type
-        of operations provided, executes those operations on the dataset. It utilizes the internal methods
-        of the class to which this function belongs, such as sum, mean, median, etc.
-
-        Parameters:
-        - iterable_operations (dict or list): Operations to be applied on the data. If it's a dictionary, the
-        keys represent the operation and values represent the variables of interest. If it's a list, it only
-        contains operations.
-        - data (pd.DataFrame): Input dataset on which the operations need to be applied.
-        - list_var_groupby (list of str): List of variables based on which the data needs to be grouped.
+        Args:
+            iterable_operations (dict or list):
+                Operations to be applied on the data. If it's a dictionary, the
+                keys represent the operation and values represent the variables of interest. If it's a list, it only
+                contains operations.
+            data (pd.DataFrame):
+                Input dataset on which the operations need to be applied.
+            list_var_groupby (list of str):
+                List of variables based on which the data needs to be grouped.
 
         Returns:
-        - pd.DataFrame: Dataset after applying all the operations, indexed by the list_var_groupby.
+            (DataFrame):
+                Dataset after applying all the operations, indexed by the list_var_groupby.
 
         Raises:
-        - ValueError: If the provided type for iterable_operations is neither dict nor list.
+            ValueError:
+                If the provided type for iterable_operations is neither dict nor list.
 
         Example:
         ```python
@@ -1272,13 +1265,17 @@ class StatDesGroupBy(object):
         """
         Calculate the number of unique values in the given columns of a DataFrame, optionally grouped by specific columns.
 
-        Parameters:
-        - data (pd.DataFrame): Input DataFrame to compute the number of unique values on.
-        - list_var_groupby (List[str], optional): List of column names to group by. If None, no grouping is performed.
-        - list_var_of_interest (List[str]): List of column names for which the number of unique values is computed.
+        Args:
+            data (pd.DataFrame):
+                Input DataFrame to compute the number of unique values on.
+            list_var_groupby (List[str], optional):
+                List of column names to group by. If None, no grouping is performed.
+            list_var_of_interest (List[str]):
+                List of column names for which the number of unique values is computed.
 
         Returns:
-        - pd.DataFrame: A DataFrame containing the count of unique values. The output column names are appended with "_nunique".
+            (DataFrame):
+                A DataFrame containing the count of unique values. The output column names are appended with "_nunique".
 
         Example:
         ```
@@ -1326,13 +1323,17 @@ class StatDesGroupBy(object):
         """
         Count the number of non-missing values in the given columns of a DataFrame, optionally grouped by specific columns.
 
-        Parameters:
-        - data (pd.DataFrame): Input DataFrame to compute the count on.
-        - list_var_groupby (List[str], optional): List of column names to group by. If None, no grouping is performed.
-        - list_var_of_interest (List[str]): List of column names for which the count is computed.
+        Args:
+            data (pd.DataFrame):
+                Input DataFrame to compute the count on.
+            list_var_groupby (List[str], optional):
+                List of column names to group by. If None, no grouping is performed.
+            list_var_of_interest (List[str]):
+                List of column names for which the count is computed.
 
         Returns:
-        - pd.DataFrame: A DataFrame containing the count. The output column names are appended with "_count".
+            (DataFrame):
+                A DataFrame containing the count. The output column names are appended with "_count".
 
         Example:
         ```
@@ -1376,13 +1377,17 @@ class StatDesGroupBy(object):
         """
         Determine if any element in the given columns of a DataFrame is True, optionally grouped by specific columns.
 
-        Parameters:
-        - data (pd.DataFrame): Input DataFrame to check.
-        - list_var_groupby (List[str], optional): List of column names to group by. If None, no grouping is performed.
-        - list_var_of_interest (List[str]): List of column names to check for any True values.
+        Args:
+            data (pd.DataFrame):
+                Input DataFrame to check.
+            list_var_groupby (List[str], optional):
+                List of column names to group by. If None, no grouping is performed.
+            list_var_of_interest (List[str]):
+                List of column names to check for any True values.
 
         Returns:
-        - pd.DataFrame: A DataFrame indicating if any value is True. The output column names are appended with "_any".
+            (DataFrame):
+                A DataFrame indicating if any value is True. The output column names are appended with "_any".
 
         Example:
         ```
@@ -1426,13 +1431,17 @@ class StatDesGroupBy(object):
         """
         Determine if all elements in the given columns of a DataFrame are True, optionally grouped by specific columns.
 
-        Parameters:
-        - data (pd.DataFrame): Input DataFrame to check.
-        - list_var_groupby (List[str], optional): List of column names to group by. If None, no grouping is performed.
-        - list_var_of_interest (List[str]): List of column names to check if all values are True.
+        Args:
+            data (pd.DataFrame):
+                Input DataFrame to check.
+            list_var_groupby (List[str], optional):
+                List of column names to group by. If None, no grouping is performed.
+            list_var_of_interest (List[str]):
+                List of column names to check if all values are True.
 
         Returns:
-        - pd.DataFrame: A DataFrame indicating if all values are True. The output column names are appended with "_all".
+            (DataFrame):
+                A DataFrame indicating if all values are True. The output column names are appended with "_all".
 
         Example:
         ```
@@ -1477,16 +1486,21 @@ class StatDesGroupBy(object):
         """
         Compute the sum aggregation on a given pandas DataFrame, with options for weighted sum.
 
-        Parameters:
-        - data (pd.DataFrame): The input DataFrame to compute aggregation on.
-        - list_var_groupby (List[str], optional): List of column names to group by. If None, no grouping is performed.
-        - list_var_of_interest (List[str]): List of column names on which the aggregation is performed.
-        - var_weights (str, optional): Column name representing the weights for weighted sum.
+        Args:
+            data (pd.DataFrame):
+                The input DataFrame to compute aggregation on.
+            list_var_groupby (List[str], optional):
+                List of column names to group by. If None, no grouping is performed.
+            list_var_of_interest (List[str]):
+                List of column names on which the aggregation is performed.
+            var_weights (str, optional):
+                Column name representing the weights for weighted sum.
                                     If it is in list_var_of_interest, the function will compute both weighted
                                     and non-weighted sum. If None, a simple sum is performed.
 
         Returns:
-        - pd.DataFrame: A DataFrame containing the aggregated data. The output DataFrame will have a multi-index if
+            (DataFrame):
+                A DataFrame containing the aggregated data. The output DataFrame will have a multi-index if
                         list_var_groupby is provided and more than one type of aggregation (weighted and non-weighted)
                         is performed. The column names in the output DataFrame will be appended with suffixes like "_sum".
 
@@ -1645,20 +1659,19 @@ class StatDesGroupBy(object):
         Computes the weighted or unweighted mean of the specified variables,
         possibly grouped by specified variables.
 
-        Parameters:
-        -----------
-        data : pd.DataFrame
-            The dataset containing the data to be processed.
-        list_var_groupby : list of str, optional
-            List of variable names to group by.
-        list_var_of_interest : list of str
-            List of variable names to compute the mean for.
-        var_weights : str, optional
-            Name of the column containing weights for weighted computation.
+        Args:
+            data (pd.DataFrame):
+                The dataset containing the data to be processed.
+            list_var_groupby (list of str, optional):
+                List of variable names to group by.
+            list_var_of_interest (list of str):
+                List of variable names to compute the mean for.
+            var_weights (str, optional):
+                Name of the column containing weights for weighted computation.
 
         Returns:
-        --------
-        pd.Series or pd.DataFrame : The computed mean for the specified variables.
+            (pd.Series or pd.DataFrame):
+                The computed mean for the specified variables.
         """
         if (list_var_groupby is not None) & (var_weights is not None):
             data_pond = create_pond_data(
@@ -1734,12 +1747,12 @@ class StatDesGroupBy(object):
         Computes the median value for the specified variables,
         possibly grouped by specified variables.
 
-        Parameters are the same as the mean method.
+        Args:
+            Same as the mean method.
 
         Returns:
-        --------
-        pd.Series or pd.DataFrame
-            The median values for the specified variables.
+            (pd.Series or pd.DataFrame):
+                The median values for the specified variables.
         """
         return self.quantile(
             data=data,
@@ -1761,17 +1774,16 @@ class StatDesGroupBy(object):
         Computes the q-th quantile for the specified variables,
         possibly grouped by specified variables.
 
-        Parameters:
-        -----------
-        q : float
-            Quantile to compute, which must be between 0 and 1 inclusive.
+        Args:
+            q (float):
+                Quantile to compute, which must be between 0 and 1 inclusive.
 
-        Other parameters are the same as the mean method.
+        Other args:
+            Same as the mean method.
 
         Returns:
-        --------
-        pd.Series or pd.DataFrame
-            The q-th quantile for the specified variables.
+            (pd.Series or pd.DataFrame):
+                The q-th quantile for the specified variables.
         """
         if (list_var_groupby is not None) & (var_weights is not None):
             return (
@@ -1850,17 +1862,16 @@ class StatDesGroupBy(object):
         Computes the proportion of the specified variables based on a reference variable,
         possibly grouped by specified variables.
 
-        Parameters:
-        -----------
-        var_ref : str
-            The reference variable used to compute the proportion.
+        Args:
+            var_ref (str):
+                The reference variable used to compute the proportion.
 
-        Other parameters are the same as the mean method.
+        Other args:
+            Same as the mean method.
 
         Returns:
-        --------
-        pd.Series or pd.DataFrame
-            The computed proportions for the specified variables.
+            (pd.Series or pd.DataFrame):
+                The computed proportions for the specified variables.
         """
         if (list_var_groupby is not None) & (var_weights is not None):
             data_pond = create_pond_data(
@@ -1947,14 +1958,19 @@ class StatDesGroupBy(object):
         """
         Determine the majority value for the specified variables, optionally weighted and grouped.
 
-        Parameters:
-            data (pd.DataFrame): The data frame containing the data.
-            list_var_groupby (list or None): The variables to group by. If None, no grouping is performed.
-            list_var_of_interest (list): The variables for which to determine the majority value.
-            var_weights (str or None): The variable to use for weighting. If None, no weighting is applied.
+        Args:
+            data (pd.DataFrame):
+                The data frame containing the data.
+            list_var_groupby (list or None):
+                The variables to group by. If None, no grouping is performed.
+            list_var_of_interest (list):
+                The variables for which to determine the majority value.
+            var_weights (str or None):
+                The variable to use for weighting. If None, no weighting is applied.
 
         Returns:
-            pd.DataFrame: A data frame with the majority value for each specified variable of interest, optionally grouped and weighted.
+            (pd.DataFrame):
+                A data frame with the majority value for each specified variable of interest, optionally grouped and weighted.
         """
         if (list_var_groupby is not None) & (var_weights is not None):
             return pd.concat(
@@ -2038,19 +2054,18 @@ class StatDesGroupBy(object):
         """
         Computes the proportion of unique values for the specified variables below a certain threshold.
 
-        Parameters:
-        -----------
-        var_threshold : str
-            The variable based on which the thresholding will be done.
-        seuil : int or float
-            The threshold value.
+        Args:
+            var_threshold (str):
+                The variable based on which the thresholding will be done.
+            seuil (int or float):
+                The threshold value.
 
-        Other parameters are the same as the mean method.
+        Other args:
+            Same as the mean method.
 
         Returns:
-        --------
-        pd.Series or pd.DataFrame
-            The proportion of unique values for the specified variables below the threshold.
+            (pd.Series or pd.DataFrame):
+                The proportion of unique values for the specified variables below the threshold.
         """
         # A terminer en autorisant plusieurs opérations
         if list_var_groupby is not None:
@@ -2094,17 +2109,16 @@ class StatDesGroupBy(object):
         """
         Computes the maximum proportion of a variable relative to its sum, possibly grouped by specified variables.
 
-        Parameters:
-        -----------
-        var_id : str
-            The identifier for renaming the resulting variables.
+        Args:
+            var_id (str):
+                The identifier for renaming the resulting variables.
 
-        Other parameters are the same as the mean method.
+        Other args:
+            Same as the mean method.
 
         Returns:
-        --------
-        pd.Series or pd.DataFrame
-            The computed maximum proportions for the specified variables relative to their sum.
+            (pd.Series or pd.DataFrame):
+                The computed maximum proportions for the specified variables relative to their sum.
         """
         if (list_var_groupby is not None) & (var_weights is not None):
             data_pond = create_pond_data(
@@ -2170,7 +2184,6 @@ class StatDesGroupBy(object):
                 )
             )
 
-
 # Fonction d'apurement des groupby successifs : S'il n'y a qu'une modalité en plus du "Total" dans le groupby précédent, seul la ligne "Total" est conservée
 def nest_groupby(
     data_stat_des: pd.DataFrame,
@@ -2181,13 +2194,17 @@ def nest_groupby(
     Refine a dataset based on successive groupby operations. If there is only one modality in addition to the "Total" in the previous
     groupby, only the "Total" row is preserved.
 
-    Parameters:
-    - data_stat_des (pd.DataFrame): Input dataset to refine.
-    - list_var_groupby (list of str): List of columns to perform successive groupby operations on.
-    - modality (str, optional): Reference modality to identify specific rows. Default is 'Total'.
+    Args:
+        data_stat_des (pd.DataFrame):
+            Input dataset to refine.
+        list_var_groupby (list of str):
+            List of columns to perform successive groupby operations on.
+        modality (str, optional):
+            Reference modality to identify specific rows. Default is 'Total'.
 
     Returns:
-    - pd.DataFrame: Refined dataset after successive groupby operations.
+        (pd.DataFrame):
+            Refined dataset after successive groupby operations.
 
     Notes:
     This function helps in data summarization where, for each group defined by the previous groupby columns, if only one unique

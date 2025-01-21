@@ -16,7 +16,6 @@ from matplotlib.pyplot import close, savefig
 # Importation du module de connection
 from ._connection import _S3Connection
 
-
 # Classe de sauvegarde de données sur un Bucket S3
 class S3Saver(_S3Connection):
     """
@@ -26,7 +25,8 @@ class S3Saver(_S3Connection):
     and saving data to a specified S3 object.
 
     Args:
-        package (str): The package to use for connecting to S3 ('s3fs' or 'boto3').
+        package (str):
+            The package to use for connecting to S3 ('s3fs' or 'boto3').
 
     Methods:
         connect(**kwargs):
@@ -46,7 +46,8 @@ class S3Saver(_S3Connection):
         Initialize the S3Saver class with the specified package.
 
         Args:
-            package (str): The package to use for connecting to S3 ('s3fs' or 'boto3').
+            package (str):
+                The package to use for connecting to S3 ('s3fs' or 'boto3').
         """
         # Initialisation du parent
         super().__init__(package=package)
@@ -56,10 +57,12 @@ class S3Saver(_S3Connection):
         Establish a connection to the S3 bucket.
 
         Args:
-            **kwargs: Additional keyword arguments for establishing the connection.
+            **kwargs:
+                Additional keyword arguments for establishing the connection.
 
         Returns:
-            obj: The established S3 connection.
+            (obj):
+                The established S3 connection.
 
         Example usage:
         >>> s3_saver = S3Saver(package='boto3')
@@ -75,13 +78,18 @@ class S3Saver(_S3Connection):
         Save an object to a specified S3 object based on its file extension and object type.
 
         Args:
-            bucket (str): The name of the S3 bucket.
-            key (str): The key of the S3 object to save.
-            obj (obj): The object to save (Pandas DataFrame, dictionary, Pickle object, Matplotlib figure, etc.).
-            **kwargs: Additional keyword arguments for saving the object.
+            bucket (str):
+                The name of the S3 bucket.
+            key (str):
+                The key of the S3 object to save.
+            obj (obj):
+                The object to save (Pandas DataFrame, dictionary, Pickle object, Matplotlib figure, etc.).
+            **kwargs:
+                Additional keyword arguments for saving the object.
 
         Raises:
-            ValueError: If the 'extension' argument is not one of ['csv', 'xlsx', 'xls', 'json', 'pkl', 'png', 'parquet].
+            ValueError:
+                If the 'extension' argument is not one of ['csv', 'xlsx', 'xls', 'json', 'pkl', 'png', 'parquet'].
 
         Example :
         >>> s3_saver = S3Saver(package='boto3')
@@ -106,7 +114,7 @@ class S3Saver(_S3Connection):
                     with BytesIO() as output:
                         with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
                             for key_obj, value_obj in obj.items():
-                                # La longueur d'une sheet_name est majoré à 31 caractères
+                                # La longueur d'une sheet_name est majorée à 31 caractères
                                 export_key = (
                                     key_obj if len(key_obj) <= 31 else key_obj[:31]
                                 )
@@ -185,13 +193,13 @@ class S3Saver(_S3Connection):
             elif extension == "png":
                 with self.s3.open(f"{bucket}/{key}", "wb") as s3_file:
                     # Construction de l'objet à exporter
-                    with io.BytesIO() as output:
-                        plt.savefig(output, format="png", **kwargs)
+                    with BytesIO() as output:
+                        savefig(output, format="png", **kwargs)
                         output_data = output.getvalue()
                     # Exportation de l'objet
                     s3_file.write(output_data)
                     # Fermeture des figures
-                    plt.close("all")
+                    close("all")
             else:
                 with self.s3.open(f"{bucket}/{key}", "w") as s3_file:
                     # Distinction suivant le format du fichier et export

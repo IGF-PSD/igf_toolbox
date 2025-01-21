@@ -1,4 +1,4 @@
-""" 
+"""
 TO DO :
 - faire en sorte que divide_by_total puisse tolérer un dictionnaire de modalités
 """
@@ -15,7 +15,6 @@ try:
 except:
     from collections.abc import Mapping
 
-
 # Immutable dictionnary class
 class FrozenDict(Mapping):
     """
@@ -23,20 +22,53 @@ class FrozenDict(Mapping):
     """
 
     def __init__(self, *args, **kwargs) -> None:
+        """
+        Initialize the FrozenDict.
 
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
         self._d = dict(*args, **kwargs)
         self._hash = None
 
     def __iter__(self):
+        """
+        Return an iterator over the dictionary keys.
+
+        Returns:
+            (iterator): An iterator over the dictionary keys.
+        """
         return iter(self._d)
 
     def __len__(self):
+        """
+        Return the number of items in the dictionary.
+
+        Returns:
+            (int): The number of items in the dictionary.
+        """
         return len(self._d)
 
     def __getitem__(self, key):
+        """
+        Get the value associated with the specified key.
+
+        Args:
+            key: The key to look up.
+
+        Returns:
+            The value associated with the key.
+        """
         return self._d[key]
 
     def __hash__(self):
+        """
+        Return a hash value for the dictionary.
+
+        Returns:
+            (int): The hash value.
+        """
         if self._hash is None:
             hash_ = 0
             for pair in self.items():
@@ -45,11 +77,26 @@ class FrozenDict(Mapping):
         return self._hash
 
     def __setitem__(self, key, value):
+        """
+        Raise an error since the dictionary is immutable.
+
+        Args:
+            key: The key to set.
+            value: The value to set.
+
+        Raises:
+            TypeError: FrozenDict is immutable; changes are not allowed.
+        """
         raise TypeError("FrozenDict is immutable; changes are not allowed")
 
     def __repr__(self):
-        return f"FrozenDict({self._d})"
+        """
+        Return a string representation of the dictionary.
 
+        Returns:
+            (str): A string representation of the dictionary.
+        """
+        return f"FrozenDict({self._d})"
 
 # Fonction de division par le total
 def divide_by_total(
@@ -62,22 +109,22 @@ def divide_by_total(
     """
     Divide values in the dataset by their respective total, based on specified groupby and divide-by columns.
 
-    Parameters:
-    - data_stat_des (pd.DataFrame): Input dataset containing statistics.
-    - list_var_groupby (list of str): List of columns to group data by.
-    - list_var_divide (list of str): List of columns used to identify the 'Total' or other reference rows.
-    - list_var_of_interest (list of str): List of columns containing the values to be divided.
-    - modality (str or dict, optional): Value used to identify the 'Total' or reference rows in the `list_var_divide` columns.
-                                         Default is 'Total'. If it's a dictionary, keys should be columns from `list_var_divide` and
-                                         values are the respective modalities to be used as reference for each column.
+    Args:
+        data_stat_des (pd.DataFrame): Input dataset containing statistics.
+        list_var_groupby (List[str]): List of columns to group data by.
+        list_var_divide (List[str]): List of columns used to identify the 'Total' or other reference rows.
+        list_var_of_interest (List[str]): List of columns containing the values to be divided.
+        modality (Optional[str]): Value used to identify the 'Total' or reference rows in the `list_var_divide` columns.
+                                   Default is 'Total'. If it's a dictionary, keys should be columns from `list_var_divide` and
+                                   values are the respective modalities to be used as reference for each column.
 
     Returns:
-    - pd.DataFrame: The resulting dataset after dividing the specified values by their respective totals.
+        (pd.DataFrame): The resulting dataset after dividing the specified values by their respective totals.
 
     Notes:
-    This function is useful to compute relative statistics or proportions. Ensure that the `data_stat_des` does not contain
-    NaN values in the specified columns, and the 'Total' or other reference rows are unique for each combination
-    in `list_var_groupby`.
+        This function is useful to compute relative statistics or proportions. Ensure that the `data_stat_des` does not contain
+        NaN values in the specified columns, and the 'Total' or other reference rows are unique for each combination
+        in `list_var_groupby`.
     """
     # Tolérer aussi que modality soit un dictionnaire
 
@@ -103,24 +150,23 @@ def divide_by_total(
 
     return data_res
 
-
 # Application des étoiles suivant les p-valeurs
 def apply_stars(coef: str, p_value: float) -> str:
     """
     Append asterisks to a coefficient based on its p-value.
 
-    Parameters:
-    - coef (str): The coefficient to which asterisks will be appended.
-    - p_value (float): The p-value corresponding to the coefficient.
+    Args:
+        coef (str): The coefficient to which asterisks will be appended.
+        p_value (float): The p-value corresponding to the coefficient.
 
     Returns:
-    - str: The coefficient with appended asterisks indicating its significance level.
-      Three asterisks (***) for p < 0.01, two asterisks (**) for p < 0.05,
-      one asterisk (*) for p < 0.1, and no asterisks for p >= 0.1.
+        (str): The coefficient with appended asterisks indicating its significance level.
+              Three asterisks (***) for p < 0.01, two asterisks (**) for p < 0.05,
+              one asterisk (*) for p < 0.1, and no asterisks for p >= 0.1.
 
-    Example:
-    >>> apply_stars('0.25', 0.02)
-    '0.25 (**)'
+    Examples:
+        >>> apply_stars('0.25', 0.02)
+        '0.25 (**)'
     """
 
     if p_value < 0.01:
@@ -132,7 +178,6 @@ def apply_stars(coef: str, p_value: float) -> str:
     else:
         return coef + " ()"
 
-
 # Fonction associant une p-valeur à chaque coefficient du jeu de données
 def convert_pvalues_to_stars(
     data_source: pd.DataFrame, col_coef: str, col_pvalues: str, is_percent: bool
@@ -142,25 +187,25 @@ def convert_pvalues_to_stars(
 
     This function takes in a dataframe and based on provided coefficient and p-value columns,
     it will convert the p-values to asterisks using the `apply_stars` function and append them
-    to the coefficients. The coefficients can also be converted to percentage if required.
+    to the coefficients. The coefficients can also be converted to percentages if required.
 
-    Parameters:
-    - data_source (pd.DataFrame): Source dataframe containing the coefficient and p-value columns.
-    - col_coef (str): Name of the column containing coefficients.
-    - col_pvalues (str): Name of the column containing p-values.
-    - is_percent (bool): If True, coefficients are converted to percentages. Otherwise, they remain as is.
+    Args:
+        data_source (pd.DataFrame): Source dataframe containing the coefficient and p-value columns.
+        col_coef (str): Name of the column containing coefficients.
+        col_pvalues (str): Name of the column containing p-values.
+        is_percent (bool): If True, coefficients are converted to percentages. Otherwise, they remain as is.
 
     Returns:
-    - pd.DataFrame: A dataframe with a new column 'Coefficients - P-valeurs' containing coefficients
-      appended with asterisks indicating significance level based on p-values.
-      The coefficients are rounded and the decimal points are replaced with commas.
+        (pd.DataFrame): A dataframe with a new column 'Coefficients - P-valeurs' containing coefficients
+          appended with asterisks indicating significance level based on p-values.
+          The coefficients are rounded and the decimal points are replaced with commas.
 
-    Example:
-    >>> df = pd.DataFrame({'coef': [0.25, 0.1], 'p_value': [0.02, 0.5]})
-    >>> convert_pvalues_to_stars(df, 'coef', 'p_value', True)
-       coef  p_value Coefficients - P-valeurs
-    0  0.25     0.02                   25,0% (**)
-    1  0.10     0.50                   10,0% ()
+    Examples:
+        >>> df = pd.DataFrame({'coef': [0.25, 0.1], 'p_value': [0.02, 0.5]})
+        >>> convert_pvalues_to_stars(df, 'coef', 'p_value', True)
+           coef  p_value Coefficients - P-valeurs
+        0  0.25     0.02                   25,0% (**)
+        1  0.10     0.50                   10,0% ()
     """
 
     # Copie indépendante du jeu de données
@@ -195,7 +240,6 @@ def convert_pvalues_to_stars(
 
     return data_res
 
-
 # Fonction permettant de compter le nombre d'individus dans la modalité de référence
 def count_effectif_modalite(
     liste_fix_no_trap: List[Tuple[str, str]], data_source: pd.DataFrame, var_id: str
@@ -203,27 +247,20 @@ def count_effectif_modalite(
     """
     Counts the number of unique individuals within a reference modality for a given list of variables.
 
-    Parameters
-    ----------
-    liste_fix_no_trap : list of tuples
-        List of variable-modalities pairs. Each tuple consists of a variable name and its reference modality.
-    data_source : pd.DataFrame
-        Source DataFrame containing the data.
-    var_id : str
-        Name of the variable that identifies unique individuals within `data_source`.
+    Args:
+        liste_fix_no_trap (List[Tuple[str, str]]): List of variable-modalities pairs. Each tuple consists of a variable name and its reference modality.
+        data_source (pd.DataFrame): Source DataFrame containing the data.
+        var_id (str): Name of the variable that identifies unique individuals within `data_source`.
 
-    Returns
-    -------
-    data_res : pd.DataFrame
-        DataFrame containing:
-        - 'variable': Variable names from `liste_fix_no_trap`.
-        - 'modalite_ref': Corresponding modalities from `liste_fix_no_trap`.
-        - 'nombre_individus': Count of unique individuals within each modality.
-        The last row contains the intersection count for all modalities provided in `liste_fix_no_trap`.
+    Returns:
+        (pd.DataFrame): DataFrame containing:
+            - 'variable': Variable names from `liste_fix_no_trap`.
+            - 'modalite_ref': Corresponding modalities from `liste_fix_no_trap`.
+            - 'nombre_individus': Count of unique individuals within each modality.
+          The last row contains the intersection count for all modalities provided in `liste_fix_no_trap`.
 
-    Notes
-    -----
-    If a modality for a given variable is not found in `data_source`, a warning is issued, and the modality is skipped.
+    Notes:
+        If a modality for a given variable is not found in `data_source`, a warning is issued, and the modality is skipped.
     """
 
     # Initialisation du jeu de données résultat

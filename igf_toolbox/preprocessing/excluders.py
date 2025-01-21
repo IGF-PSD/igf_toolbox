@@ -1,4 +1,4 @@
-""""
+"""
 TO DO :
 - Ajouter un dropna qui s'applique aux X et aux y
 """
@@ -24,26 +24,28 @@ class ForestOutliersIsolation(TransformerMixin, BaseEstimator):
     a split value between the maximum and minimum values of that selected feature. It's
     primarily used for anomaly detection.
 
-    Parameters:
-    - n_estimators (int, optional): The number of base estimators in the ensemble. Default is 100.
-    - random_state (int, optional): Seed used by the random number generator. Default is 42.
+    Args:
+        n_estimators (int, optional):
+            The number of base estimators in the ensemble. Default is 100.
+
+        random_state (int, optional):
+            Seed used by the random number generator. Default is 42.
 
     Attributes:
-    - model (IsolationForest): The trained Isolation Forest model.
+        model (IsolationForest):
+            The trained Isolation Forest model.
 
-    Methods:
-    - fit(X, y=None): Fit the Isolation Forest model.
-    - transform(X, y=None): Transform the data by excluding detected anomalies.
 
-    Example:
-    >>> fo = ForestOutliersIsolation()
-    >>> X = pd.DataFrame({'A': [1, 2, 3, 100], 'B': [1, 2, 3, 100]})
-    >>> fo.fit(X)
-    >>> print(fo.transform(X))
-       A  B
-    0  1  1
-    1  2  2
-    2  3  3
+    Examples: 
+        >>> fo = ForestOutliersIsolation()
+        >>> X = pd.DataFrame({'A': [1, 2, 3, 100], 'B': [1, 2, 3, 100]})
+        >>> fo.fit(X)
+        >>> print(fo.transform(X))
+            A  B
+        0  1  1
+        1  2  2
+        2  3  3
+
     """
 
     def __init__(self, n_estimators: int = 100, random_state: int = 42) -> None:
@@ -55,12 +57,15 @@ class ForestOutliersIsolation(TransformerMixin, BaseEstimator):
         """
         Fit the Isolation Forest model to the data.
 
-        Parameters:
-        - X (pd.DataFrame): The input data.
-        - y (ignored): This parameter is ignored as Isolation Forest is an unsupervised method.
+        Args:
+            X (pd.DataFrame):
+                The input data.
+
+            y (ignored):
+                This parameter is ignored as Isolation Forest is an unsupervised method.
 
         Returns:
-        - self: The fitted transformer.
+            (self): The fitted transformer.
         """
         self.model = IsolationForest(
             n_estimators=self.n_estimators, random_state=self.random_state
@@ -71,12 +76,15 @@ class ForestOutliersIsolation(TransformerMixin, BaseEstimator):
         """
         Remove detected anomalies from the data using the trained Isolation Forest model.
 
-        Parameters:
-        - X (pd.DataFrame): The input data.
-        - y (ignored): This parameter is ignored.
+        Args:
+            X (pd.DataFrame):
+                The input data.
+
+            y (ignored):
+                This parameter is ignored.
 
         Returns:
-        - pd.DataFrame: The transformed data with detected anomalies excluded.
+            (pd.DataFrame): The transformed data with detected anomalies excluded.
         """
         # Copie indépendante du jeu de données
         X_res = X.copy()
@@ -93,7 +101,6 @@ class ForestOutliersIsolation(TransformerMixin, BaseEstimator):
 
         return X_res
 
-
 # Exclut les observations en fonction de leur valeur par rapport à un seuil
 class ThresholdExcluder(TransformerMixin, BaseEstimator):
     """
@@ -103,34 +110,42 @@ class ThresholdExcluder(TransformerMixin, BaseEstimator):
     Multiple criteria can be applied simultaneously, and rows which don't satisfy all the conditions
     will be excluded from the result.
 
-    Attributes:
-    - list_dict_params (List[Dict]): A list of dictionaries specifying the exclusion criteria.
-        Each dictionary should contain:
-        - 'variable': The column on which to apply the criterion.
-        - 'operator': The comparison operator, which can be one of the following: '>', '>=', '<', '<=', '!='.
-        - 'threshold': The value to compare against.
-    - drop (bool) : A boolean indicating whether to drop or fill with np.nan excluded observations
+    Args:
+        list_dict_params (List[Dict]):
+            A list of dictionaries specifying the exclusion criteria.
+            Each dictionary should contain:
+            - 'variable': The column on which to apply the criterion.
+            - 'operator': The comparison operator, which can be one of the following: '>', '>=', '<', '<=', '!='.
+            - 'threshold': The value to compare against.
+
+        drop (bool, optional):
+            A boolean indicating whether to drop or fill with np.nan excluded observations. Default is True.
 
     Methods:
-    - fit(X, y=None): Returns self.
-    - transform(X, y=None): Exclude observations based on the criteria.
+        fit(X, y=None):
+            Returns self.
 
-    Example:
-    >>> excluder = ThresholdExcluder([{'variable': 'A', 'operator': '>', 'threshold': 5},
-    >>>                               {'variable': 'B', 'operator': '<=', 'threshold': 10}])
-    >>> df = pd.DataFrame({'A': [1, 6, 3, 7], 'B': [5, 10, 20, 8]})
-    >>> df_transformed = excluder.transform(df)
+        transform(X, y=None):
+            Exclude observations based on the criteria.
+
+    Examples:
+        >>> excluder = ThresholdExcluder([{'variable': 'A', 'operator': '>', 'threshold': 5},
+        >>>                               {'variable': 'B', 'operator': '<=', 'threshold': 10}])
+        >>> df = pd.DataFrame({'A': [1, 6, 3, 7], 'B': [5, 10, 20, 8]})
+        >>> df_transformed = excluder.transform(df)
     """
 
     def __init__(self, list_dict_params: List[Dict], drop: Optional[bool] = True):
         """
         Initialize the ThresholdExcluder.
 
-        Parameters:
-        - list_dict_params (List[Dict]): A list of dictionaries specifying the exclusion criteria.
+        Args:
+            list_dict_params (List[Dict]):
+                A list of dictionaries specifying the exclusion criteria.
         """
         # Initialisation de la liste du dictionnaire de paramètres
         self.list_dict_params = list_dict_params
+        self.drop = drop
 
     def fit(self, X, y=None) -> None:
         """
@@ -139,12 +154,15 @@ class ThresholdExcluder(TransformerMixin, BaseEstimator):
         The fit method is implemented for compatibility with sklearn's TransformerMixin,
         but doesn't perform any actual computation.
 
-        Parameters:
-        - X (pd.DataFrame): The input data. Not used, only needed for compatibility.
-        - y (ignored): This parameter is ignored.
+        Args:
+            X (pd.DataFrame):
+                The input data. Not used, only needed for compatibility.
+
+            y (ignored):
+                This parameter is ignored.
 
         Returns:
-        - self: The instance itself.
+            (self): The instance itself.
         """
         return self
 
@@ -152,13 +170,21 @@ class ThresholdExcluder(TransformerMixin, BaseEstimator):
         """
         Exclude observations based on the specified criteria.
 
-        Parameters:
-        - X (pd.DataFrame): The input data to transform.
-        - y (ignored): This parameter is ignored.
+        Args:
+            X (pd.DataFrame):
+                The input data to transform.
+
+            y (ignored):
+                This parameter is ignored.
 
         Returns:
-        - pd.DataFrame: The transformed data with observations not meeting the criteria excluded.
+            (pd.DataFrame): The transformed data with observations not meeting the criteria excluded.
         """
+        # Drop NaN values from X and y
+        X = X.dropna()
+        if y is not None:
+            y = y.dropna()
+
         # Disjonction suivant la suppression
         if self.drop:
             # Initialisation de la série de booléens
@@ -234,7 +260,6 @@ class ThresholdExcluder(TransformerMixin, BaseEstimator):
 
         return X_transformed
 
-
 # Exclut les observations suivant leur position dans la distribution
 class QuantileExcluder(TransformerMixin, BaseEstimator):
     """
@@ -244,31 +269,38 @@ class QuantileExcluder(TransformerMixin, BaseEstimator):
     Multiple criteria can be applied simultaneously, and rows which don't satisfy all the conditions
     will be excluded from the result.
 
-    Attributes:
-    - list_dict_params (List[Dict]): A list of dictionaries specifying the exclusion criteria.
-        Each dictionary should contain:
-        - 'variable': The column on which to apply the criterion.
-        - 'operator': The comparison operator, which can be one of the following: 'left', 'right', 'both'.
-        - 'threshold': The quantile value to compare against.
-    - drop (bool) : A boolean indicating whether to drop or fill with np.nan excluded observations
+    Args:
+        list_dict_params (List[Dict]):
+            A list of dictionaries specifying the exclusion criteria.
+            Each dictionary should contain:
+            - 'variable': The column on which to apply the criterion.
+            - 'operator': The comparison operator, which can be one of the following: 'left', 'right', 'both'.
+            - 'threshold': The quantile value to compare against.
+
+        drop (bool, optional):
+            A boolean indicating whether to drop or fill with np.nan excluded observations. Default is True.
 
     Methods:
-    - fit(X, y=None): Returns self.
-    - transform(X, y=None): Exclude observations based on the criteria.
+        fit(X, y=None):
+            Returns self.
 
-    Example:
-    >>> excluder = QuantileExcluder([list_dict_params={'variable': 'A', 'operator': 'left', 'threshold': 0.25},
-    >>>                              {'variable': 'B', 'operator': 'right', 'threshold': 0.1}], drop=True)
-    >>> df = pd.DataFrame({'A': [1, 2, 3, 4], 'B': [5, 6, 7, 8]})
-    >>> df_transformed = excluder.transform(df)
+        transform(X, y=None):
+            Exclude observations based on the criteria.
+
+    Examples:
+        >>> excluder = QuantileExcluder([list_dict_params={'variable': 'A', 'operator': 'left', 'threshold': 0.25},
+        >>>                              {'variable': 'B', 'operator': 'right', 'threshold': 0.1}], drop=True)
+        >>> df = pd.DataFrame({'A': [1, 2, 3, 4], 'B': [5, 6, 7, 8]})
+        >>> df_transformed = excluder.transform(df)
     """
 
     def __init__(self, list_dict_params: List[Dict], drop: bool = True) -> None:
         """
         Initialize the QuantileExcluder.
 
-        Parameters:
-        - list_dict_params (List[Dict]): A list of dictionaries specifying the exclusion criteria.
+        Args:
+            list_dict_params (List[Dict]):
+                A list of dictionaries specifying the exclusion criteria.
         """
         # Initialisation de la liste du dictionnaire de paramètres
         self.list_dict_params = list_dict_params
@@ -282,12 +314,15 @@ class QuantileExcluder(TransformerMixin, BaseEstimator):
         The fit method is implemented for compatibility with sklearn's TransformerMixin,
         but doesn't perform any actual computation.
 
-        Parameters:
-        - X (pd.DataFrame): The input data. Not used, only needed for compatibility.
-        - y (ignored): This parameter is ignored.
+        Args:
+            X (pd.DataFrame):
+                The input data. Not used, only needed for compatibility.
+
+            y (ignored):
+                This parameter is ignored.
 
         Returns:
-        - self: The instance itself.
+            (self): The instance itself.
         """
         return self
 
@@ -295,13 +330,21 @@ class QuantileExcluder(TransformerMixin, BaseEstimator):
         """
         Exclude observations based on the specified quantile criteria.
 
-        Parameters:
-        - X (pd.DataFrame): The input data to transform.
-        - y (ignored): This parameter is ignored.
+        Args:
+            X (pd.DataFrame):
+                The input data to transform.
+
+            y (ignored):
+                This parameter is ignored.
 
         Returns:
-        - pd.DataFrame: The transformed data with observations not meeting the criteria excluded.
+            (pd.DataFrame): The transformed data with observations not meeting the criteria excluded.
         """
+        # Drop NaN values from X and y
+        X = X.dropna()
+        if y is not None:
+            y = y.dropna()
+
         # Disjonction suivant la suppression
         if self.drop:
             # Initialisation de la série de booléens
@@ -382,7 +425,6 @@ class QuantileExcluder(TransformerMixin, BaseEstimator):
 
         return X_transformed
 
-
 # Transformer permettant de supprimer une ou plusieurs colonnes
 class ColumnExcluder(TransformerMixin, BaseEstimator):
     """
@@ -390,40 +432,35 @@ class ColumnExcluder(TransformerMixin, BaseEstimator):
 
     Provides methods for fitting to data and transforming data by dropping specified columns.
 
-    Attributes:
-    -----------
-    list_col_drop : list
-        List of column names to be dropped.
+    Args:
+        list_col_drop (list):
+            List of column names to be dropped.
 
     Methods:
-    --------
-    fit(X, y=None) :
-        Fits the transformer to the data. For this transformer, it's essentially a no-op but maintains consistency.
+        fit(X, y=None):
+            Fits the transformer to the data. For this transformer, it's essentially a no-op but maintains consistency.
 
-    transform(X, y=None) :
-        Transforms the data by dropping the specified columns.
+        transform(X, y=None):
+            Transforms the data by dropping the specified columns.
 
-    fit_transform(X, y=None) :
-        Fits and then transforms the data.
+        fit_transform(X, y=None):
+            Fits and then transforms the data.
 
     Examples:
-    ---------
-    >>> col_excluder = ColumnExcluder(list_col_drop=['col1', 'col2'])
-    >>> reduced_data = col_excluder.fit_transform(data)
+        >>> col_excluder = ColumnExcluder(list_col_drop=['col1', 'col2'])
+        >>> reduced_data = col_excluder.fit_transform(data)
 
     Notes:
-    ------
-    It's important to ensure that the columns specified in `list_col_drop` exist in the DataFrame. Otherwise, it may raise a KeyError.
+        It's important to ensure that the columns specified in `list_col_drop` exist in the DataFrame. Otherwise, it may raise a KeyError.
     """
 
     def __init__(self, list_col_drop: List[str]) -> None:
         """
         Initializes the ColumnExcluder class.
 
-        Parameters:
-        -----------
-        list_col_drop : list
-            List of column names to be dropped from the DataFrame.
+        Args:
+            list_col_drop (list):
+                List of column names to be dropped from the DataFrame.
         """
         # Initialisation des paramètres
         self.list_col_drop = list_col_drop
@@ -432,17 +469,15 @@ class ColumnExcluder(TransformerMixin, BaseEstimator):
         """
         Fits the transformer to the data. For this transformer, it's a no-op but is included for consistency.
 
-        Parameters:
-        -----------
-        X : pd.DataFrame
-            The data to be transformed.
+        Args:
+            X (pd.DataFrame):
+                The data to be transformed.
 
-        y : Ignored
-            This parameter exists only for compatibility with scikit-learn pipeline and is not used.
+            y (Ignored):
+                This parameter exists only for compatibility with scikit-learn pipeline and is not used.
 
         Returns:
-        --------
-        self
+            (self)
         """
         return self
 
@@ -450,18 +485,15 @@ class ColumnExcluder(TransformerMixin, BaseEstimator):
         """
         Transforms the data by dropping the specified columns.
 
-        Parameters:
-        -----------
-        X : pd.DataFrame
-            The data to be transformed.
+        Args:
+            X (pd.DataFrame):
+                The data to be transformed.
 
-        y : Ignored
-            This parameter exists only for compatibility with scikit-learn pipeline and is not used.
+            y (Ignored):
+                This parameter exists only for compatibility with scikit-learn pipeline and is not used.
 
         Returns:
-        --------
-        pd.DataFrame
-            Transformed data with specified columns dropped.
+            (pd.DataFrame): Transformed data with specified columns dropped.
         """
         return X.drop(self.list_col_drop, axis=1)
 
@@ -469,18 +501,15 @@ class ColumnExcluder(TransformerMixin, BaseEstimator):
         """
         Fits and then transforms the data.
 
-        Parameters:
-        -----------
-        X : pd.DataFrame
-            The data to be transformed.
+        Args:
+            X (pd.DataFrame):
+                The data to be transformed.
 
-        y : Ignored
-            This parameter exists only for compatibility with scikit-learn pipeline and is not used.
+            y (Ignored):
+                This parameter exists only for compatibility with scikit-learn pipeline and is not used.
 
         Returns:
-        --------
-        pd.DataFrame
-            Transformed data with specified columns dropped.
+            (pd.DataFrame): Transformed data with specified columns dropped.
         """
         self.fit(X=X, y=y)
         return self.transform(X=X, y=y)

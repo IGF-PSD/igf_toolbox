@@ -20,7 +20,6 @@ from .base import StatDesGroupBy, nest_groupby
 # Utilitaire
 # from igf_toolbox_python.utils.general import nest_groupby
 
-
 # Contrôle du secret statistique
 class PrimarySecretStatController(object):
     """
@@ -60,13 +59,13 @@ class PrimarySecretStatController(object):
         """
         Initialize the PrimarySecretStatController class.
 
-        Parameters:
-        - var_individu (str or None): Variable representing individuals.
-        - var_entreprise (str or None): Variable representing companies.
-        - threshold_secret_stat_effectif_individu (int or None): The threshold for primary statistical secrecy control (individuals).
-        - threshold_secret_stat_effectif_entreprise (int or None): The threshold for primary statistical secrecy control (companies).
-        - threshold_secret_stat_contrib_individu (float or None): The threshold for contribution statistical secrecy control (individuals).
-        - threshold_secret_stat_contrib_entreprise (float or None): The threshold for contribution statistical secrecy control (companies).
+        Args:
+            var_individu (Union[str, None]): Variable representing individuals.
+            var_entreprise (Union[str, None]): Variable representing companies.
+            threshold_secret_stat_effectif_individu (Union[int, None]): The threshold for primary statistical secrecy control (individuals).
+            threshold_secret_stat_effectif_entreprise (Union[int, None]): The threshold for primary statistical secrecy control (companies).
+            threshold_secret_stat_contrib_individu (Union[float, None]): The threshold for contribution statistical secrecy control (individuals).
+            threshold_secret_stat_contrib_entreprise (Union[float, None]): The threshold for contribution statistical secrecy control (companies).
         """
         # Initialisation des paramètres
         # Variables de contrôle du secret statistique
@@ -94,13 +93,13 @@ class PrimarySecretStatController(object):
 
         Adds a column indicating whether the data in each row respects the secret statistic criteria or not.
 
-        Parameters:
-        - data (pd.DataFrame) : Dataset with the variable to be controlled
-        - var_of_interest (str): Column name of the variable to be controlled.
-        - threshold (int): The threshold for primary statistical secrecy control.
+        Args:
+            data (pd.DataFrame): Dataset with the variable to be controlled.
+            var_of_interest (str): Column name of the variable to be controlled.
+            threshold (int): The threshold for primary statistical secrecy control.
 
         Returns:
-        - pd.DataFrame: Dataset with an added column indicating the status of the secret statistic.
+            (pd.DataFrame): Dataset with an added column indicating the status of the secret statistic.
         """
 
         # Ajout d'une colonne secret stat
@@ -119,13 +118,13 @@ class PrimarySecretStatController(object):
 
         Adds a column indicating whether the data in each row respects the secret statistic criteria or not.
 
-        Parameters:
-        - data (pd.DataFrame) : Dataset with the variable to be controlled
-        - var_of_interest (str): Column name of the variable to be controlled.
-        - threshold (int): The threshold for contribution statistical secrecy control.
+        Args:
+            data (pd.DataFrame): Dataset with the variable to be controlled.
+            var_of_interest (str): Column name of the variable to be controlled.
+            threshold (int): The threshold for contribution statistical secrecy control.
 
         Returns:
-        - pd.DataFrame: Dataset with an added column indicating the status of the secret statistic.
+            (pd.DataFrame): Dataset with an added column indicating the status of the secret statistic.
         """
         # Ajout d'une colonne secret stat
         data[var_of_interest + "_secret_stat_second"] = True
@@ -148,13 +147,13 @@ class PrimarySecretStatController(object):
         This function controls primary and contribution statistical secrecy for a dataset by comparing the results with
         predefined thresholds. It modifies the dataset as needed to maintain the secrecy of statistical information.
 
-        Parameters:
+        Args:
             data (pd.DataFrame): The dataset containing descriptive statistics to control the statistical secret on.
-            iterable_operations (dict or list): The list of statistical operations to be applied.
-            list_var_of_interest_max_sum_effectif (list): List of variables related to contribution control operations.
+            iterable_operations (Union[list, dict]): The list of statistical operations to be applied.
+            list_var_of_interest_max_sum_effectif (List[str]): List of variables related to contribution control operations.
 
         Returns:
-            DataFrame: The modified dataset after applying statistical secrecy controls.
+            (pd.DataFrame): The modified dataset after applying statistical secrecy controls.
 
         Note:
             - Primary statistical secrecy control compares the number of unique values in specific variables to predefined thresholds.
@@ -240,7 +239,6 @@ class PrimarySecretStatController(object):
 
         return data
 
-
 # Classe de construction d'une statistique descriptive en vérifiant le secret statistique
 class SecondarySecretStatController(object):
     """
@@ -273,7 +271,7 @@ class SecondarySecretStatController(object):
         """
         Initialize the SecondarySecretStatController class.
 
-        Parameters:
+        Args:
             list_var_groupby (List[str]): A list of variables used for grouping.
             var_individu (Union[str, None]): The variable representing individual-level data.
             var_entreprise (Union[str, None]): The variable representing enterprise-level data.
@@ -292,7 +290,7 @@ class SecondarySecretStatController(object):
         Get the variable representing the number of observations or entities.
 
         Returns:
-            Union[str, None]: The variable representing the number of observations or entities, or None if not defined.
+            (Union[str, None]): The variable representing the number of observations or entities, or None if not defined.
         """
         if self.var_individu is not None:
             var_effectif = f"{self.var_individu}_nunique"
@@ -315,13 +313,13 @@ class SecondarySecretStatController(object):
         This function performs secondary statistical secrecy control at the local level using the specified strategy, where only specific
         data points are flagged as non-secret based on a given strategy.
 
-        Parameters:
-            data (DataFrame): The dataset containing descriptive statistics.
+        Args:
+            data (pd.DataFrame): The dataset containing descriptive statistics.
             list_var_subgroupby (List[str]): The list of variables used in the sub-groupby.
             var_secret_primary (str): The primary secret variable to control.
 
         Returns:
-            DataFrame: A DataFrame with a boolean column indicating whether each observation is considered non-secret (True) or secret (False).
+            (pd.DataFrame): A DataFrame with a boolean column indicating whether each observation is considered non-secret (True) or secret (False).
 
         Raises:
             ValueError: If the 'var_effectif' parameter is not provided when the strategy is 'min'.
@@ -366,14 +364,14 @@ class SecondarySecretStatController(object):
         defined by combinations of grouping variables. It generates secondary secrecy flags for these subgroups based on
         the specified strategy.
 
-        Parameters:
-            data (DataFrame): The dataset to perform secrecy control on.
+        Args:
+            data (pd.DataFrame): The dataset to perform secrecy control on.
             subgroupby_iterable (Iterable): An iterable containing combinations of grouping variables.
             var_secret_primary (str): The primary secret variable to control.
             var_secret_secondary (str): The secondary secret variable to control.
 
         Returns:
-            Tuple[DataFrame, List[str]]: A tuple containing the modified dataset with secondary secrecy flags added for subgroups
+            (Tuple[pd.DataFrame, List[str]]): A tuple containing the modified dataset with secondary secrecy flags added for subgroups
                 and a list of combinations of grouping variables that need further secrecy control.
         """
         # Copie indépendante du jeu de données
@@ -444,12 +442,12 @@ class SecondarySecretStatController(object):
         ('var_individu' and 'var_entreprise'). The control process iterates over subgroups to determine the secondary secrecy
         status.
 
-        Parameters:
-            data (DataFrame): The dataset containing primary secrecy information.
+        Args:
+            data (pd.DataFrame): The dataset containing primary secrecy information.
             var_ss_primary (Optional[str]): The primary secrecy variable to control. Defaults to 'secret_stat_primary'.
 
         Returns:
-            DataFrame: The dataset with secondary statistical secrecy controlled.
+            (pd.DataFrame): The dataset with secondary statistical secrecy controlled.
         """
         # Dans le cas où l'on ne groupby que sur un seul élément, on vérifie juste qu'il y a zéro ou strictement plus de une case ne respectant pas le secret statistique
         if len(self.list_var_groupby) == 1:
@@ -495,7 +493,6 @@ class SecondarySecretStatController(object):
 
         return data
 
-
 # Classe d'itération des statistiques descriptives et du contrôle des secrets statistiques primaires et secondaires
 class SecretStatEstimator(
     StatDesGroupBy, PrimarySecretStatController, SecondarySecretStatController
@@ -507,7 +504,7 @@ class SecretStatEstimator(
     It provides methods to estimate and control statistical secrecy in a dataset based on specified parameters.
 
     Attributes:
-        data_source (DataFrame): The dataset to estimate and control secrecy.
+        data_source (pd.DataFrame): The dataset to estimate and control secrecy.
         list_var_groupby (List[str]): The list of variables to group the data by.
         list_var_of_interest (List[str]): The list of variables of interest for statistics.
         var_individu (Optional[Union[str, None]]): The variable representing individual-level data.
@@ -543,8 +540,8 @@ class SecretStatEstimator(
         """
         Initialize the SecretStatEstimator class.
 
-        Parameters:
-            data_source (DataFrame): The dataset to estimate and control secrecy.
+        Args:
+            data_source (pd.DataFrame): The dataset to estimate and control secrecy.
             list_var_groupby (List[str]): The list of variables to group the data by.
             list_var_of_interest (List[str]): The list of variables of interest for statistics.
             var_individu (Optional[Union[str, None]]): The variable representing individual-level data.
@@ -595,14 +592,14 @@ class SecretStatEstimator(
         This function modifies the list of operations and variables of interest, ensuring it includes certain control operations
         for statistical secrecy and makes necessary adjustments.
 
-        Parameters:
-            iterable_operations (dict or list): The initial list of operations.
+        Args:
+            iterable_operations (Union[dict, list]): The initial list of operations.
 
         Returns:
-            Tuple[Union[dict, list], List[str], List[str]]: A tuple containing the following:
-                - iterable_operations_work (list or dict): The cleaned and updated list of operations.
-                - list_var_of_interest_work (list): The cleaned and updated list of variables of interest.
-                - list_var_of_interest_max_sum_effectif (list): A list of variables related to secondary control operations.
+            (Tuple[Union[dict, list], List[str], List[str]]): A tuple containing the following:
+                - iterable_operations_work (Union[dict, list]): The cleaned and updated list of operations.
+                - list_var_of_interest_work (List[str]): The cleaned and updated list of variables of interest.
+                - list_var_of_interest_max_sum_effectif (List[str]): A list of variables related to secondary control operations.
         """
         # Copie indépendante des opérations
         iterable_operations_work = deepcopy(iterable_operations)
@@ -733,14 +730,14 @@ class SecretStatEstimator(
         This function determines which columns should be added or dropped from a descriptive statistics dataset based on
         the provided parameters. The goal is to maintain statistical secrecy and ensure data integrity.
 
-        Parameters:
-            data (DataFrame): The dataset containing descriptive statistics.
-            iterable_operations (dict or list): The list of statistical operations to be applied.
+        Args:
+            data (pd.DataFrame): The dataset containing descriptive statistics.
+            iterable_operations (Union[dict, list]): The list of statistical operations to be applied.
 
         Returns:
-            Tuple[List[str], List[str]]: A tuple containing the following:
-                - list_var_drop (list): A list of columns to be dropped from the dataset.
-                - list_var_data_secret_stat_add (list): A list of columns to be added to the dataset.
+            (Tuple[List[str], List[str]]): A tuple containing the following:
+                - list_var_drop (List[str]): A list of columns to be dropped from the dataset.
+                - list_var_data_secret_stat_add (List[str]): A list of columns to be added to the dataset.
         """
         if isinstance(iterable_operations, dict):
             if "nunique" not in iterable_operations.keys():
@@ -957,17 +954,17 @@ class SecretStatEstimator(
         It calculates descriptive statistics, checks for primary and secondary secrecy violations, and separates variables
         to be added or removed in the resulting datasets.
 
-        Parameters:
-            iterable_operations (dict or list): The operations to perform on the variables of interest.
+        Args:
+            iterable_operations (Union[dict, list]): The operations to perform on the variables of interest.
             include_total (bool, optional): Include total statistics in the result. Defaults to True.
             drop (bool, optional): Drop non-compliant rows from the result. Defaults to True.
-            fill_value (float or np.nan, optional): The value to fill non-compliant rows when 'drop' is False. Defaults to np.nan.
+            fill_value (Union[int, float, str], optional): The value to fill non-compliant rows when 'drop' is False. Defaults to np.nan.
             nest (bool, optional): Nest the index in the result. Defaults to False.
 
         Returns:
-            Tuple[DataFrame, DataFrame]: A tuple containing the following:
-                - data_stat_des (DataFrame): The dataset with secondary statistical secrecy estimated and controlled.
-                - data_secret_stat (DataFrame): The dataset containing the secondary statistical secrecy information.
+            (Tuple[pd.DataFrame, pd.DataFrame]): A tuple containing the following:
+                - data_stat_des (pd.DataFrame): The dataset with secondary statistical secrecy estimated and controlled.
+                - data_secret_stat (pd.DataFrame): The dataset containing the secondary statistical secrecy information.
         """
         # Modification des opérations en fonction des secrets à estimer
         (

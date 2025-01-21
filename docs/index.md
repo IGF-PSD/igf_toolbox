@@ -1,4 +1,4 @@
-# IGF python toolbox
+# IGF Python toolbox
 
 ## Objectives
 

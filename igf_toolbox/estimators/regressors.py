@@ -1,4 +1,4 @@
-""" 
+"""
 TO DO :
 - une classe permettant d'estimer un modèle à effets aléatoire (éventuellement en choisissant entre modèle à effets aléatoires et effets fixes selon un test d'Hausman)
 - une classe permettant d'estimer un modèle avec des retards de la variable endogène
@@ -19,7 +19,6 @@ from sklearn.model_selection import train_test_split
 # Stat Models
 from statsmodels.regression.linear_model import OLS, WLS
 
-
 # Estimateur des moindres carrés ordinaires
 class LeastSquaresEstimator(BaseEstimator):
     """
@@ -27,34 +26,32 @@ class LeastSquaresEstimator(BaseEstimator):
 
     Provides methods for fitting a linear regression model, making predictions, and summarizing the results.
 
-    Attributes:
-    -----------
-    model : statsmodels regression model
-        The internal regression model, either OLS or WLS.
-    _coef : pd.Series
-        The estimated coefficients from the regression model.
+    Args:
+        model (statsmodels regression model):
+            The internal regression model, either OLS or WLS.
+
+        _coef (pd.Series):
+            The estimated coefficients from the regression model.
 
     Methods:
-    --------
-    fit(X, y, sample_weight=None) :
-        Fits a regression model to the data.
+        fit(X, y, sample_weight=None):
+            Fits a regression model to the data.
 
-    predict(X) :
-        Uses the fitted model to predict the dependent variable for a new set of independent variables.
+        predict(X):
+            Uses the fitted model to predict the dependent variable for a new set of independent variables.
 
-    summary() :
-        Returns a summary of the estimated regression coefficients, their p-values, and 95% confidence intervals.
+        summary():
+            Returns a summary of the estimated regression coefficients, their p-values, and 95% confidence intervals.
 
-    rsquared() :
-        Returns the R-squared and adjusted R-squared values for the fitted model.
+        rsquared():
+            Returns the R-squared and adjusted R-squared values for the fitted model.
 
     Examples:
-    ---------
-    >>> estimator = LeastSquaresEstimator()
-    >>> estimator.fit(X_train, y_train)
-    >>> predictions = estimator.predict(X_test)
-    >>> summary_results = estimator.summary()
-    >>> r2_values = estimator.rsquared()
+        >>> estimator = LeastSquaresEstimator()
+        >>> estimator.fit(X_train, y_train)
+        >>> predictions = estimator.predict(X_test)
+        >>> summary_results = estimator.summary()
+        >>> r2_values = estimator.rsquared()
     """
 
     def __init__(self) -> None:
@@ -64,20 +61,18 @@ class LeastSquaresEstimator(BaseEstimator):
         """
         Fits a regression model to the data.
 
-        Parameters:
-        -----------
-        X : pd.DataFrame
-            The independent variables (explanatory variables).
+        Args:
+            X (pd.DataFrame):
+                The independent variables (explanatory variables).
 
-        y : pd.Series
-            The dependent variable (response variable).
+            y (pd.Series):
+                The dependent variable (response variable).
 
-        sample_weight : pd.Series, optional
-            Optional weights for each observation. If provided, WLS is used; otherwise, OLS is used.
+            sample_weight (pd.Series, optional):
+                Optional weights for each observation. If provided, WLS is used; otherwise, OLS is used.
 
         Returns:
-        --------
-        None
+            (None)
         """
         # Estimation du modèle
         if sample_weight is None:
@@ -93,15 +88,12 @@ class LeastSquaresEstimator(BaseEstimator):
         """
         Uses the fitted model to predict the dependent variable for a new set of independent variables.
 
-        Parameters:
-        -----------
-        X : pd.DataFrame
-            The independent variables for which to predict the dependent variable.
+        Args:
+            X (pd.DataFrame):
+                The independent variables for which to predict the dependent variable.
 
         Returns:
-        --------
-        pd.Series
-            Predicted values of the dependent variable.
+            (pd.Series): Predicted values of the dependent variable.
         """
         return self.model.predict(X)
 
@@ -110,9 +102,7 @@ class LeastSquaresEstimator(BaseEstimator):
         Returns a summary of the estimated regression coefficients, their p-values, and 95% confidence intervals.
 
         Returns:
-        --------
-        pd.DataFrame
-            A dataframe with the estimated regression coefficients, their p-values, and 95% confidence intervals.
+            (pd.DataFrame): A dataframe with the estimated regression coefficients, their p-values, and 95% confidence intervals.
         """
 
         # Description des résultats du modèle
@@ -130,9 +120,7 @@ class LeastSquaresEstimator(BaseEstimator):
         Returns the R-squared and adjusted R-squared values for the fitted model.
 
         Returns:
-        --------
-        pd.DataFrame
-            A dataframe with the R-squared and adjusted R-squared values.
+            (pd.DataFrame): A dataframe with the R-squared and adjusted R-squared values.
         """
         # Description de la pertinence du modèle
         data_r2 = pd.DataFrame(
@@ -142,40 +130,43 @@ class LeastSquaresEstimator(BaseEstimator):
         )
         return data_r2
 
-
 # Estimateurs des moindres carrés ordinaires sur des données de panel
 class PanelLeastSquaresEstimator(BaseEstimator):
     """
     An estimator for panel data using Ordinary Least Squares (OLS).
 
-    Parameters
-    ----------
-    entity_effects : bool
-        Whether to include entity (fixed) effects in the model.
-    time_effects : bool
-        Whether to include time effects in the model.
-    drop_absorbed : bool, optional (default=False)
-        If true, drops variables that are fully absorbed by the entity or time effects.
-    cov_type : str, optional (default='unadjusted')
-        Type of covariance matrix estimator to use.
+    Args:
+        entity_effects (bool):
+            Whether to include entity (fixed) effects in the model.
 
-    Attributes
-    ----------
-    model : PanelOLS
-        The fitted model.
+        time_effects (bool):
+            Whether to include time effects in the model.
 
-    Methods
-    -------
-    fit(X, y, sample_weight=None):
-        Fits the model using the provided data.
-    predict(X):
-        Predicts the response variable using the provided data.
-    summary():
-        Returns a summary of the regression results.
-    rsquared():
-        Returns various R^2 measures for the model.
-    estimated_effects():
-        Returns the estimated entity and time effects.
+        drop_absorbed (bool, optional):
+            If true, drops variables that are fully absorbed by the entity or time effects.
+
+        cov_type (str, optional):
+            Type of covariance matrix estimator to use.
+
+    Attributes:
+        model (PanelOLS):
+            The fitted model.
+
+    Methods:
+        fit(X, y, sample_weight=None):
+            Fits the model using the provided data.
+
+        predict(X):
+            Predicts the response variable using the provided data.
+
+        summary():
+            Returns a summary of the regression results.
+
+        rsquared():
+            Returns various R^2 measures for the model.
+
+        estimated_effects():
+            Returns the estimated entity and time effects.
     """
 
     def __init__(
@@ -201,19 +192,18 @@ class PanelLeastSquaresEstimator(BaseEstimator):
         """
         Fit the model using the provided data.
 
-        Parameters
-        ----------
-        X : DataFrame
-            Feature matrix.
-        y : Series
-            Response variable.
-        sample_weight : Series, optional
-            Weights for each observation.
+        Args:
+            X (DataFrame):
+                Feature matrix.
 
-        Returns
-        -------
-        self : PanelLeastSquaresEstimator
-            The instance itself.
+            y (Series):
+                Response variable.
+
+            sample_weight (Series, optional):
+                Weights for each observation.
+
+        Returns:
+            (PanelLeastSquaresEstimator): The instance itself.
         """
         # Par convention les Entity X Year index sont les deux premières colonnes si X est un ndarray
         if isinstance(X, np.ndarray):
@@ -234,15 +224,12 @@ class PanelLeastSquaresEstimator(BaseEstimator):
         """
         Predict the response variable using the provided data.
 
-        Parameters
-        ----------
-        X : DataFrame
-            Feature matrix to predict response for.
+        Args:
+            X (DataFrame):
+                Feature matrix to predict response for.
 
-        Returns
-        -------
-        Series
-            Predicted values.
+        Returns:
+            (Series): Predicted values.
         """
         # Par convention les Entity X Year index sont les deux premières colonnes si X est un ndarray
         if isinstance(X, np.ndarray):
@@ -254,10 +241,8 @@ class PanelLeastSquaresEstimator(BaseEstimator):
         """
         Returns a summary of the regression results.
 
-        Returns
-        -------
-        DataFrame
-            A DataFrame with coefficients, p-values, and 95% confidence intervals.
+        Returns:
+            (DataFrame): A DataFrame with coefficients, p-values, and 95% confidence intervals.
         """
         # Description des résultats du modèle
         coefs = self.model.params.to_frame().rename(
@@ -277,10 +262,8 @@ class PanelLeastSquaresEstimator(BaseEstimator):
         """
         Returns various R^2 measures for the model.
 
-        Returns
-        -------
-        DataFrame
-            A DataFrame containing various R^2 measures and the number of observations.
+        Returns:
+            (DataFrame): A DataFrame containing various R^2 measures and the number of observations.
         """
         return pd.DataFrame(
             data=[
@@ -308,9 +291,7 @@ class PanelLeastSquaresEstimator(BaseEstimator):
         """
         Returns the estimated entity and time effects.
 
-        Returns
-        -------
-        DataFrame
-            A DataFrame containing the estimated entity and time effects.
+        Returns:
+            (DataFrame): A DataFrame containing the estimated entity and time effects.
         """
         return self.model.estimated_effects

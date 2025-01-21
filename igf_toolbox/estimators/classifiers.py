@@ -9,31 +9,29 @@ from sklearn.base import BaseEstimator
 # Stat Models
 from statsmodels.discrete.discrete_model import Logit, Probit
 
-
 # Modèle Probit
 class ProbitClassifier(BaseEstimator):
     """
     Probit model wrapped to a sklearn class
-    Parameters
-    ----------
-    proba_threshold : float, default=0.5
-        Threshold to distinguish forecast corresponding to the zero class and to the one class
 
-    scoring : string, default='roc'
-        Score to calculate via the score method
-    regularized : bool, default=True
-        Whether to add a regularisation constrain to select variables in the minimization process and ensure convergence
+    Args:
+        proba_threshold (float):
+            Threshold to distinguish forecast corresponding to the zero class and to the one class
 
-    method : string, default='l1'
-        Type of regularization to apply
+        scoring (string):
+            Score to calculate via the score method
 
-    alpha : float, default=0.01
-        Regularization parameter
+        regularized (bool):
+            Whether to add a regularisation constrain to select variables in the minimization process and ensure convergence
 
-    Attributes
-    ----------
-    probit : Probit
-        Probit fitted regressor
+        method (string):
+            Type of regularization to apply
+
+        alpha (float):
+            Regularization parameter
+
+    Returns:
+        (Probit): Probit fitted regressor
     """
 
     def __init__(
@@ -57,28 +55,25 @@ class ProbitClassifier(BaseEstimator):
     def set_params(self, **parameters) -> None:
         """
         Change the parameters of the model
-        Returns
-        -------
-        self : returns an instance of self
+
+        Returns:
+            (self): returns an instance of self
         """
         # Ajout des paramètres
         for parameter, value in parameters.items():
             setattr(self, parameter, value)
         return self
 
-    def get_params(self, deep=True) -> dict:
+    def get_params(self, deep: bool) -> dict:
         """
-        Return a dictionnary containing the current parameters of the model
-        Parameters
-        ----------
+        Return a dictionary containing the current parameters of the model
 
-        deep : bool, default=True
-            Whether to return an independent copy of the parameters
-        Returns
-        -------
+        Args:
+            deep (bool):
+                Whether to return an independent copy of the parameters
 
-        DictParams : dictionnary
-            Dictionnary containing the name of the parameter and its corresponding value
+        Returns:
+            (dict): Dictionary containing the name of the parameter and its corresponding value
         """
         # Retourne les paramètres
         return {
@@ -93,16 +88,16 @@ class ProbitClassifier(BaseEstimator):
     def fit(self, X, y) -> None:
         """
         Fit the probit model.
-        Parameters
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            Training data
 
-        y : array-like of shape (n_samples,) or (n_samples, n_targets)
-            Target values. Will be cast to X's dtype if necessary
-        Returns
-        -------
-        self : returns an instance of self
+        Args:
+            X (array-like of shape (n_samples, n_features)):
+                Training data
+
+            y (array-like of shape (n_samples,) or (n_samples, n_targets)):
+                Target values. Will be cast to X's dtype if necessary
+
+        Returns:
+            (self): returns an instance of self
         """
         # Entrainement du modèle
         if self.regularized:
@@ -121,17 +116,17 @@ class ProbitClassifier(BaseEstimator):
         return self
 
     def predict(self, X) -> np.ndarray:
-        """Predict class for X.
-        Parameters
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            The input samples. Internally, it will be converted to
-            ``dtype=np.float32`` and if a sparse matrix is provided
-            to a sparse ``csr_matrix``.
-        Returns
-        -------
-        Prediction : array-like of shape (n_samples,) or (n_samples, n_outputs)
-            The predicted classes.
+        """
+        Predict class for X.
+
+        Args:
+            X (array-like of shape (n_samples, n_features)):
+                The input samples. Internally, it will be converted to
+                ``dtype=np.float32`` and if a sparse matrix is provided
+                to a sparse ``csr_matrix``.
+
+        Returns:
+            (np.ndarray): The predicted classes.
         """
         # Prédiction
         if self.proba_threshold:
@@ -139,17 +134,17 @@ class ProbitClassifier(BaseEstimator):
         return self.probit.predict(X)
 
     def predict_proba(self, X) -> np.ndarray:
-        """Predict class associated with the class labelized as one for X.
-        Parameters
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            The input samples. Internally, it will be converted to
-            ``dtype=np.float32`` and if a sparse matrix is provided
-            to a sparse ``csr_matrix``.
-        Returns
-        -------
-        Prediction : array-like of shape (n_samples,) or (n_samples, n_outputs)
-            The predicted probabilities.
+        """
+        Predict class associated with the class labeled as one for X.
+
+        Args:
+            X (array-like of shape (n_samples, n_features)):
+                The input samples. Internally, it will be converted to
+                ``dtype=np.float32`` and if a sparse matrix is provided
+                to a sparse ``csr_matrix``.
+
+        Returns:
+            (np.ndarray): The predicted probabilities.
         """
         # Prédiction de la probabilité d'appartenance à chaque classe
         proba = []
@@ -165,19 +160,20 @@ class ProbitClassifier(BaseEstimator):
         return np.array(proba).reshape(-1, 2)
 
     def score(self, X_test, y_test):
-        """Calculate the score for the label predicted by the model for X_test et les vrais labels y_test.
-        Parameters
-        ----------
-        X_test : array-like of shape (n_samples, n_features)
-            The input samples. Internally, it will be converted to
-            ``dtype=np.float32`` and if a sparse matrix is provided
-            to a sparse ``csr_matrix``.
-        y_test : array-like of shape (n_samples, 1).
-            The test samples
-        Returns
-        -------
-        score : float or array-like
-            The computed score.
+        """
+        Calculate the score for the label predicted by the model for X_test and the true labels y_test.
+
+        Args:
+            X_test (array-like of shape (n_samples, n_features)):
+                The input samples. Internally, it will be converted to
+                ``dtype=np.float32`` and if a sparse matrix is provided
+                to a sparse ``csr_matrix``.
+
+            y_test (array-like of shape (n_samples, 1)):
+                The test samples
+
+        Returns:
+            (float or array-like): The computed score.
         """
         # Calcul du ROC-AUC ou de l'Accuracy
         self.y_pred = ((self.predict(X_test) > 0.25) * 1) * True
@@ -199,9 +195,9 @@ class ProbitClassifier(BaseEstimator):
     def summary(self):
         """
         Give information about the estimation of the probit model
-        Returns
-        -------
-        Summary : Information about the coefficients estimated by the model
+
+        Returns:
+            (Summary): Information about the coefficients estimated by the model
         """
         # Résumé des résultats de l'estimation
         return self.probit.summary()
@@ -209,38 +205,36 @@ class ProbitClassifier(BaseEstimator):
     def cov_matrix(self):
         """
         Give the covariance matrix of the model
-        Returns
-        -------
-        Cov : Covariance matrix of the model
+
+        Returns:
+            (Cov): Covariance matrix of the model
         """
         # Matrice de variance-covariance
         return self.probit.cov_params()
-
 
 # Modèle Logit
 class LogitClassifier(BaseEstimator):
     """
     Logit model wrapped to a sklearn class
-    Parameters
-    ----------
-    proba_threshold : float, default=0.5
-        Threshold to distinguish forecast corresponding to the zero class and to the one class
 
-    scoring : string, default='roc'
-        Score to calculate via the score method
-    regularized : bool, default=True
-        Whether to add a regularisation constrain to select variables in the minimization process and ensure convergence
+    Args:
+        proba_threshold (float):
+            Threshold to distinguish forecast corresponding to the zero class and to the one class
 
-    method : string, default='l1'
-        Type of regularization to apply
+        scoring (string):
+            Score to calculate via the score method
 
-    alpha : float, default=0.01
-        Regularization parameter
+        regularized (bool):
+            Whether to add a regularisation constrain to select variables in the minimization process and ensure convergence
 
-    Attributes
-    ----------
-    logit : Logit
-        Logit fitted regressor
+        method (string):
+            Type of regularization to apply
+
+        alpha (float):
+            Regularization parameter
+
+    Returns:
+        (Logit): Logit fitted regressor
     """
 
     def __init__(
@@ -264,28 +258,25 @@ class LogitClassifier(BaseEstimator):
     def set_params(self, **parameters) -> None:
         """
         Change the parameters of the model
-        Returns
-        -------
-        self : returns an instance of self
+
+        Returns:
+            (self): returns an instance of self
         """
         # Ajout des paramètres
         for parameter, value in parameters.items():
             setattr(self, parameter, value)
         return self
 
-    def get_params(self, deep: Optional[bool] = True) -> dict:
+    def get_params(self, deep: bool) -> dict:
         """
-        Return a dictionnary containing the current parameters of the model
-        Parameters
-        ----------
+        Return a dictionary containing the current parameters of the model
 
-        deep : bool, default=True
-            Whether to return an independent copy of the parameters
-        Returns
-        -------
+        Args:
+            deep (bool):
+                Whether to return an independent copy of the parameters
 
-        DictParams : dictionnary
-            Dictionnary containing the name of the parameter and its corresponding value
+        Returns:
+            (dict): Dictionary containing the name of the parameter and its corresponding value
         """
         # Retourne les paramètres
         return {
@@ -299,17 +290,17 @@ class LogitClassifier(BaseEstimator):
 
     def fit(self, X, y):
         """
-        Fit the probit model.
-        Parameters
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            Training data
+        Fit the logit model.
 
-        y : array-like of shape (n_samples,) or (n_samples, n_targets)
-            Target values. Will be cast to X's dtype if necessary
-        Returns
-        -------
-        self : returns an instance of self
+        Args:
+            X (array-like of shape (n_samples, n_features)):
+                Training data
+
+            y (array-like of shape (n_samples,) or (n_samples, n_targets)):
+                Target values. Will be cast to X's dtype if necessary
+
+        Returns:
+            (self): returns an instance of self
         """
         # Entrainement du modèle
         if self.regularized:
@@ -328,17 +319,17 @@ class LogitClassifier(BaseEstimator):
         return self
 
     def predict(self, X):
-        """Predict class for X.
-        Parameters
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            The input samples. Internally, it will be converted to
-            ``dtype=np.float32`` and if a sparse matrix is provided
-            to a sparse ``csr_matrix``.
-        Returns
-        -------
-        Prediction : array-like of shape (n_samples,) or (n_samples, n_outputs)
-            The predicted classes.
+        """
+        Predict class for X.
+
+        Args:
+            X (array-like of shape (n_samples, n_features)):
+                The input samples. Internally, it will be converted to
+                ``dtype=np.float32`` and if a sparse matrix is provided
+                to a sparse ``csr_matrix``.
+
+        Returns:
+            (array-like of shape (n_samples,) or (n_samples, n_outputs)): The predicted classes.
         """
         # Prédiction
         if self.proba_threshold:
@@ -346,17 +337,17 @@ class LogitClassifier(BaseEstimator):
         return self.logit.predict(X)
 
     def predict_proba(self, X):
-        """Predict class associated with the class labelized as one for X.
-        Parameters
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            The input samples. Internally, it will be converted to
-            ``dtype=np.float32`` and if a sparse matrix is provided
-            to a sparse ``csr_matrix``.
-        Returns
-        -------
-        Prediction : array-like of shape (n_samples,) or (n_samples, n_outputs)
-            The predicted probabilities.
+        """
+        Predict class associated with the class labeled as one for X.
+
+        Args:
+            X (array-like of shape (n_samples, n_features)):
+                The input samples. Internally, it will be converted to
+                ``dtype=np.float32`` and if a sparse matrix is provided
+                to a sparse ``csr_matrix``.
+
+        Returns:
+            (array-like of shape (n_samples,) or (n_samples, n_outputs)): The predicted probabilities.
         """
         # Prédiction de la probabilité d'appartenance à chacune des classes
         proba = []
@@ -371,19 +362,20 @@ class LogitClassifier(BaseEstimator):
         return np.array(proba).reshape(-1, 2)
 
     def score(self, X_test, y_test):
-        """Calculate the score for the label predicted by the model for X_test et les vrais labels y_test.
-        Parameters
-        ----------
-        X_test : array-like of shape (n_samples, n_features)
-            The input samples. Internally, it will be converted to
-            ``dtype=np.float32`` and if a sparse matrix is provided
-            to a sparse ``csr_matrix``.
-        y_test : array-like of shape (n_samples, 1).
-            The test samples
-        Returns
-        -------
-        score : float or array-like
-            The computed score.
+        """
+        Calculate the score for the label predicted by the model for X_test and the true labels y_test.
+
+        Args:
+            X_test (array-like of shape (n_samples, n_features)):
+                The input samples. Internally, it will be converted to
+                ``dtype=np.float32`` and if a sparse matrix is provided
+                to a sparse ``csr_matrix``.
+
+            y_test (array-like of shape (n_samples, 1)):
+                The test samples
+
+        Returns:
+            (float or array-like): The computed score.
         """
         # Calcul du ROC-AUC ou de l'Accuracy
         self.y_pred = ((self.predict(X_test) > 0.25) * 1) * True
@@ -405,9 +397,9 @@ class LogitClassifier(BaseEstimator):
     def summary(self):
         """
         Give information about the estimation of the logit model
-        Returns
-        -------
-        Summary : Information about the coefficients estimated by the model
+
+        Returns:
+            (Summary): Information about the coefficients estimated by the model
         """
         # Résumé des résultats de l'estimation
         return self.logit.summary()
@@ -415,19 +407,19 @@ class LogitClassifier(BaseEstimator):
     def cov_matrix(self):
         """
         Give the covariance matrix of the model
-        Returns
-        -------
-        Cov : Covariance matrix of the model
+
+        Returns:
+            (Cov): Covariance matrix of the model
         """
         # Matrice de variance-covariance
         return self.logit.cov_params()
 
     def margeff(self):
         """
-        Give the marignal effects of the exogenous variables in the model
-        Returns
-        -------
-        MargEff : Marginal effects of the model
+        Give the marginal effects of the exogenous variables in the model
+
+        Returns:
+            (MargEff): Marginal effects of the model
         """
         # Effets marginaux
         return self.logit.get_margeff().summary_frame()

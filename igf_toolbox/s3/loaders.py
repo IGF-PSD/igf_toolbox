@@ -12,7 +12,6 @@ from geopandas import read_file
 # Importation du module de connection
 from ._connection import _S3Connection
 
-
 class S3Loader(_S3Connection):
     """
     A class for loading data from an Amazon S3 bucket using 'boto3' or 's3fs' as the underlying package.
@@ -21,7 +20,8 @@ class S3Loader(_S3Connection):
     and loading data from a specified S3 object.
 
     Args:
-        package (str): The package to use for connecting to S3 ('s3fs' or 'boto3').
+        package (str):
+            The package to use for connecting to S3 ('s3fs' or 'boto3').
 
     Methods:
         connect(**kwargs):
@@ -42,7 +42,8 @@ class S3Loader(_S3Connection):
         Initialize the S3Loader class with the specified package.
 
         Args:
-            package (str): The package to use for connecting to S3 ('s3fs' or 'boto3').
+            package (str):
+                The package to use for connecting to S3 ('s3fs' or 'boto3').
         """
         # Initialisation du parent
         super().__init__(package=package)
@@ -52,10 +53,12 @@ class S3Loader(_S3Connection):
         Establish a connection to the S3 bucket.
 
         Args:
-            **kwargs: Additional keyword arguments for establishing the connection.
+            **kwargs:
+                Additional keyword arguments for establishing the connection.
 
         Returns:
-            obj: The established S3 connection.
+            (obj):
+                The established S3 connection.
 
         Example :
         >>> s3_loader = S3Loader(package='boto3')
@@ -69,12 +72,16 @@ class S3Loader(_S3Connection):
         Load data from a specified S3 object based on its file extension.
 
         Args:
-            bucket (str): The name of the S3 bucket.
-            key (str): The key of the S3 object to load.
-            **kwargs: Additional keyword arguments for reading the data.
+            bucket (str):
+                The name of the S3 bucket.
+            key (str):
+                The key of the S3 object to load.
+            **kwargs:
+                Additional keyword arguments for reading the data.
 
         Returns:
-            obj: The loaded data (Pandas DataFrame, JSON object, Pickle object, or GeoDataFrame).
+            (obj):
+                The loaded data (Pandas DataFrame, JSON object, Pickle object, or GeoDataFrame).
 
         Example :
         >>> s3_loader = S3Loader(package='boto3')
@@ -124,15 +131,20 @@ class S3Loader(_S3Connection):
         JSON object, Pickle object, or GeoDataFrame, depending on the extension.
 
         Args:
-            s3_file (obj): The S3 file object to read from.
-            extension (str): The file extension indicating the file format ('csv', 'json', 'pkl', 'geojson', 'parquet').
-            **kwargs: Additional keyword arguments specific to the file format's reading method.
+            s3_file (obj):
+                The S3 file object to read from.
+            extension (str):
+                The file extension indicating the file format ('csv', 'json', 'pkl', 'geojson', 'parquet').
+            **kwargs:
+                Additional keyword arguments specific to the file format's reading method.
 
         Returns:
-            obj: The read data (Pandas DataFrame, JSON object, Pickle object, or GeoDataFrame).
+            (obj):
+                The read data (Pandas DataFrame, JSON object, Pickle object, or GeoDataFrame).
 
         Raises:
-            ValueError: If the 'extension' argument is not one of ['csv', 'json', 'pkl', 'geojson', 'parquet'].
+            ValueError:
+                If the 'extension' argument is not one of ['csv', 'json', 'pkl', 'geojson', 'parquet'].
 
         Example :
         >>> s3_connection = _S3Connection(package='boto3')

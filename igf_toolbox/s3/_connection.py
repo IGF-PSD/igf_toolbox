@@ -9,7 +9,6 @@ from s3fs import S3FileSystem
 # Modules de communisation avec s3
 from urllib3 import disable_warnings
 
-
 # Classe parent gérant la connection au bucket pour les loaders et savers
 class _S3Connection:
     """
@@ -19,13 +18,16 @@ class _S3Connection:
     's3fs' is used for file system-like access, while 'boto3' provides a more comprehensive AWS SDK.
 
     Args:
-        package (str): The package to use for connecting to S3 ('s3fs' or 'boto3').
+        package (str):
+            The package to use for connecting to S3 ('s3fs' or 'boto3').
 
     Raises:
-        ValueError: If the 'package' argument is not one of ['s3fs', 'boto3'].
+        ValueError:
+            If the 'package' argument is not one of ['s3fs', 'boto3'].
 
     Attributes:
-        package (str): The package used for S3 connectivity ('s3fs' or 'boto3').
+        package (str):
+            The package used for S3 connectivity ('s3fs' or 'boto3').
 
     Methods:
         _connect(endpoint_url, aws_access_key_id, aws_secret_access_key, aws_session_token, verify, **kwargs):
@@ -45,7 +47,8 @@ class _S3Connection:
         Initialize the S3 connection class with the specified package.
 
         Args:
-            package (str): The package to use for connecting to S3 ('s3fs' or 'boto3').
+            package (str):
+                The package to use for connecting to S3 ('s3fs' or 'boto3').
         """
         # Initialisation du package utilisé pour se connecter au bucket S3
         # Deux valeurs sont valides pour ce paramètre 's3fs' et 'boto3'
@@ -67,18 +70,26 @@ class _S3Connection:
         Connects to the S3 bucket using the specified parameters and package.
 
         Args:
-            endpoint_url (str): The S3 endpoint URL (optional).
-            aws_access_key_id (str): The AWS access key ID (optional).
-            aws_secret_access_key (str): The AWS secret access key (optional).
-            aws_session_token (str): The AWS session token (optional).
-            verify (bool): Whether to verify SSL certificates (default is False).
-            **kwargs: Additional keyword arguments specific to the chosen package.
+            endpoint_url (str):
+                The S3 endpoint URL (optional).
+            aws_access_key_id (str):
+                The AWS access key ID (optional).
+            aws_secret_access_key (str):
+                The AWS secret access key (optional).
+            aws_session_token (str):
+                The AWS session token (optional).
+            verify (bool):
+                Whether to verify SSL certificates (default is False).
+            **kwargs:
+                Additional keyword arguments specific to the chosen package.
 
         Returns:
-            obj: The connected S3 client or file system.
+            (obj):
+                The connected S3 client or file system.
 
         Raises:
-            ValueError: If the 'package' argument is not one of ['s3fs', 'boto3'].
+            ValueError:
+                If the 'package' argument is not one of ['s3fs', 'boto3'].
 
         Example :
         >>> s3_connection = _S3Connection(package='boto3')

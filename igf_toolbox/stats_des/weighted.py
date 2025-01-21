@@ -9,7 +9,6 @@ import pandas as pd
 # Module de compilation
 from numba import njit
 
-
 # Fonction de calcul de l'écart-type pondéré
 def weighted_std(
     values: Union[np.ndarray, pd.DataFrame, pd.Series],
@@ -19,22 +18,22 @@ def weighted_std(
     """
     Computes the weighted standard deviation for a given set of values.
 
-    Parameters:
-    - values (array-like): Input data for which the weighted standard deviation is computed.
-    - axis (int, optional): Axis along which the weighted standard deviation is computed.
-        - If axis=0, compute the standard deviation for each column.
-        - If axis=1, compute the standard deviation for each row.
-        - Default is None, which computes the standard deviation of the flattened array.
-    - weights (array-like, optional): An array of weights of the same shape as `values`. Default is None, which gives equal weight to all values.
+    Args:
+        values (Union[np.ndarray, pd.DataFrame, pd.Series]): Input data for which the weighted standard deviation is computed.
+        axis (Union[int, None], optional): Axis along which the weighted standard deviation is computed.
+            - If axis=0, compute the standard deviation for each column.
+            - If axis=1, compute the standard deviation for each row.
+            - Default is None, which computes the standard deviation of the flattened array.
+        weights (Union[List[Union[int, float]], None], optional): An array of weights of the same shape as `values`. Default is None, which gives equal weight to all values.
 
     Returns:
-    - pd.Series: Series containing the computed weighted standard deviation.
+        (pd.Series): Series containing the computed weighted standard deviation.
 
     Raises:
-    - ValueError: If the input values contain NaN.
+        ValueError: If the input values contain NaN.
 
     Notes:
-    The function expects no NaN values in the input. Ensure NaN values are handled before calling this function.
+        The function expects no NaN values in the input. Ensure NaN values are handled before calling this function.
     """
 
     if np.isnan(values).any():
@@ -56,7 +55,6 @@ def weighted_std(
 
     return std
 
-
 # Calcul des différents quantiles associés à plusieurs variables d'intérêt au sein d'un jeu de données
 # Peut éventuellement être regroupé dans une même classe avec la fonction suivante
 def weighted_quantile(
@@ -68,20 +66,20 @@ def weighted_quantile(
     """
     Compute the weighted quantile(s) for multiple variables of interest from the given dataset.
 
-    Parameters:
-    - data (pd.DataFrame): The input dataset containing the values and their respective weights.
-    - vars_of_interest (list of str): List of column names in `data` representing the variables for which quantiles will be computed.
-    - var_weights (str or None): Column name in `data` representing the weights of the values.
+    Args:
+        data (pd.DataFrame): The input dataset containing the values and their respective weights.
+        vars_of_interest (Union[List[str], str]): List of column names in `data` representing the variables for which quantiles will be computed.
+        var_weights (Union[str, None]): Column name in `data` representing the weights of the values.
                                  If None, simple quantile will be computed for each variable of interest.
-    - q (Number or array-like): Quantile or sequence of quantiles to compute, which must be between 0 and 1 inclusive.
+        q (Union[int, float, List[Union[int, float]]]): Quantile or sequence of quantiles to compute, which must be between 0 and 1 inclusive.
 
     Returns:
-    - pd.Series: The computed weighted quantile(s) for each variable of interest. The index of the series corresponds to
+        (pd.Series): The computed weighted quantile(s) for each variable of interest. The index of the series corresponds to
                  the variables of interest, and the values are the computed quantiles.
 
     Notes:
-    This function relies on the `_weighted_quantile_array` compiled function.
-    Ensure that the `data` does not contain NaN values in the specified columns.
+        This function relies on the `_weighted_quantile_array` compiled function.
+        Ensure that the `data` does not contain NaN values in the specified columns.
     """
 
     # Retraitement des variables d'intérêt et conversion en liste
@@ -98,7 +96,7 @@ def weighted_quantile(
     list_res = []
     # Parcours des variables d'intérêt
     for var_of_interest in vars_of_interest:
-        # Distinction de la méthode a appliquer suivant que
+        # Distinction de la méthode à appliquer suivant que
         if var_weights is not None:
             res_value = _weighted_quantile_array(
                 array=data[[var_of_interest, var_weights]].values,
@@ -115,7 +113,6 @@ def weighted_quantile(
 
     return pd.Series(data=list_res, index=vars_of_interest)
 
-
 # Calcul des quantiles pondérés sur des array afin d'utiliser Numba
 @njit
 def _weighted_quantile_array(
@@ -124,18 +121,18 @@ def _weighted_quantile_array(
     """
     Calculates weighted quantiles for a given 2D array with values and weights.
 
-    Parameters:
-    - array (2D numpy.ndarray): Input array containing values and their corresponding weights.
-    - values_pos (int): Column index in `array` where the values are stored.
-    - weights_pos (int): Column index in `array` where the weights are stored.
-    - q (1D array-like): List or array of quantiles to compute. Values must be between 0 and 1.
+    Args:
+        array (np.ndarray): Input array containing values and their corresponding weights.
+        values_pos (int): Column index in `array` where the values are stored.
+        weights_pos (int): Column index in `array` where the weights are stored.
+        q (np.ndarray): List or array of quantiles to compute. Values must be between 0 and 1.
 
     Returns:
-    - numpy.ndarray: Array containing computed weighted quantiles corresponding to `q`.
+        (np.ndarray): Array containing computed weighted quantiles corresponding to `q`.
 
     Notes:
-    This function is optimized with Numba's Just-in-Time (JIT) compiler for improved performance.
-    Ensure that the `array` does not contain NaN values.
+        This function is optimized with Numba's Just-In-Time (JIT) compiler for improved performance.
+        Ensure that the `array` does not contain NaN values.
     """
     # Tri selon les valeurs (en première colonne)
     array_work = array[array[:, values_pos].argsort()]
@@ -150,7 +147,6 @@ def _weighted_quantile_array(
 
     return res_value
 
-
 # Association d'un quantile à chaque observation
 # Peut éventuellement être regroupé dans une même classe avec la fonction suivante
 def assign_quantile(
@@ -159,18 +155,18 @@ def assign_quantile(
     """
     Assigns quantiles or thresholds to each observation in the input series.
 
-    Parameters:
-    - serie (pd.Series): Serie containing values for which quantiles or thresholds are to be assigned.
-    - quantiles (1D array-like): List or array of quantiles or thresholds. Does not need to be sorted.
-    - is_threshold (bool): If True, the function assigns thresholds to each observation in `array_values`.
+    Args:
+        serie (pd.Series): Series containing values for which quantiles or thresholds are to be assigned.
+        quantiles (List[Union[int, float]]): List or array of quantiles or thresholds. Does not need to be sorted.
+        is_threshold (bool): If True, the function assigns thresholds to each observation in `array_values`.
                            If False, the function assigns quantile labels (e.g., 1 for first quantile, 2 for second, etc.).
 
     Returns:
-    - pd.Series: Series containing assigned quantiles or thresholds for each observation in `serie`.
+        (pd.Series): Series containing assigned quantiles or thresholds for each observation in `serie`.
 
     Notes:
-    This function relies on `_assign_quantile_array` optimized with Numba's Just-in-Time (JIT) compiler for improved performance.
-    Ensure that the `array_values` does not contain NaN values.
+        This function relies on `_assign_quantile_array` optimized with Numba's Just-In-Time (JIT) compiler for improved performance.
+        Ensure that the `array_values` does not contain NaN values.
     """
 
     return pd.Series(
@@ -182,7 +178,6 @@ def assign_quantile(
         index=serie.index,
     )
 
-
 # Association d'un quantile à chaque observation sur des array afin d'utiliser Numba
 @njit
 def _assign_quantile_array(
@@ -191,18 +186,18 @@ def _assign_quantile_array(
     """
     Assigns quantiles or thresholds to each observation in the input array.
 
-    Parameters:
-    - array_values (1D numpy.ndarray): Array containing values for which quantiles or thresholds are to be assigned.
-    - quantiles (1D array-like): List or array of quantiles or thresholds. Does not need to be sorted.
-    - is_threshold (bool): If True, the function assigns thresholds to each observation in `array_values`.
+    Args:
+        array_values (np.ndarray): Array containing values for which quantiles or thresholds are to be assigned.
+        quantiles (np.ndarray): List or array of quantiles or thresholds. Does not need to be sorted.
+        is_threshold (bool): If True, the function assigns thresholds to each observation in `array_values`.
                            If False, the function assigns quantile labels (e.g., 1 for first quantile, 2 for second, etc.).
 
     Returns:
-    - numpy.ndarray: Array containing assigned quantiles or thresholds for each observation in `array_values`.
+        (np.ndarray): Array containing assigned quantiles or thresholds for each observation in `array_values`.
 
     Notes:
-    This function is optimized with Numba's Just-in-Time (JIT) compiler for improved performance.
-    Ensure that the `array_values` does not contain NaN values.
+        This function is optimized with Numba's Just-In-Time (JIT) compiler for improved performance.
+        Ensure that the `array_values` does not contain NaN values.
     """
 
     # Tri des quantiles
@@ -223,7 +218,6 @@ def _assign_quantile_array(
 
     return array_res
 
-
 # Création d'un jeu de données pondéré
 def create_pond_data(
     data: pd.DataFrame,
@@ -234,39 +228,30 @@ def create_pond_data(
     """
     Create a weighted dataset by multiplying the variables of interest with the specified weights.
 
-    Parameters
-    ----------
-    data : pandas.DataFrame
-        The source dataset that contains the variables of interest, grouping variables, and weights.
-    list_var_of_interest : list of str
-        The list of column names in `data` that are of interest for weighting.
-    list_var_groupby : list of str or None
-        The list of column names in `data` used for grouping. If None, no grouping will be performed.
-    var_weights : str
-        The column name in `data` that contains the weights for the variables of interest.
+    Args:
+        data (pd.DataFrame): The source dataset that contains the variables of interest, grouping variables, and weights.
+        list_var_of_interest (List[str]): The list of column names in `data` that are of interest for weighting.
+        list_var_groupby (Union[List[str], None]): The list of column names in `data` used for grouping. If None, no grouping will be performed.
+        var_weights (str): The column name in `data` that contains the weights for the variables of interest.
 
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with the variables of interest weighted by `var_weights`. If `list_var_groupby` is provided,
+    Returns:
+        (pd.DataFrame): A DataFrame with the variables of interest weighted by `var_weights`. If `list_var_groupby` is provided,
         the returned DataFrame will also contain the groupby variables.
 
-    Notes
-    -----
-    The function resets the index of the input dataframe to ensure safe merging.
+    Notes:
+        The function resets the index of the input dataframe to ensure safe merging.
 
-    Examples
-    --------
-    >>> data = pd.DataFrame({
-    ...     'A': [1, 2, 3],
-    ...     'B': [4, 5, 6],
-    ...     'weights': [0.5, 1, 1.5]
-    ... })
-    >>> create_pond_data(data, ['A'], None, 'weights')
-       A
-    0  0.5
-    1  2.0
-    2  4.5
+    Examples:
+        >>> data = pd.DataFrame({
+        ...     'A': [1, 2, 3],
+        ...     'B': [4, 5, 6],
+        ...     'weights': [0.5, 1, 1.5]
+        ... })
+        >>> create_pond_data(data, ['A'], None, 'weights')
+           A
+        0  0.5
+        1  2.0
+        2  4.5
     """
 
     # Réinitialisation de l'index pour pouvoir faire un merge "safe"
