@@ -1,20 +1,14 @@
 # Importation des modules
-# Modules de base
-from io import BytesIO
-# Module de gestion du format JSON
-from json import dumps
-# Module de gestion du format pickle
-from pickle import dump
-from typing import Optional, Union
+from itertools import combinations
+from typing import List, Optional, Union
 
-import geopandas as gpd
+import numpy as np
 import pandas as pd
-import xlsxwriter
-# Module de gestion des données graphiques
-from matplotlib.pyplot import close, savefig
 
-# Importation du module de connection
-from ._connection import _S3Connection
+# Utilitaire
+from ..utils._auxiliary import _sort_index_with_total, create_dict_suffix
+from .weighted import create_pond_data, weighted_quantile
+
 
 # Classe de statistiques descriptives
 class StatDesGroupBy(object):
