@@ -221,6 +221,7 @@ def concentration_ratio(x: Sequence[float], k: int = 3, verbose: bool = False) -
 
     # Check if market shares are given in %
     if np.sum(x) > 1:
+        warnings.simplefilter("always", UserWarning) 
         warnings.warn(
             """The sum of market shares exceeds 1, suggesting that they may be in percentage form.
                          Please verify the data.""",
