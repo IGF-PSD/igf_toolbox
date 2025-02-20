@@ -1,0 +1,1 @@
+::: igf_toolbox.stats_des.industrial_economics.market_concentration_indicators.hhi
