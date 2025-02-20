@@ -15,6 +15,7 @@ The repository is organized as follow :
 - the `preprocessing` module contains a set of classes that can be integrated into a `sklearn.pipeline` to perform various data transformation operations
 - the `model_selection` module contains functions for training a prediction model or estimating a regression model
 - the `estimators` module contains  econometric models that can be integrated into a `sklearn.pipeline`
+- the `economics\industrial_economics` module contains functions for measuring market concentration in an industry and the `economics\public_health_economics` module contains functions for measuring hospital activity 
 - the `utils` module contains  a set of utility functions on which other functions in this module depend, or for calculating weighted statistics, for example
 
 ## Installation
