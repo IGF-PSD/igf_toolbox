@@ -84,6 +84,8 @@ extra_javascript:
 
 nav:
   - Package description: index.md
+  - Concepts:
+      - Market concentration indicators: concepts/MARKET_CONCENTRATION.md
   - API Documentation:
     - Estimators:
       - Classifiers:
