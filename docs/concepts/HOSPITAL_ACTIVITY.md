@@ -1,9 +1,9 @@
 # Public Health Economics indicators for hospital activity measurement
 
-## Nombre de séjours
+## Number of stays
 
-## Nombre d'équivalents journées
+## Number of equivalent days
 
-## Volume économique
+## Economic volume
 
-## Correction des jours ouvrés
+## Holiday effect correction
