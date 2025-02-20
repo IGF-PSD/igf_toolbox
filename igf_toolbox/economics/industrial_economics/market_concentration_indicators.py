@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numba import njit
 
-from utils import validate_market_shares_data
+from .utils import validate_market_shares_data
 
-@njit(return_type=float)
+@njit()
 def _gini_index(x: np.ndarray) -> float:
     """
     Computes the Gini Index using numba.
@@ -108,7 +108,7 @@ def lorenz_curve(x: Sequence[float], verbose: bool = False) -> None:
 
     plt.show()
 
-@njit(return_type=float)
+@njit()
 def _hhi(x: np.ndarray) -> float:
     """
     Computes the Herfindahl-Hirschman Index using numba.
@@ -234,7 +234,7 @@ def concentration_ratio(x: Sequence[float], k: int = 3, verbose: bool = False) -
     # Return the sum of the k-largest market shares.
     return float(np.sum(top_k))
 
-@njit(return_type=float)
+@njit()
 def _shannon_entropy(x: np.ndarray) -> float:
     """
     Computes the Shannon Entropy using numba.
@@ -286,7 +286,7 @@ def shannon_entropy(x: Sequence[float], verbose: bool = False) -> float:
 
     return _shannon_entropy(x)
 
-@njit(return_type=float)
+@njit()
 def _theil_index(x: np.ndarray) -> float:
     """
     Computes the Theil Index using numba.
