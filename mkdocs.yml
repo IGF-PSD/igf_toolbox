@@ -86,6 +86,7 @@ nav:
   - Package description: index.md
   - Concepts:
       - Market concentration indicators: concepts/MARKET_CONCENTRATION.md
+      - Hospital activity measurement indicators: concepts/HOSPITAL_ACTIVITY.md
   - API Documentation:
     - Estimators:
       - Classifiers:
