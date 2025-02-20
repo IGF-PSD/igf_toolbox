@@ -23,3 +23,9 @@ Three different measures have been selected to analyze activity in the field of 
 ### Economic volume
 
 ### Holiday effect correction
+
+## HAD
+
+## SMR
+
+## PSY
