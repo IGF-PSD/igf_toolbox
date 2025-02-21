@@ -92,12 +92,12 @@ The *CAS* of a stay is determined based on the duration of the stay and the type
 
 ### 6th character of *GHM*
 
-|6ème caractère    |Label    |
+|6th character of *GHM*    |Label    |
 |------------------|---------|
-|1 ou A|Niveaux de sévérité 1 ou A|
-|2 ou B|Niveaux de sévérité 2 ou B|
-|3 ou C|Niveaux de sévérité 3 ou C|
-|4 ou D|Niveaux de sévérité 4 ou D|
+|1 or A|Niveaux de sévérité 1 ou A|
+|2 or B|Niveaux de sévérité 2 ou B|
+|3 or C|Niveaux de sévérité 3 ou C|
+|4 or D|Niveaux de sévérité 4 ou D|
 |J|Séjours en ambulatoire|
 |T|Séjours de très courte durée|
 |Z|Séjours sans niveau de sévérité|
