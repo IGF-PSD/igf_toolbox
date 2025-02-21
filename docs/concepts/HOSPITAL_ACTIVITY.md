@@ -124,4 +124,6 @@ $\boxed{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n}}{q_{GHM, GHS, n-1}}-1}$
 
 #### Holiday effect correction
 
+#### Breakdowns of the *MCO* activity
+
 ## *HAD*, *SMR* and *PSY*
