@@ -40,7 +40,8 @@ Each *GHM-GHS* pair is thus associated with:
 
 ### *CMD*
 
-Les CMD correspondent le plus souvent à un système fonctionnel (affections du système nerveux, de l'oeil, de l'appareil respiratoire, etc...); elles sont subdivisées en racines de GHM, elles-mêmes subdivisées en GHM.
+The *CMD* most often correspond to a functional system (nervous system disorders, eye disorders, respiratory system disorders, etc.); they are subdivided into *racines de GHM*, which are themselves subdivided into *GHM*.  
+
 |CMD    |Label    |
 |-------|---------|
 |01|Affections du système nerveux|
