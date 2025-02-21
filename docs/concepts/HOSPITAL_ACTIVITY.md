@@ -121,7 +121,7 @@ $\boxed{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n}}{q_{GHM, GHS, n-1}}-1}$
 #### Evolution of number of equivalent days
 
 
-$\boxed{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n} \time DMS_{GHM, GHS, n}}{q_{GHM, GHS, n-1} \time DMS_{GHM, GHS, n-1}}-1}$
+$\boxed{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n} \times DMS_{GHM, GHS, n}}{q_{GHM, GHS, n-1} \times DMS_{GHM, GHS, n-1}}-1}$
 
 #### Evolution of *Economic volume*
 
