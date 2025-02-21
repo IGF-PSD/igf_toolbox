@@ -123,7 +123,7 @@ $\boxed{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n} \times DMS_{GHM, GHS, n}}{q_{GHM, G
 
 #### Evolution of *Economic volume*
 
-$\boxed{\sum_{GHM, GHS}\frac{\overline{p_{GHM, GHS, N}} \times q_{GHM, GHS, n}}{\overline{p_{GHM, GHS, N}} \times q_{GHM, GHS, n-1}}-1}$
+$\boxed{\sum_{GHM, GHS}\frac{p_{GHM, GHS, N} \times q_{GHM, GHS, n}}{p_{GHM, GHS, N} \times q_{GHM, GHS, n-1}}-1}$
 
 #### Holiday effect correction
 
