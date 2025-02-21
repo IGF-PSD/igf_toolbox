@@ -76,7 +76,8 @@ The *CMD* most often correspond to a functional system (nervous system disorders
 
 ### *CAS*
 
-La CAS d'un séjour est donnée selon la durée du séjour et le type de prise en charge selon l'un des groupes suivants:
+The *CAS* of a stay is determined based on the duration of the stay and the type of care according to one of the following groups:
+
 |CAS    |Label    |
 |-------|---------|
 |C|Chirurgie non ambulatoire|
