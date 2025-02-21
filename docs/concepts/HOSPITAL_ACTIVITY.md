@@ -2,7 +2,7 @@
 
 ## *MCO* activity
 
-L'unité statistique à retenir dans le PMSI dans le cadre d'une analyse économique de l'activité hospitalière MCO est celle du croisement d'un *GHM* (*Groupe homogène de malades*) et d'un *GHS* (*Groupe homogène de séjours*). 
+The statistical unit to be considered in the *PMSI* for an economic analysis of *MCO* hospital activity is the intersection of a *GHM* (*Groupe homogène de malades*) and a *GHS* (*Groupe homogène de séjours*).
 
 Un *GHM* regroupe les prises en charge de même nature médicale et économique et constitue la catégorie élémentaire de la classification en MCO. Chaque séjour aboutit dans un *GHM* selon un algorithme fondé sur les informations médico-administratives contenues dans le résumé de sortie standadrdisé (*RSS*) de chaque patient. Un *GHS* correspond, dans le cadre de la *T2A*, au tarif du *groupe homogène de malades*. La très vaste majorité des *GHM* ne correspondent qu'à un unique GHS, c'est-à-dire à un seul tarif. Toutefois, certains *GHM* peuvent être affectés à deux ou plusieurs tarifs (dépendant, pour une même prise en charge - pour un même *GHM* -, de niveaux d'équipements différents par exemple). L'unité statistique retenue dans le cadre de la T2A MCO n'est donc pas celle du *GHM*, mais celle d'un *GHM* croisé à un *GHS*. Plus particulièrement:
 - un *GHM* est codé dans le *PMSI* par une suite alpha-numérique constituée de 6 caractères, dont les 3 premiers et le dernier sont signifiants et apportent des informations sur le séjour
