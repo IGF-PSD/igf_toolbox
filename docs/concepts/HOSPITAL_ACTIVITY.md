@@ -22,7 +22,11 @@ La définition des *GHS* quant à elle repose sur une notion de valorisation moy
 
 Les *GHM* et *GHS* permettent de mesurer l'activité des hôpitaux et de piloter leur performance et leurs ressources en fonction du *casemix* hodpitalier.
 
-A chaque couple de GHM-GHS est ainsi associé un nombre de séjours.
+A chaque couple de GHM-GHS est ainsi associé:
+- un nombre de séjours ou de séances
+- un nombre de journées 
+- une durée moyenne de séjour (DMS)
+
 
 ### CMD
 
