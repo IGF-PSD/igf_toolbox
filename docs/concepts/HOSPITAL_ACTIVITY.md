@@ -1,6 +1,6 @@
 # Public Health Economics indicators for hospital activity measurement
 
-## *MCO*
+## *MCO* activity
 
 L'unité statistique à retenir dans le PMSI dans le cadre d'une analyse économique de l'activité hospitalière MCO est celle du croisement d'un *GHM* (*Groupe homogène de malades*) et d'un *GHS* (*Groupe homogène de séjours*). 
 
