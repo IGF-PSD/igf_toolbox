@@ -4,11 +4,15 @@
 
 The statistical unit to be considered in the *PMSI* for an economic analysis of *MCO* hospital activity is the intersection of a *GHM* (*Groupe homogène de malades*) and a *GHS* (*Groupe homogène de séjours*).
 
-Un *GHM* regroupe les prises en charge de même nature médicale et économique et constitue la catégorie élémentaire de la classification en MCO. Chaque séjour aboutit dans un *GHM* selon un algorithme fondé sur les informations médico-administratives contenues dans le résumé de sortie standadrdisé (*RSS*) de chaque patient. Un *GHS* correspond, dans le cadre de la *T2A*, au tarif du *groupe homogène de malades*. La très vaste majorité des *GHM* ne correspondent qu'à un unique GHS, c'est-à-dire à un seul tarif. Toutefois, certains *GHM* peuvent être affectés à deux ou plusieurs tarifs (dépendant, pour une même prise en charge - pour un même *GHM* -, de niveaux d'équipements différents par exemple). L'unité statistique retenue dans le cadre de la T2A MCO n'est donc pas celle du *GHM*, mais celle d'un *GHM* croisé à un *GHS*. Plus particulièrement:
-- un *GHM* est codé dans le *PMSI* par une suite alpha-numérique constituée de 6 caractères, dont les 3 premiers et le dernier sont signifiants et apportent des informations sur le séjour
-  - Les deux premiers indiquent la spécialité de prise en charge, dite *catégorie majeure de diagnostic* ou *CMD*, et regroupent 28 catégories libellées de 01, 02, 03 à 28 dans la partie [CMD](#cmd)
-  - Le troisième indique la nature de la prise en charge, dite *catégorie d'activité de soins* ou *CAS*, et correspondent à une lettre parmi celles de la partie [CAS](#cas), correspondant à l'un des 9 groupes de type de prise en charge (chirurgie, médecine, techniques peu invasives) et de durée de séjour (séjour avec ou sans nuitée)
-  - Le dernier caractère indique la complexité du séjour, sa gravité ou sa durée, le niveau 1 étant le plus faible niveau de sévérité et 4 le plus élevé. Ce dernier caractère suit cette [classification](#6ème-caractère-du-ghm)
+A **GHM** groups together cases of the same medical and economic nature and constitutes the elementary category of classification in *MCO*. Each stay is assigned to a *GHM* according to an algorithm based on the medico-administrative information contained in the *résumé de sortie standardisé* (*RSS*) of each patient.  
+
+A *GHS* corresponds, within the framework of *T2A*, to the tariff of the *groupe homogène de malades*. The vast majority of *GHM* correspond to only a single *GHS*, meaning a single tariff. However, some *GHM* may be assigned to two or more tariffs (depending, for the same case —for the same *GHM*— on different levels of equipment, for example).  
+
+Therefore, the statistical unit considered within the framework of *T2A MCO* is not the *GHM* itself but a *GHM* combined with a *GHS*. More particularly:  
+- A *GHM* is coded in the *PMSI* by an alphanumeric sequence consisting of 6 characters, of which the first three and the last one are significant and provide information about the stay.  
+  - The first two indicate the specialty of care, called *catégorie majeure de diagnostic* or *CMD*, and group 28 categories labeled from 01, 02, 03 to 28 in the section [CMD](#cmd).  
+  - The third indicates the nature of the care, called *catégorie d'activité de soins* or *CAS*, and corresponds to a letter among those in the section [CAS](#cas), representing one of the 9 groups of care types (surgery, medicine, minimally invasive techniques) and length of stay (stay with or without an overnight stay).  
+  - The last character indicates the complexity of the stay, its severity, or its duration, with level 1 being the lowest severity level and 4 the highest. This last character follows this [classification](#6ème-caractère-du-ghm).  
 
 A titre d'exemple, le GHM *08C471* dont le libellé est *Prothèses de hanche pour traumatismes résents, niveau 1* indique qu'il s'agit de la CMD *08* (*Affections et traumatismes de l'appareil musculosquelettique et du tissu conjonctif*), soit de l'orthopédie, puis de la chirurgie (le troisième caractère étant *C*) et enfin que le niveau de sévérité est faible (niveau 1). Par ailleurs, le numéro du milieu, *47*, ne sert qu'à ordonnancer ce *GHM* au sein des *GHM* de chirurgie orthopédique en l'occurence.
 
@@ -81,7 +85,7 @@ La CAS d'un séjour est donnée selon la durée du séjour et le type de prise e
 |X| Séjours sans acte classant d'au moins une nuit - médecine notamment|
 |Z| Séjours inclassables|
 
-### 6ème caractère du GHM
+### 6th character of GHM
 
 |6ème caractère    |Label    |
 |------------------|---------|
