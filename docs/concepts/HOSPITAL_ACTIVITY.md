@@ -66,7 +66,7 @@ Les CMD correspondent le plus souvent à un système fonctionnel (affections du 
 |28|Séances|
 |90|Erreurs et autres séjours inclassables|
 
-### CAS
+### *CAS*
 
 La CAS d'un séjour est donnée selon la durée du séjour et le type de prise en charge selon l'un des groupes suivants:
 |CAS    |Label    |
