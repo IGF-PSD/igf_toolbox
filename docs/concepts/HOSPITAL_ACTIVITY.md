@@ -12,6 +12,8 @@ Un *GHM* regroupe les prises en charge de même nature médicale et économique 
 
 A titre d'exemple, le GHM *08C471* dont le libellé est *Prothèses de hanche pour traumatismes résents, niveau 1* indique qu'il s'agit de la CMD *08* (*Affections et traumatismes de l'appareil musculosquelettique et du tissu conjonctif*), soit de l'orthopédie, puis de la chirurgie (le troisième caractère étant *C*) et enfin que le niveau de sévérité est faible (niveau 1). Par ailleurs, le numéro du milieu, *47*, ne sert qu'à ordonnancer ce *GHM* au sein des *GHM* de chirurgie orthopédique en l'occurence.
 
+Enfin, les 5 premiers caractères du *GHM* correspondent à la *racine du GHM*, et regroupent l'ensemble des *GHM* de même *CMD* et de même type de prise en charge, quelque soit le degré de gravité du séjour. A titre d'exemple, le *GHM* *08C471* appartient à la *racine* *08C47*, ainsi que les *GHM*: *08C472*, *08C473* et *08C474*.
+
 A chaque couple de GHM-GHS est ainsi associé un nombre de séjours.
 
 ### CMD
