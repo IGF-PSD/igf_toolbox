@@ -10,7 +10,7 @@ Un *GHM* regroupe les prises en charge de même nature médicale et économique 
   - Le troisième indique la nature de la prise en charge, dite *catégorie d'activité de soins* ou *CAS*, et correspondent à une lettre parmi celles de la partie [CAS](#cas), correspondant à l'un des 9 groupes de type de prise en charge (chirurgie, médecine, techniques peu invasives) et de durée de séjour (séjour avec ou sans nuitée)
   - Le dernier caractère indique la complexité du séjour, sa gravité ou sa durée, le niveau 1 étant le plus faible niveau de sévérité et 4 le plus élevé. Ce dernier caractère suit cette [classification](#6ème-caractère-du-ghm)
 
-A titre d'exemple, le GHM *08C471* dont le libellé est *Prothèses de hanche pour traumatismes résents, niveau 1* indique qu'il s'agit de la CMD *08* (*Affections et traumatismes de l'appareil musculosquelettique et du tissu conjonctif*), soit de l'orthopédie, puis de la chirurgie (le troisième caractère étant *C*) et enfin que le niveau de sévérité est faible (niveau 1). Par ailleurs, le numéro du milieu, *47*, ne sert qu'à ordonnancer ce GHM au sein des 
+A titre d'exemple, le GHM *08C471* dont le libellé est *Prothèses de hanche pour traumatismes résents, niveau 1* indique qu'il s'agit de la CMD *08* (*Affections et traumatismes de l'appareil musculosquelettique et du tissu conjonctif*), soit de l'orthopédie, puis de la chirurgie (le troisième caractère étant *C*) et enfin que le niveau de sévérité est faible (niveau 1). Par ailleurs, le numéro du milieu, *47*, ne sert qu'à ordonnancer ce *GHM* au sein des *GHM* de chirurgie orthopédique en l'occurence.
 
 A chaque couple de GHM-GHS est ainsi associé un nombre de séjours.
 
