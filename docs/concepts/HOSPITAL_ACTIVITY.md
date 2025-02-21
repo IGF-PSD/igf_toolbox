@@ -21,6 +21,18 @@ Les CMD correspondent le plus souvent à un système fonctionnel (affections du 
 |02|Affections de l'oeil|
 |03|Affections des oreilles, du nez, de la gorge, de la bouche et des dents|
 |04|Affections de l'appareil respiratoire|
+|05|Affections de l'appareil circulatoire|
+|06|Affections du tube digestif|
+|07|Affections du système hépatobiliaire et du pancréas|
+|08|Affections et traumatismes de l'appareil musculosquelettique et du tissu conjonctif|
+|09|Affections de la peau, des tissus sous-cutanés et des seins|
+|10|Affections endocriniennes, métaboliques et nutritionnelles|
+|11|Affections du rein et des voies urinaires|
+|12|Affections de l'appareil génital masculin|
+|13|Affections de l'appareil génital féminin|
+|14|Grossesses pathologiques, accouchements et affections du post-partum|
+|15|Nouveau-nés, prématurés et affections de la période périnatale|
+|16|Affections du sang et des organes hématopoïétiques|
 
 
 ## MCO
