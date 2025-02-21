@@ -113,14 +113,14 @@ Three different measures have been selected to analyze activity in the field of 
 
 - **The economic volume**: This corresponds to activity-related revenues based on the rates associated with each category of stays, adjusted to neutralize the "price effects" caused by the annual revaluation of these rates. While the evolution of the number of equivalent days is a concrete and simple indicator to calculate, it does not account for differences in costs and, therefore, in health insurance revenues related to hospitalization days depending on the treated pathologies. The economic volume aims to factor in these structural effects: the activity volume is thus calculated as the number of stays weighted by a coefficient representing their cost for health insurance. It does not reflect the "actual" revenues of healthcare facilities, which benefit from annual price effects linked to the revaluation of these rates. An identical rate is applied between former DG and former OQN establishments to make their economic volume comparable.  
 
-#### Number of stays
+#### Evolution of number of stays
 
 $\frac{q_{GHM, GHS, n}}{q_{GHM, GHS, n-1}}-1$
 
 
-#### Number of equivalent days
+#### Evolution of number of equivalent days
 
-#### *Economic volume*
+#### Evolution of *Economic volume*
 
 #### Holiday effect correction
 
