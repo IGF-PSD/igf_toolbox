@@ -123,13 +123,14 @@ $\boxed{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n} \times DMS_{GHM, GHS, n}}{q_{GHM, G
 
 #### Evolution of *Economic volume*
 
-L'activité *MCO* peut être caractérisée par un dincateur en "volume" tenant compte du poids de chaque séjour en fonction de la pathologie prise en charge, non affecté par les variations des tarifs des séjours d'une année sur l'autre. Le volume économique est calculé sur le périmètres des séjours *MCO*, hors séances. Cet indicateur, appelé "volume économique", permet de mesurer plus finement l'activité en tenant compte d'un plus grand nombre de caractéristiques du séjour que la seule durée.
+The *MCO* activity can be characterized by a "volume" indicator that considers the weight of each stay based on the pathology treated, unaffected by variations in stay rates from one year to another. The economic volume is calculated on the scope of *MCO* stays, excluding sessions. This indicator, called "economic volume," allows for a more precise measurement of activity by considering a greater number of characteristics of the stay than just the duration.
 
-L'analyse de l'évolution du volume économique présente deux avantages en comparaison à celle du nombre d'équivalent journées ou de séjours:
-- elle permet de mesurer l'activité en tenant compte de l'évolution de l'intensité d'une journée de prise en charge notamment en tenant compte de la sévérité des cas traités et des diagnostics pris en charge
-- elle permet de se rapprocher des l'évolution des recettes de l'assurance maladie perçues par l'établissement. En effet le volume économique correspond à la valorisation par l'assurance maladie des séjours à tarif constant
+The analysis of the evolution of the economic volume presents two advantages compared to that of the number of equivalent days or stays:
+- it allows measuring activity while considering the evolution of the intensity of a day of care, particularly by taking into account the severity of the cases treated and the diagnoses managed
+- it allows getting closer to the evolution of the health insurance revenues received by the establishment. Indeed, the economic volume corresponds to the valuation by health insurance of stays at a constant rate
 
-Le volume économique est égal au nombre de séjours pondérés par le poids économique de chaque *GHM-GHS* à partir du prix moyen des séjours de ce croisement. A titre d'exemple, pour un prix moyen observé l'année $n_{0}$
+The economic volume is equal to the number of stays weighted by the economic weight of each *GHM-GHS* based on the average price of stays in this category. For example, for an average observed price in the reference year $n_{ref}$, the economic volume for the year $n$ is given by:
+
 
 $\boxed{\sum_{GHM, GHS}\frac{p_{GHM, GHS, N} \times q_{GHM, GHS, n}}{p_{GHM, GHS, N} \times q_{GHM, GHS, n-1}}-1}$
 
