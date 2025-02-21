@@ -62,6 +62,19 @@ La CAS d'un séjour est donnée selon la durée du séjour et le type de prise e
 |X| Séjours sans acte classant d'au moins une nuit - médecine notamment|
 |Z| Séjours inclassables|
 
+### 6ème caractère du GHM (sévérité)
+
+|6ème caractère    |Label    |
+|------------------|---------|
+|1 ou A||
+|2 ou B||
+|3 ou C||
+|4 ou D||
+|J||
+|T||
+|Z||
+|E||
+
 
 ## MCO
 
