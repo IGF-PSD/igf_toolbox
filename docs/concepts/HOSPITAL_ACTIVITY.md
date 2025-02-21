@@ -12,28 +12,31 @@ Therefore, the statistical unit considered within the framework of *T2A MCO* is 
 - A *GHM* is coded in the *PMSI* by an alphanumeric sequence consisting of 6 characters, of which the first three and the last one are significant and provide information about the stay.  
   - The first two indicate the specialty of care, called *catégorie majeure de diagnostic* or *CMD*, and group 28 categories labeled from 01, 02, 03 to 28 in the section [CMD](#cmd).  
   - The third indicates the nature of the care, called *catégorie d'activité de soins* or *CAS*, and corresponds to a letter among those in the section [CAS](#cas), representing one of the 9 groups of care types (surgery, medicine, minimally invasive techniques) and length of stay (stay with or without an overnight stay).  
-  - The last character indicates the complexity of the stay, its severity, or its duration, with level 1 being the lowest severity level and 4 the highest. This last character follows this [classification](#6th-character-of-ghm).  
+  - The last character indicates the complexity of the stay, its severity, or its duration, with level 1 being the lowest severity level and 4 the highest. This last character follows this [classification](#6th-character-of-ghm).
 
-A titre d'exemple, le GHM *08C471* dont le libellé est *Prothèses de hanche pour traumatismes résents, niveau 1* indique qu'il s'agit de la CMD *08* (*Affections et traumatismes de l'appareil musculosquelettique et du tissu conjonctif*), soit de l'orthopédie, puis de la chirurgie (le troisième caractère étant *C*) et enfin que le niveau de sévérité est faible (niveau 1). Par ailleurs, le numéro du milieu, *47*, ne sert qu'à ordonnancer ce *GHM* au sein des *GHM* de chirurgie orthopédique en l'occurence.
+As an example, the *GHM* *08C471*, whose label is *Prothèses de hanche pour traumatismes récents, niveau 1*, indicates that it belongs to *CMD* *08* (*Affections et traumatismes de l'appareil musculosquelettique et du tissu conjonctif*), meaning orthopedics, then surgery (the third character being *C*), and finally that the severity level is low (level 1). Moreover, the middle number, *47*, is only used to sequence this *GHM* within all orthopedic surgery *GHM* in this case.  
 
-Enfin, les 5 premiers caractères du *GHM* correspondent à la *racine du GHM*, et regroupent l'ensemble des *GHM* de même *CMD* et de même type de prise en charge, quelque soit le degré de gravité du séjour. A titre d'exemple, le *GHM* *08C471* appartient à la *racine* *08C47*, ainsi que les *GHM*: *08C472*, *08C473* et *08C474*.
+Finally, the first five characters of the *GHM* correspond to the *racine du GHM* and group together all *GHM* of the same *CMD* and the same type of care, regardless of the severity level of the stay.  
 
-La définition des *GHS* quant à elle repose sur une notion de valorisation moyenne évaluée en regard des coûts et des plans de santé publique, notion adaptée au vu de situations concrètres à l'instar de:
-- écart en termes de durée de séjour (séjours *EXB* ou *EXH* correspondant respectivement à des durées de séjours très basses ou très hautes relativement au *GHM*)
-- écart en termes de lourdeur de la prise en charge engendré par le passage en unité spécialisée (réanimation, soins intensif, surveillance continue, néonatalogie) induisant la création de suppléments journaliers en sus
-- les molécules onéreuses de la liste en sus
-- etc
+As an example, the *GHM* *08C471* belongs to the *racine* *08C47*, along with the *GHM*: *08C472*, *08C473*, and *08C474*.
 
-Les *GHM* et *GHS* permettent de mesurer l'activité des hôpitaux et de piloter leur performance et leurs ressources en fonction du *casemix* hodpitalier.
+The definition of *GHS*, on the other hand, is based on an average valuation concept assessed in relation to costs and public health plans, a concept adapted in view of concrete situations such as:  
 
-A chaque couple de GHM-GHS est ainsi associé:
-- un nombre de séjours ou de séances
-- un nombre de journées
-- un type d'hospitalisation:
-  - hospitalisation complète (*HC*): dès lors que le séjour a nécessité au moins une nuitée
-  - hospitalisation ambulatoire (*HP*): dès lors que le séjour n'a pas nécessité de nuitée
-- une durée moyenne de séjour (*DMS*), correspondant au ratio du nombre de journées et du nombre de séjours, et défini uniquement pour les séjours en *HC*
-- un prix moyen
+- differences in length of stay (*EXB* or *EXH* stays corresponding respectively to very short or very long durations relative to the *GHM*)  
+- differences in the complexity of care due to admission to a specialized unit (intensive care, high-dependency care, continuous monitoring, neonatology), leading to the creation of additional daily supplements  
+- expensive drugs from the additional list (*molécules onéreuses de la liste en sus*)
+- etc.
+
+The *GHM* and *GHS* make it possible to measure hospital activity and manage their performance and resources according to the hospital *casemix*.  
+
+Each *GHM-GHS* pair is thus associated with:  
+- a number of stays or sessions  
+- a number of days  
+- a type of hospitalization:  
+  - full hospitalization (*HC*): when the stay required at least one overnight stay  
+  - outpatient hospitalization (*HP*): when the stay did not require an overnight stay  
+- an average length of stay (*DMS*), corresponding to the ratio of the number of days to the number of stays, and defined only for *HC* stays  
+- an average price  
 
 ### *CMD*
 
