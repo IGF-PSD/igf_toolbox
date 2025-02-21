@@ -30,12 +30,12 @@ The definition of *GHS*, on the other hand, is based on an average valuation con
 The *GHM* and *GHS* make it possible to measure hospital activity and manage their performance and resources according to the hospital *casemix*.  
 
 Each *GHM-GHS* pair is thus associated for each year $n$ with:  
-- a number of stays or sessions  
+- a number of stays or sessions: sessions are usually excluded from the scope for calculating hospital activity and only stays are included and denoted $q_{GHM, GHS, n}$
 - a number of days  
 - a type of hospitalization:  
   - full hospitalization (*HC*): when the stay required at least one overnight stay  
   - outpatient hospitalization (*HP*): when the stay did not require an overnight stay  
-- an average length of stay (*DMS*), corresponding to the ratio of the number of days to the number of stays, and defined only for *HC* stays  
+- an average length of stay (*DMS*), corresponding to the ratio of the number of days to the number of stays, and defined only for *HC* stays
 - an average price : $\overline{p}_{GHM, GHS, n}$
 
 ### *CMD*
