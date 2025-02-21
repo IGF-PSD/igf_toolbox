@@ -29,7 +29,7 @@ A chaque couple de GHM-GHS est ainsi associé:
   - hospitalisation complète (*HC*): dès lors que le séjour a nécessité au moins une nuitée
   - hospitalisation ambulatoire (*HP*): dès lors que le séjour n'a pas nécessité de nuitée
 - une durée moyenne de séjour (*DMS*), correspondant au ratio du nombre de journées et du nombre de séjours, et défini uniquement pour les séjours en *HC*
-
+- un prix moyen
 
 ### *CMD*
 
