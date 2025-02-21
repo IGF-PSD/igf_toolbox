@@ -7,7 +7,7 @@ L'unité statistique retenue dans le PMSI est celle du croisement d'un GHM (Grou
 Un GHM regroupe les prises en charge de même nature médicale et économique et constitue la catégorie élémentaire de la classification en MCO. Chaque séjour aboutit dans un GHM selon un algorithme fondé sur les informations médico-administratives contenues dans le résumé de sortie standadrdisé (RSS) de chaque patient. Un GHS correspond, dans le cadre de la T2A, au tarif du groupe homogène de malades. La très vaste majorité des GHM ne correspondent qu'à un unique GHS, c'est-à-dire à un seul tarif. Toutefois, certains GHM peuvent être affectés à deux ou plusieurs tarifs (dépendant, pour une même prise en charge - pour un même GHM -, de niveaux d'équipements différents par exemple). L'unité statistique retenue dans le cadre de la T2A MCO n'est donc pas celle du GHM, mais celle d'un GHM croisé à un GHS. Plus particulièrement:
 - un GHM est codé dans le PMSI par une suite alpha-numérique constituée de 6 caractères, dont les 3 premiers et le dernier sont signifiants et apportent des informations sur le séjour
   - Les deux premiers indiquent la spécialité de prise en charge, dite catégorie majeure de diagnostic ou CMD, et regroupent 28 catégories libellées de 01, 02, 03 à 28 dans la partie [CMD](#cmd)
-  - Le troisième indique la nature de la prise en charge, dite catégorie d'activité de soins ou CAS, et correspondent 
+  - Le troisième indique la nature de la prise en charge, dite catégorie d'activité de soins ou CAS, et correspondent à une lettre 
   - Le dernier caractère indique la complexité du séjour, sa gravité ou sa durée  
 
 A chaque couple de GHM-GHS est ainsi associé un nombre de séjours.
@@ -46,6 +46,8 @@ Les CMD correspondent le plus souvent à un système fonctionnel (affections du 
 |27|Transplantations d'organes|
 |28|Séances|
 |90|Erreurs et autres séjours inclassables|
+
+### CAS
 
 
 ## MCO
