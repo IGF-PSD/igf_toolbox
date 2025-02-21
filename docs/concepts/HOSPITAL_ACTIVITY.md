@@ -15,6 +15,13 @@ A chaque couple de GHM-GHS est ainsi associé un nombre de séjours.
 ### CMD
 
 Les CMD correspondent le plus souvent à un système fonctionnel (affections du système nerveux, de l'oeil, de l'appareil respiratoire, etc...); elles sont subdivisées en racines de GHM, elles-mêmes subdivisées en GHM.
+|CMD    |Label    |
+|-------|---------|
+|01|Affections du système nerveux|
+|02|Affections de l'oeil|
+|03|Affections des oreilles, du nez, de la gorge, de la bouche et des dents|
+|04|Affections de l'appareil respiratoire|
+
 
 ## MCO
 
