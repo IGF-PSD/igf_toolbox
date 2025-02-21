@@ -18,6 +18,8 @@ Three different measures have been selected to analyze activity in the field of 
 
 ### Number of stays
 
+L'unité statistique retenue dans le PMSI est celle du croisement d'un GHM (Groupe homogène de maldes) et d'un GHS (Groupe homogène de séjours)
+
 ### Number of equivalent days
 
 ### Economic volume
