@@ -70,10 +70,10 @@ La CAS d'un séjour est donnée selon la durée du séjour et le type de prise e
 |2 ou B||
 |3 ou C||
 |4 ou D||
-|J||
-|T||
-|Z||
-|E||
+|J|Séjours en ambulatoire|
+|T|Séjours de très courte durée|
+|Z|Séjours sans niveau de sévérité|
+|E|Séjours avec décès|
 
 
 ## MCO
