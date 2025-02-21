@@ -89,7 +89,7 @@ La CAS d'un séjour est donnée selon la durée du séjour et le type de prise e
 |X| Séjours sans acte classant d'au moins une nuit - médecine notamment|
 |Z| Séjours inclassables|
 
-### 6th character of GHM
+### 6th character of *GHM*
 
 |6ème caractère    |Label    |
 |------------------|---------|
@@ -102,9 +102,9 @@ La CAS d'un séjour est donnée selon la durée du séjour et le type de prise e
 |Z|Séjours sans niveau de sévérité|
 |E|Séjours avec décès|
 
-### Analysis of MCO activity
+### Analysis of *MCO* activity
 
-Three different measures have been selected to analyze activity in the field of MCO stays:  
+Three different measures have been selected to analyze activity in the field of *MCO* stays:  
 
 - **The number of stays in full hospitalization and outpatient care**: This is the simplest measure of hospital activity. A stay refers to the period during which a patient is hospitalized:  
   - Full hospitalization (HC) includes all stays of at least one night.  
@@ -119,7 +119,7 @@ Three different measures have been selected to analyze activity in the field of 
 
 #### Number of equivalent days
 
-#### Economic volume
+#### *Economic volume*
 
 #### Holiday effect correction
 
