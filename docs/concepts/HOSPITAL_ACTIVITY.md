@@ -14,6 +14,8 @@ A chaque couple de GHM-GHS est ainsi associé un nombre de séjours.
 
 ### CMD
 
+Les CMD correspondent le plus souvent à un système fonctionnel (affections du système nerveux, de l'oeil, de l'appareil respiratoire, etc...); elles sont subdivisées en racines de GHM, elles-mêmes subdivisées en GHM.
+
 ## MCO
 
 ### Analysis of MCO activity
