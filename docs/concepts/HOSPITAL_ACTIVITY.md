@@ -14,6 +14,14 @@ A titre d'exemple, le GHM *08C471* dont le libellé est *Prothèses de hanche po
 
 Enfin, les 5 premiers caractères du *GHM* correspondent à la *racine du GHM*, et regroupent l'ensemble des *GHM* de même *CMD* et de même type de prise en charge, quelque soit le degré de gravité du séjour. A titre d'exemple, le *GHM* *08C471* appartient à la *racine* *08C47*, ainsi que les *GHM*: *08C472*, *08C473* et *08C474*.
 
+La définition des *GHS* quant à elle repose sur une notion de valorisation moyenne évaluée en regard des coûts et des plans de santé publique, notion adaptée au vu de situations concrètres à l'instar de:
+- écart en termes de durée de séjour (séjours *EXB* ou *EXH* correspondant respectivement à des durées de séjours très basses ou très hautes relativement au *GHM*)
+- écart en termes de lourdeur de la prise en charge engendré par le passage en unité spécialisée (réanimation, soins intensif, surveillance continue, néonatalogie) induisant la création de suppléments journaliers en sus
+- les molécules onéreuses de la liste en sus
+- etc
+
+Les *GHM* et *GHS* permettent de mesurer l'activité des hôpitaux et de piloter leur performance et leurs ressources en fonction du *casemix* hodpitalier.
+
 A chaque couple de GHM-GHS est ainsi associé un nombre de séjours.
 
 ### CMD
