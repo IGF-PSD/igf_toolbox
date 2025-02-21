@@ -33,6 +33,19 @@ Les CMD correspondent le plus souvent à un système fonctionnel (affections du 
 |14|Grossesses pathologiques, accouchements et affections du post-partum|
 |15|Nouveau-nés, prématurés et affections de la période périnatale|
 |16|Affections du sang et des organes hématopoïétiques|
+|17|Affections myéloprolifératives et tumeurs de siège imprécis ou diffus et/ou CMA|
+|18|Maladies infectieuses et parasitaires|
+|19|Maladies et troubles mentaux|
+|20|Troubles mentaux organiques liés à l'absorption de drogues ou induits par celles-ci|
+|21|Traumatismes, allergies et empoisonnements|
+|22|Brûlures|
+|23|Facteurs influant sur l'état de santé et autres motifs de recours aux services de santé|
+|24|Séjours de moins de 2 jours|
+|25|Maladies dues à une infection par le VIH|
+|26|Traumatismes multiples graves|
+|27|Transplantations d'organes|
+|28|Séances|
+|90|Erreurs et autres séjours inclassables|
 
 
 ## MCO
