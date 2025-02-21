@@ -12,7 +12,7 @@ Therefore, the statistical unit considered within the framework of *T2A MCO* is 
 - A *GHM* is coded in the *PMSI* by an alphanumeric sequence consisting of 6 characters, of which the first three and the last one are significant and provide information about the stay.  
   - The first two indicate the specialty of care, called *catégorie majeure de diagnostic* or *CMD*, and group 28 categories labeled from 01, 02, 03 to 28 in the section [CMD](#cmd).  
   - The third indicates the nature of the care, called *catégorie d'activité de soins* or *CAS*, and corresponds to a letter among those in the section [CAS](#cas), representing one of the 9 groups of care types (surgery, medicine, minimally invasive techniques) and length of stay (stay with or without an overnight stay).  
-  - The last character indicates the complexity of the stay, its severity, or its duration, with level 1 being the lowest severity level and 4 the highest. This last character follows this [classification](#6ème-caractère-du-ghm).  
+  - The last character indicates the complexity of the stay, its severity, or its duration, with level 1 being the lowest severity level and 4 the highest. This last character follows this [classification](#6th-character-of-ghm).  
 
 A titre d'exemple, le GHM *08C471* dont le libellé est *Prothèses de hanche pour traumatismes résents, niveau 1* indique qu'il s'agit de la CMD *08* (*Affections et traumatismes de l'appareil musculosquelettique et du tissu conjonctif*), soit de l'orthopédie, puis de la chirurgie (le troisième caractère étant *C*) et enfin que le niveau de sévérité est faible (niveau 1). Par ailleurs, le numéro du milieu, *47*, ne sert qu'à ordonnancer ce *GHM* au sein des *GHM* de chirurgie orthopédique en l'occurence.
 
