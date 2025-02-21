@@ -6,7 +6,7 @@ The statistical unit to be considered in the *PMSI* for an economic analysis of 
 
 A **GHM** groups together cases of the same medical and economic nature and constitutes the elementary category of classification in *MCO*. Each stay is assigned to a *GHM* according to an algorithm based on the medico-administrative information contained in the *résumé de sortie standardisé* (*RSS*) of each patient.  
 
-A *GHS* corresponds, within the framework of *T2A*, to the tariff of the *groupe homogène de malades*. The vast majority of *GHM* correspond to only a single *GHS*, meaning a single tariff. However, some *GHM* may be assigned to two or more tariffs (depending, for the same case —for the same *GHM*— on different levels of equipment, for example).  
+A *GHS* corresponds, within the framework of *T2A*, to the tariff of the *groupe homogène de malades*. The vast majority of *GHM* correspond to only a single *GHS*, meaning a single tariff. However, some *GHM* may be assigned to two or more tariffs (depending, for the same case — for the same *GHM* — on different levels of equipment, for example).  
 
 Therefore, the statistical unit considered within the framework of *T2A MCO* is not the *GHM* itself but a *GHM* combined with a *GHS*. More particularly:  
 - A *GHM* is coded in the *PMSI* by an alphanumeric sequence consisting of 6 characters, of which the first three and the last one are significant and provide information about the stay.  
