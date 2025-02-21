@@ -129,7 +129,7 @@ The analysis of the evolution of the economic volume presents two advantages com
 - it allows measuring activity while considering the evolution of the intensity of a day of care, particularly by taking into account the severity of the cases treated and the diagnoses managed
 - it allows getting closer to the evolution of the health insurance revenues received by the establishment. Indeed, the economic volume corresponds to the valuation by health insurance of stays at a constant rate
 
-The economic volume is equal to the number of stays weighted by the economic weight of each *GHM-GHS* based on the average price of stays in this category. For example, for an average observed price in the reference year $n_{ref}$, the economic volume for the year $n$ is given by: $economic \ volume_{n} = \sum_{GHM, GHS} p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n}$
+The economic volume is equal to the number of stays weighted by the economic weight of each *GHM-GHS* based on the average price of stays in this category. For example, for an average observed price in the reference year $n_{ref}$, the economic volume for the year $n$ is given by: $economic \ \ volume_{n} = \sum_{GHM, GHS} p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n}$
 
 
 $\boxed{\sum_{GHM, GHS}\frac{p_{GHM, GHS, N} \times q_{GHM, GHS, n}}{p_{GHM, GHS, N} \times q_{GHM, GHS, n-1}}-1}$
