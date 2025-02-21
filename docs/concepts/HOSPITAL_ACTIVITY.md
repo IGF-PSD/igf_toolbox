@@ -124,7 +124,7 @@ $\boxed{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n} \times DMS_{GHM, GHS, n}}{q_{GHM, G
 
 #### Evolution of *Economic volume*
 
-$\frac{\overline{p}_{GHM, GHS, T} \times q_{GHM, GHS, n}}{\overline{p}_{GHM, GHS, T} \times q_{GHM, GHS, n-1}}-1$
+$\frac{\overline{p} \times q_{GHM, GHS, n}}{\overline{p}_{GHM, GHS, T} \times q_{GHM, GHS, n-1}}-1$
 
 
 
