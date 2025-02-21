@@ -107,7 +107,7 @@ The *CAS* of a stay is determined based on the duration of the stay and the type
 
 Three different measures have been selected to analyze activity in the field of *MCO* stays:  
 
-- **The number of stays in full hospitalization and outpatient care**: This is the simplest measure of hospital activity. A stay refers to the period during which a patient is hospitalized.
+- [**The number of stays in full hospitalization and outpatient care**](#evolution-of-number-of-stays): This is the simplest measure of hospital activity. A stay refers to the period during which a patient is hospitalized.
 
 - **The number of equivalent days**: This measure synthesizes the evolution of activity associated with full hospitalizations and outpatient hospitalizations (an outpatient stay is valued as one day), taking into account the length of stays. This "physical" measure of activity has the advantage of being easily interpretable. It is notably used by the Directorate for Research, Studies, Evaluation, and Statistics (*DREES*) in its annual overview of healthcare facilities.  
 
