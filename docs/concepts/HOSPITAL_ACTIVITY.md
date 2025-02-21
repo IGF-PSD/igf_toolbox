@@ -115,6 +115,8 @@ Three different measures have been selected to analyze activity in the field of 
 
 #### Number of stays
 
+$\frac{q_{GHM, GHS, n}}{q_{GHM, GHS, n-1}}-1$
+
 
 #### Number of equivalent days
 
