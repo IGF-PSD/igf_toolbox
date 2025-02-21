@@ -115,7 +115,7 @@ Three different measures have been selected to analyze activity in the field of 
 
 #### Evolution of number of stays
 
-$\sum_{GHM, GHS}\frac{q_{GHM, GHS, n}}{q_{GHM, GHS, n-1}}-1$
+$\box{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n}}{q_{GHM, GHS, n-1}}-1}$
 
 
 #### Evolution of number of equivalent days
