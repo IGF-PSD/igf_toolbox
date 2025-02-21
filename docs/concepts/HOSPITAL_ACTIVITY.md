@@ -35,7 +35,7 @@ Each *GHM-GHS* pair is thus associated for each year $n$ with:
 - a type of hospitalization:  
   - full hospitalization (*HC*): when the stay required at least one overnight stay  
   - outpatient hospitalization (*HP*): when the stay did not require an overnight stay  
-- an average length of stay (*DMS*), corresponding to the ratio of the number of days to the number of stays, and defined only for *HC* stays
+- an average length of stay (*DMS*), corresponding to the ratio of the number of days to the number of stays, and defined only for *HC* stays, denoted $DMS_{GHM, GHS, n}$
 - an average price denoted $\overline{p}_{GHM, GHS, n}$
 
 ### *CMD*
