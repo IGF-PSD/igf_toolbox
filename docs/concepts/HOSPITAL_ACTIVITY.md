@@ -1,6 +1,6 @@
 # Public Health Economics indicators for hospital activity measurement
 
-## PMSI
+## PMSI MCO
 
 L'unité statistique retenue dans le PMSI est celle du croisement d'un GHM (Groupe homogène de maldes) et d'un GHS (Groupe homogène de séjours). 
 
