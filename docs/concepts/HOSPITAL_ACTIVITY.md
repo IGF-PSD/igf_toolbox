@@ -195,6 +195,8 @@ Thus, the evolution of the *volume économique* can be decomposed into seven dis
 
 #### Holiday effect correction (*CJO*)
 
+A working-day adjustment is applied to the change in the number of stays, *équivalents-journées* and *volume économique*, to obtain comparable data from one year to another, regardless of the number of working and non-working days (weekends and public holidays) in a given period.
+
 #### Breakdowns of the *MCO* activity
 
 ## *HAD* and *SMR* activities
