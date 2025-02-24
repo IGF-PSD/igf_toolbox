@@ -144,7 +144,7 @@ $évolution \ \ du \ \ volume \ \ économique_{n} = effet \ \ nombre \ \ de \ \ 
 
 The *effet nombre de séjours* corresponds to the annual change in the number of stays (excluding sessions), while the *effet structure* measures the year-over-year change in the hospital case mix, assuming a constant number of stays. It thus corresponds to the change in the average valuation associated with a stay. Here, the case mix refers to the distribution of stays based on their severity (1, 2, 3, ...), diagnosis (*racine de GHM*), or type of care (*HC* or *HP*). Those two components of the evolution of *volumen économique*, *effet nombre de séjours* et *effet structure*, can both be broken down.
 
-
+The *effet nombre de séjours* can be broken down into two sub-effects: $effet \ \ nombre \ \ de \ \ séjours_{n} = effet \ \ démographie_{n} + effet \ \ modification \ \ du \ \ recours \ \ à \ \ l'hospitalisation_{n}$
 
 
 
