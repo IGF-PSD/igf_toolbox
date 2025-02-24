@@ -139,7 +139,7 @@ However, this indicator does not take into account changes in the average length
 
 #### Evolution of number of *équivalents-journées*
 
-Hospital activity in *MCO* can then be measured by the number of days spent in the hospital through the number of *équivalents-journées*. This indicator measures, on one hand, the number of days in full hospitalization (*HC*) and, on the other hand, the number of stays in partial hospitalization (*HP*). This indicator is calculated for year $n$, for each *GHM* and then aggregated as follows: $équivalents-journées_{n} = \sum_{GHM \mid HP}$
+Hospital activity in *MCO* can then be measured by the number of days spent in the hospital through the number of *équivalents-journées*. This indicator measures, on one hand, the number of days in full hospitalization (*HC*) and, on the other hand, the number of stays in partial hospitalization (*HP*). This indicator is calculated for year $n$, for each *GHM* and then aggregated as follows: $équivalents-journées_{n} = \sum_{GHM \mid HP} q_{GHM, n} + \sum_{GHM \mid HC} DMS_{GHM, n} \times q_{GHM, n}$
 
 
 #### Evolution of *volume économique*
