@@ -133,7 +133,9 @@ Three different measures have been selected to analyze activity in the field of 
 
 #### Evolution of number of stays
 
-$\boxed{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n}}{q_{GHM, GHS, n-1}}-1}$
+Hospital activity in *MCO* excluding sessions in public and private healthcare facilities can first be measured based on the number of stays, whether carried out on an outpatient basis or as full hospitalization. This number can be considered an indicator of the total number of patients treated by healthcare facilities. The evolution of the activity between years $n-1$ and $n$ can then be computed using the evolution of the number of stays between $n-1$ and $n$ : $\boxed{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n}}{q_{GHM, GHS, n-1}}-1}$
+
+However, this indicator does not take into account changes in the average length of stay (*DMS*) or the difference in duration between outpatient care and full hospitalization.
 
 #### Evolution of number of *équivalents-journées*
 
