@@ -105,7 +105,7 @@ The 6th character of a *GHM* is significant and is associated to a level of seve
 |Z|Séjours sans niveau de sévérité|
 |E|Séjours avec décès|
 
-### Analysis of *MCO* activity
+### *MCO* activity indicators
 
 Three different measures have been selected to analyze activity in the field of *MCO* stays:  
 
