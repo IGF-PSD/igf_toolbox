@@ -5,12 +5,13 @@
   - [*CAS*](#cas)
   - [6th character of *GHM*](#6th-character-of-ghm)
   - [*MCO* activity indicators](#mco-activity-indicators)
-      -[Evolution of number of stays](#evolution-of-number-of-stays)
-      -[Evolution of number of *équivalents-journées*](#evolution-of-number-of-équivalents-journées)
-      -[Evolution of *volume économique*](#evolution-of-volume-économique)
-      -[Holiday effect correction (*CJO*)](#holiday-effect-correction-cjo)
-      -[Breakdowns of the *MCO* activity](#breakdowns-of-the-mco-activity)
--[*HAD* and *SMR* activities](#had-and-smr-activities)
+    - [Evolution of number of stays](#evolution-of-number-of-stays)
+    - [Evolution of number of *équivalents-journées*](#evolution-of-number-of-équivalents-journées)
+    - [Evolution of *volume économique*](#evolution-of-volume-économique)
+    - [Holiday effect correction (*CJO*)](#holiday-effect-correction-cjo)
+    - [Breakdowns of the *MCO* activity](#breakdowns-of-the-mco-activity)
+- [*HAD* and *SMR* activities](#had-and-smr-activities)
+
 
 ## *MCO* activity
 
