@@ -133,6 +133,8 @@ The economic volume is equal to the number of stays weighted by the economic wei
 
 This average price is usually calculated exclusively for the scope of *EPS* (*Etablissements Publics de Santé*), a scope for which the *MCO* databases (such as *DIAMANT*), provide valuation data from health insurance (*Assurance Maladie*). This average price is used to assess the stays of all public and private establishments in order to calculate their *economic volume*. This average price for a *GHM-GHS* is then given by : $p_{GHM, GHS, n_{ref}} = \frac{1}{q_{GHM, GHS, n_{ref}}} \times \frac{v_{GHM, GHS, n_{ref}}}{\tau_{GHM, GHS, n_{ref}}}$ , where :
 - $q_{GHM, GHS, n_{ref}}$ is the number of stays for reference year $n_{ref}$ for the pair *GHM-GHS* in the *EPS* scope
+- $v_{GHM, GHS, n_{ref}}$ is the valuation by health insurance of stays in year $n_{ref}$ for the pair *GHM-GHS* in the *EPS* scope
+- $\tau_{GHM, GHS, n_{ref}}$ is the reimbursement rate by health insurance of stays in year $n_{ref}$ for the pair *GHM-GHS* in the *EPS* scope
 
 
 $\boxed{\sum_{GHM, GHS}\frac{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n}}{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n-1}}-1}$
