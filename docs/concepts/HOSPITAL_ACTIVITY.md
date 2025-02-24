@@ -143,6 +143,8 @@ $\boxed{évolution \ \ du \ \ volume \ \ économique_{n} = \sum_{GHM, GHS}\frac{
 This yearly evolution breaks down into two terms : 
 $évolution \ \ du \ \ volume \ \ économique_{n} = effet \ \ nombre \ \ de \ \ séjours_{n} + effet \ \ structure_{n}$
 
+The *effet nombre de séjours* corresponds to the annual change in the number of stays (excluding sessions), while the *effet structure* measures the year-over-year change in the hospital case mix, assuming a constant number of stays. It thus corresponds to the change in the average valuation associated with a stay. 
+
 #### Holiday effect correction
 
 #### Breakdowns of the *MCO* activity
