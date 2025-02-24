@@ -197,6 +197,8 @@ Thus, the evolution of the *volume économique* can be decomposed into seven dis
 
 A working-day adjustment is applied to the change in the number of stays, *équivalents-journées* and *volume économique*, to obtain comparable data from one year to another, regardless of the number of working and non-working days (weekends and public holidays) in a given period.
 
+Indeed, according to studies conducted by *ATIH*, hospital activity on a non-working day represents 34 % of the average activity on a working day in terms of number of stays and number of *équivalents-journées*, and 49 % of the average activity on a working day in terms of *volume économique*.
+
 #### Breakdowns of the *MCO* activity
 
 ## *HAD* and *SMR* activities
