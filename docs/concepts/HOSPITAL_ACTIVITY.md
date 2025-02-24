@@ -168,7 +168,7 @@ The *effet nombre de séjours* corresponds to the annual change in the number of
   
       - *effet augmentation de la population*: $\boxed{effet \\ augmentation \\ de \\ la \\ population_{n} = \frac{\sum_{i \in age \\ class} pop_{i, n}}{\sum_{i \in age \\ class} pop_{i, n-1}}-1}$
   
-      - *effet pyramide des âges*: $\boxed{effet \\ pyramide \\ des \\ âges_{n} = \frac{\sum_{i \in age \\ class} \frac{q_{i, n-1}}{pop_{i, n-1}} \frac{pop_{i, n}}{pop_{T, n}}}{\sum_{i \in age \\ class} \frac{q_{i, n-1}}{pop_{i, n-1}} \frac{pop_{i, n-1}}{pop_{T, n-1}}}-1}$
+      - *effet pyramide des âges* (where $pop_{T, n}$ is the total population at year $n$): $\boxed{effet \\ pyramide \\ des \\ âges_{n} = \frac{\sum_{i \in age \\ class} \frac{q_{i, n-1}}{pop_{i, n-1}} \frac{pop_{i, n}}{pop_{T, n}}}{\sum_{i \in age \\ class} \frac{q_{i, n-1}}{pop_{i, n-1}} \frac{pop_{i, n-1}}{pop_{T, n-1}}}-1}$
   
   - The *effet modification du recours à l'hospitalisation*:
 
