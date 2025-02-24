@@ -11,7 +11,6 @@
     - [Evolution of number of *équivalents-journées*](#evolution-of-number-of-équivalents-journées)
     - [Evolution of *volume économique*](#evolution-of-volume-économique)
     - [Holiday effect correction (*CJO*)](#holiday-effect-correction-cjo)
-    - [Breakdowns of the *MCO* activity](#breakdowns-of-the-mco-activity)
 - [*HAD* and *SMR* activities](#had-and-smr-activities)
 
 
@@ -200,7 +199,5 @@ A working-day adjustment is applied to the change in the number of stays, *équi
 Indeed, according to studies conducted by *ATIH*, hospital activity on a non-working day represents 34 % of the average activity on a working day in terms of number of stays and number of *équivalents-journées*, and 49 % of the average activity on a working day in terms of *volume économique*. The working-day adjustment, or *effet CJO*, applied to the evolution of the number of stays, the evolution of the number of *équivalents-journées* or the *effet volume économique*, for a year $n$, is given by: $\boxed{effet \\ CJO_{n} = \frac{Jours \\ d'activité_{n}}{Jours \\ d'activité_{n-1}}-1}$ , where $\boxed{Jours \\ d'activité_{n} = Nombre \\ jours \\ ouvrés_{n} + \alpha \times Nombre \\ jours \\ non \\ ouvrés_{n}}$, $\alpha$ being 34 % for adjusting evolution of numbers of stays and *équivalents-journées* and 49 % for adjusting *effet volume économique*, and $Nombre \\ jours \\ ouvrés_{n}$ and $Nombre \\ jours \\ non \\ ouvrés_{n}$ are the numbers of working days and non working days respectively for year $n$.
 
 We can then define for example adjusted *effet volume économique* : $\boxed{effet \\ volume \\ CJO_{n} = effet \\ volume_{n} - effet \\ CJO_{n}}$
-
-#### Breakdowns of the *MCO* activity
 
 ## *HAD* and *SMR* activities
