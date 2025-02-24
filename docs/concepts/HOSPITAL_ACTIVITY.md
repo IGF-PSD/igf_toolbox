@@ -1,5 +1,17 @@
 # Public Health Economics indicators for hospital activity measurement
 
+- [*MCO* activity](#mco-activity)
+  - [*CMD*](#cmd)
+  - [*CAS*](#cas)
+  - [6th character of *GHM*](#6th-character-of-ghm)
+  - [*MCO* activity indicators](#mco-activity-indicators)
+    -[Evolution of number of stays](#evolution-of-number-of-stays)
+    -[Evolution of number of *équivalents-journées*](#evolution-of-number-of-equivalents-journees)
+    -[Evolution of *volume économique*](#evolution-of-volume-economique)
+    -[Holiday effect correction (*CJO*)](#holiday-effect-correction-cjo)
+    -[Breakdowns of the *MCO* activity](#breakdowns-of-the-mco-activity)
+-[*HAD* and *SMR* activities](#had-and-smr-activities)
+
 ## *MCO* activity
 
 The statistical unit to be considered in the *PMSI* for an economic analysis of *MCO* hospital activity is the intersection of a *GHM* (*Groupe homogène de malades*) and a *GHS* (*Groupe homogène de séjours*).
@@ -111,19 +123,19 @@ Three different measures have been selected to analyze activity in the field of 
 
 - [**The number of stays in full hospitalization and outpatient care**](#evolution-of-number-of-stays): This is the simplest measure of hospital activity. A stay refers to the period during which a patient is hospitalized.
 
-- [**The number of equivalent days**](#evolution-of-number-of-stays): This measure synthesizes the evolution of activity associated with full hospitalizations and outpatient hospitalizations (an outpatient stay is valued as one day), taking into account the length of stays. This "physical" measure of activity has the advantage of being easily interpretable. It is notably used by the Directorate for Research, Studies, Evaluation, and Statistics (*DREES*) in its annual overview of healthcare facilities.  
+- [**The number of équivalents-journées**](#evolution-of-number-of-equivalents-journees): This measure synthesizes the evolution of activity associated with full hospitalizations and outpatient hospitalizations (an outpatient stay is valued as one day), taking into account the length of stays. This "physical" measure of activity has the advantage of being easily interpretable. It is notably used by the Directorate for Research, Studies, Evaluation, and Statistics (*DREES*) in its annual overview of healthcare facilities.  
 
-- [The **volume économique**](#evolution-of-economic-volume): This corresponds to activity-related revenues based on the rates associated with each category of stays, adjusted to neutralize the "price effects" caused by the annual revaluation of these rates. While the evolution of the number of equivalent days is a concrete and simple indicator to calculate, it does not account for differences in costs and, therefore, in health insurance revenues related to hospitalization days depending on the treated pathologies. The economic volume aims to factor in these structural effects: the activity volume is thus calculated as the number of stays weighted by a coefficient representing their cost for health insurance. It does not reflect the "actual" revenues of healthcare facilities, which benefit from annual price effects linked to the revaluation of these rates. An identical rate is applied between former DG and former OQN establishments to make their economic volume comparable.  
+- [The **volume économique**](#evolution-of-volume-economique): This corresponds to activity-related revenues based on the rates associated with each category of stays, adjusted to neutralize the "price effects" caused by the annual revaluation of these rates. While the evolution of the number of equivalent days is a concrete and simple indicator to calculate, it does not account for differences in costs and, therefore, in health insurance revenues related to hospitalization days depending on the treated pathologies. The economic volume aims to factor in these structural effects: the activity volume is thus calculated as the number of stays weighted by a coefficient representing their cost for health insurance. It does not reflect the "actual" revenues of healthcare facilities, which benefit from annual price effects linked to the revaluation of these rates. An identical rate is applied between former DG and former OQN establishments to make their economic volume comparable.  
 
 #### Evolution of number of stays
 
 $\boxed{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n}}{q_{GHM, GHS, n-1}}-1}$
 
-#### Evolution of number of equivalent days
+#### Evolution of number of *équivalents-journées*
 
 $\boxed{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n} \times DMS_{GHM, GHS, n}}{q_{GHM, GHS, n-1} \times DMS_{GHM, GHS, n-1}}-1}$
 
-#### Evolution of *Economic volume*
+#### Evolution of *volume économique*
 
 The *MCO* activity can be characterized by a "volume" indicator that considers the weight of each stay based on the pathology treated, unaffected by variations in stay rates from one year to another. The economic volume is calculated on the scope of *MCO* stays, excluding sessions. This indicator, called "economic volume," allows for a more precise measurement of activity by considering a greater number of characteristics of the stay than just the duration.
 
@@ -162,7 +174,7 @@ Thus, the evolution of the *volume économique* can be decomposed into seven dis
 
 
 
-#### Holiday effect correction
+#### Holiday effect correction (*CJO*)
 
 #### Breakdowns of the *MCO* activity
 
