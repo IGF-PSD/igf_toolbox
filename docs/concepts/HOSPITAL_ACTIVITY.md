@@ -139,7 +139,7 @@ This average price is usually calculated exclusively for the scope of *EPS* (*Et
 - $\tau_{GHM, GHS, n_{ref}}$ is the reimbursement rate by health insurance of stays in year $n_{ref}$ for the pair *GHM-GHS* in the *EPS* scope
 
 The evolution of the hospital activity between years $n-1$ and $n$ can thus be given by the following :
-$\boxed{évolution \ \ du \ \ volume \ \ économique_{n} = \sum_{GHM, GHS}\frac{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n}}{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n-1}}-1}$
+$$\boxed{évolution \ \ du \ \ volume \ \ économique_{n} = \sum_{GHM, GHS}\frac{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n}}{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n-1}}-1}$$
 
 This yearly evolution breaks down into two terms : 
 $\boxed{évolution \ \ du \ \ volume \ \ économique_{n} = effet \ \ nombre \ \ de \ \ séjours_{n} + effet \ \ structure_{n}}$
