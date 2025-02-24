@@ -166,4 +166,4 @@ Thus, the evolution of the *volume économique* can be decomposed into seven dis
 
 #### Breakdowns of the *MCO* activity
 
-## *HAD* and *SMR*
+## *HAD* and *SMR* activities
