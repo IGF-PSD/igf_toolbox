@@ -2,6 +2,7 @@
 
 ## Table of contents
 - [*MCO* activity](#mco-activity)
+  - [Introduction](#introduction) 
   - [*CMD*](#cmd)
   - [*CAS*](#cas)
   - [6th character of *GHM*](#6th-character-of-ghm)
@@ -15,6 +16,8 @@
 
 
 ## *MCO* activity
+
+### Introduction
 
 The statistical unit to be considered in the *PMSI* for an economic analysis of *MCO* hospital activity is the intersection of a *GHM* (*Groupe homogène de malades*) and a *GHS* (*Groupe homogène de séjours*).
 
