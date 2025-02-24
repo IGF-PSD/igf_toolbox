@@ -132,7 +132,7 @@ The analysis of the evolution of the economic volume presents two advantages com
 The economic volume is equal to the number of stays weighted by the economic weight of each *GHM-GHS* based on the average price of stays in this category. For example, for an average observed price in the reference year $n_{ref}$, the economic volume for the year $n$ is given by: $economic \ \ volume_{n} = \sum_{GHM, GHS} p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n}$, where $p_{GHM, GHS, n_{ref}}$ is the average price for stays associated with $GHM-GHS$ on the reference years $n_{ref}$
 
 
-$\boxed{\sum_{GHM, GHS}\frac{p_{GHM, GHS, N} \times q_{GHM, GHS, n}}{p_{GHM, GHS, N} \times q_{GHM, GHS, n-1}}-1}$
+$\boxed{\sum_{GHM, GHS}\frac{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n}}{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n-1}}-1}$
 
 #### Holiday effect correction
 
