@@ -179,6 +179,12 @@ Thus, the evolution of the *volume économique* can be decomposed into seven dis
 ![This decomposition is given as following](../assets/decomposition-effet-volume.png)
 
 
+<p align="center">
+  <img src="../assets/test.png" alt="Alt text" />
+</p>
+
+
+
 #### Holiday effect correction (*CJO*)
 
 #### Breakdowns of the *MCO* activity
