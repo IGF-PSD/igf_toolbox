@@ -167,9 +167,13 @@ The *effet nombre de séjours* corresponds to the annual change in the number of
   - The *effet démographie* can also be broken down into two components: $\boxed{effet \ \ démographie_{n} = effet \ \ augmentation \ \ de \ \ la \ \ population_{n} + effet \ \ pyramide \ \ des \ \ âges_{n}}$ , where the *effet augmentation de la population* corresponds to the increase in *volume économique* induced by a rise in the French population. The *effet pyramides des âges* measures the evolution of *volume économique* induced by a distortion of the age pyramid with a constant population. Indeed, the admission rate differs from one age group to another and increases with age. An aging population, without a change in the total population, results in an increase in the number of stays and, therefore, the *volume économique*, through an age pyramid effect called *effet pyramide des âges*.
 
 - The *effet structure* $\boxed{effet \\ structure_{n} = effet \\ volume_{n} - effet \\ nombre \\ de \\ séjours_{n}}$ and can also be broken down into four sub-effects: $\boxed{effet \ \ structure_{n} = effet \ \ racine_{n} + effet \ \ bascule \\ vers \\ l'ambulatoire_{n} + effet \ \ sévérité_{n} + effet \ \ résiduel_{n}}$ , where the three first effects measure the distortions in the casemix resulting from, respectively, the changes in the distribution of stays by *racine de GHM*, the shift towards outpatient care (*HP*) and the shift towards stays corresponding to more severe health conditions. However, the sum of these three effects is not necessarily equal to the *effet structure*, because of correlations between sub-effects, resulting in a residual effect denoted *effet résiduel*. However, this decomposition allows to identify the main contributors to the *effet structure* and establish a link with the underlying evolution of hospital activity. The different effects are given by :
-  - *effet racine*: $\boxed{\frac{\sum_{racine \\ GHM} p_{racine \\ GHM, n_{ref}} \times \frac{q_{racine \\ GHM, n}}{\sum_{racine \\ GHM} q_{racine \\ GHM, n}}}{\sum_{racine \\ GHM} p_{racine \\ GHM, n_{ref}} \times \frac{q_{racine \\ GHM, n-1}}{\sum_{racine \\ GHM} q_{racine \\ GHM, n-1}}}-1}$
+  
+  - *effet racine*: $\boxed{effet \\ racine_{n} = \frac{\sum_{racine \\ GHM} p_{racine \\ GHM, n_{ref}} \times \frac{q_{racine \\ GHM, n}}{\sum_{racine \\ GHM} q_{racine \\ GHM, n}}}{\sum_{racine \\ GHM} p_{racine \\ GHM, n_{ref}} \times \frac{q_{racine \\ GHM, n-1}}{\sum_{racine \\ GHM} q_{racine \\ GHM, n-1}}}-1}$
+    
   - *effet bascule vers l'ambulatoire*
+    
   - *effet sévérité*:
+    
   - *effet résiduel*: $\boxed{effet \\ résiduel_{n} = effet \\ structure_{n} - (effet \\ racine_{n} + effet \\ bascule \\ vers \\ l'ambulatoire_{n} + effet \\ sévérité_{n})}$
 
 Thus, the evolution of the *volume économique* can be decomposed into seven distinct sub-effects:
