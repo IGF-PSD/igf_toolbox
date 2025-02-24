@@ -172,7 +172,7 @@ The *effet nombre de séjours* corresponds to the annual change in the number of
     
   - *effet bascule vers l'ambulatoire*: $\boxed{effet \\ bascule \\ vers \\ l'ambulatoire_{n} = \frac{\sum_{k \in HC, HP} p_{k, n_{ref}} \times \frac{q_{k, n}}{\sum_{k \in HC, HP} q_{k, n}}}{\sum_{k \in HC, HP} p_{k , n_{ref}} \times \frac{q_{k, n-1}}{\sum_{k \in HC, HP} q_{k, n-1}}}-1}$
     
-  - *effet sévérité*:
+  - *effet sévérité*: $\boxed{effet \\ sévérité_{n} = \frac{\sum_{sévérité} p_{sévérité, n_{ref}} \times \frac{q_{sévérité, n}}{\sum_{sévérité} q_{sévérité, n}}}{\sum_{sévérité} p_{sévérité, n_{ref}} \times \frac{q_{sévérité, n-1}}{\sum_{sévérité} q_{sévérité, n-1}}}-1}$
     
   - *effet résiduel*: $\boxed{effet \\ résiduel_{n} = effet \\ structure_{n} - (effet \\ racine_{n} + effet \\ bascule \\ vers \\ l'ambulatoire_{n} + effet \\ sévérité_{n})}$
 
