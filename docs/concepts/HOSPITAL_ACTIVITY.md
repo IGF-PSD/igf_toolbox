@@ -135,13 +135,14 @@ Three different measures have been selected to analyze activity in the field of 
 
 Hospital activity in *MCO* excluding sessions in public and private healthcare facilities can first be measured based on the number of stays, whether carried out on an outpatient basis or as full hospitalization. This number can be considered an indicator of the total number of patients treated by healthcare facilities. The evolution of the activity between years $n-1$ and $n$ can then be computed using the evolution of the number of stays between $n-1$ and $n$ : $\boxed{\sum_{GHM, GHS}\frac{q_{GHM, GHS, n}}{q_{GHM, GHS, n-1}}-1}$
 
-However, this indicator does not take into account changes in the average length of stay (*DMS*) or the difference in duration between outpatient care and full hospitalization. This evolution can be broken down into the contribution of the number of stays in *HP* and the contribution of the number of *équivalents-journées* in *HC* : $\frac{\Delta équivalents-journées_{n}}{équivalents-journées_{n-1}}$
+However, this indicator does not take into account changes in the average length of stay (*DMS*) or the difference in duration between outpatient care and full hospitalization. 
 
 #### Evolution of number of *équivalents-journées*
 
 Hospital activity in *MCO* can then be measured by the number of days spent in the hospital through the number of *équivalents-journées*. This indicator measures, on one hand, the number of days in full hospitalization (*HC*) and, on the other hand, the number of stays in partial hospitalization (*HP*). This indicator is calculated for year $n$, for each *GHM* and then aggregated as follows: $\boxed{équivalents-journées_{n} = \sum_{GHM \mid HP} q_{GHM, n} + \sum_{GHM \mid HC} DMS_{GHM, n} \times q_{GHM, n}}$
 
-The evolution in the number of the number of *équivalents-journées* provides a measure of hospital activity.
+The evolution in the number of the number of *équivalents-journées* provides a measure of hospital activity. This evolution can be broken down into the contribution of the number of stays in *HP* and the contribution of the number of *équivalents-journées* in *HC* and then broken down by *DMS* and number of stays : 
+$$ 
 
 #### Evolution of *volume économique*
 
