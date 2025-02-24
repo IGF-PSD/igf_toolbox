@@ -170,7 +170,7 @@ The *effet nombre de séjours* corresponds to the annual change in the number of
   
   - *effet racine*: $\boxed{effet \\ racine_{n} = \frac{\sum_{racine \\ GHM} p_{racine \\ GHM, n_{ref}} \times \frac{q_{racine \\ GHM, n}}{\sum_{racine \\ GHM} q_{racine \\ GHM, n}}}{\sum_{racine \\ GHM} p_{racine \\ GHM, n_{ref}} \times \frac{q_{racine \\ GHM, n-1}}{\sum_{racine \\ GHM} q_{racine \\ GHM, n-1}}}-1}$
     
-  - *effet bascule vers l'ambulatoire*
+  - *effet bascule vers l'ambulatoire*: $\boxed{effet \\ bascule \\ vers \\ l'ambulatoire_{n} = \frac{\sum_{k \in HC, HP} p_{k, n_{ref}} \times \frac{q_{k, n}}{\sum_{k \in HC, HP} q_{k, n}}}{\sum_{k \in HC, HP} p_{k , n_{ref}} \times \frac{q_{k, n-1}}{\sum_{k \in HC, HP} q_{k, n-1}}}-1}$
     
   - *effet sévérité*:
     
