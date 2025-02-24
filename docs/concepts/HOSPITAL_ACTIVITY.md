@@ -1,5 +1,6 @@
 # Public Health Economics indicators for hospital activity measurement
 
+## Table of contents
 - [*MCO* activity](#mco-activity)
   - [*CMD*](#cmd)
   - [*CAS*](#cas)
