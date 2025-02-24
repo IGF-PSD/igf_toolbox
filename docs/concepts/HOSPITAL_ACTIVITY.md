@@ -92,6 +92,8 @@ The *CAS* of a stay is determined based on the duration of the stay and the type
 
 ### 6th character of *GHM*
 
+The 6th character of a *GHM* is significant and is associated to a level of severity of the hospital stay. The *racine de GHM* can be found by excluding this last character from the *GHM*.
+
 |6th character of *GHM*    |Label    |
 |------------------|---------|
 |1 or A|Niveaux de sévérité 1 ou A|
