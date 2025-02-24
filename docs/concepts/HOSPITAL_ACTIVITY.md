@@ -155,11 +155,11 @@ This average price is usually calculated exclusively for the scope of *EPS* (*Et
 - $v_{GHM, GHS, n_{ref}}$ is the valuation by health insurance of stays in year $n_{ref}$ for the pair *GHM-GHS* in the *EPS* scope
 - $\tau_{GHM, GHS, n_{ref}}$ is the reimbursement rate by health insurance of stays in year $n_{ref}$ for the pair *GHM-GHS* in the *EPS* scope
 
-The evolution of the hospital activity between years $n-1$ and $n$ can thus be given by the following :
-$$\boxed{évolution \ \ du \ \ volume \ \ économique_{n} = \sum_{GHM, GHS}\frac{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n}}{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n-1}}-1}$$
+The evolution of the hospital activity between years $n-1$ and $n$, called *effet volume*, can thus be given by the following :
+$$\boxed{effet \\ volume_{n} = \sum_{GHM, GHS}\frac{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n}}{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n-1}}-1}$$
 
 This yearly evolution breaks down into two terms : 
-$\boxed{évolution \ \ du \ \ volume \ \ économique_{n} = effet \ \ nombre \ \ de \ \ séjours_{n} + effet \ \ structure_{n}}$
+$\boxed{effet \\ volume_{n} = effet \ \ nombre \ \ de \ \ séjours_{n} + effet \ \ structure_{n}}$
 
 The *effet nombre de séjours* corresponds to the annual change in the number of stays (excluding sessions), while the *effet structure* measures the year-over-year change in the hospital case mix, assuming a constant number of stays. It thus corresponds to the change in the average valuation associated with a stay. Here, the case mix refers to the distribution of stays based on their severity (1, 2, 3, ...), diagnosis (*racine de GHM*), or type of care (*HC* or *HP*). Those two components of the evolution of *volumen économique*, *effet nombre de séjours* et *effet structure*, can both be broken down.
 
