@@ -141,7 +141,7 @@ The evolution of the hospital activity between years $n-1$ and $n$ can thus be g
 $\boxed{evolution \ \ du \ \ volume \ \ economique_{n} = \sum_{GHM, GHS}\frac{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n}}{p_{GHM, GHS, n_{ref}} \times q_{GHM, GHS, n-1}}-1}$
 
 This yearly evolution breaks down into two terms : 
-$evolution \ \ du \ \ volume \ \ economique_{n} = effet \ \ nombre \ \ de \ \ séjours_{n} + effet \ \structure_{n}$
+$evolution \ \ du \ \ volume \ \ economique_{n} = effet \ \ nombre \ \ de \ \ séjours_{n} + effet \ \ structure_{n}$
 
 #### Holiday effect correction
 
