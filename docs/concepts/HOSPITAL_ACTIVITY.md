@@ -176,7 +176,7 @@ Thus, the evolution of the *volume économique* can be decomposed into seven dis
 - *effet sévérité*
 - *effet résiduel*
   
-![This decomposition is given as following]("..\assets\decomposition-effet-volume.png")
+![This decomposition is given as following]("../assets/decomposition-effet-volume.png")
 
 
 #### Holiday effect correction (*CJO*)
