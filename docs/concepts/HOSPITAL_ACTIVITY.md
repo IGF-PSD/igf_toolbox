@@ -144,7 +144,9 @@ Hospital activity in *MCO* can then be measured by the number of days spent in t
 The evolution in the number of the number of *équivalents-journées* provides a measure of hospital activity. This evolution can be broken down into the contribution of the number of stays in *HP* and the contribution of the number of *équivalents-journées* in *HC* and then broken down by *DMS* and number of stays : 
 $\boxed{\frac{\Delta équivalents-journées_{n}}{équivalents-journées_{n-1}} = \frac{\Delta q_{HP, n}}{équivalents-journées_{n-1}} + \frac{\Delta équivalents-journées_{HC, n}}{équivalents-journées_{n-1}}}$ 
 
-Which also leads to the following : $\boxed{\frac{\Delta équivalents-journées_{n}}{équivalents-journées_{n-1}} = \frac{\Delta q_{HP, n}}{équivalents-journées_{n-1}} + \frac{\Delta DMS_{n}}{équivalents-journées_{n-1}} + \frac{\Delta q_{HC, n}}{équivalents-journées_{n-1}} + effet \\ résiduel_{n}}$
+Which also can be broken down into effects related to the evolution of the number of stays in *HP*, number of stays in *HC*, the evolution of the *DMS* and a residual effect regarding correlations between components: $\boxed{\frac{\Delta équivalents-journées_{n}}{équivalents-journées_{n-1}} = \frac{\Delta q_{HP, n}}{équivalents-journées_{n-1}} + \frac{\Delta DMS_{n}}{équivalents-journées_{n-1}} + \frac{\Delta q_{HC, n}}{équivalents-journées_{n-1}} + effet \\ résiduel_{n}}$ , 
+
+
 
 #### Evolution of *volume économique*
 
