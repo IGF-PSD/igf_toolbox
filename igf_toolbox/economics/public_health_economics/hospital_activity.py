@@ -92,10 +92,11 @@ class HospitalActivity:
     def effet_volume(self) -> pd.DataFrame:
         """ """
 
-        data = self.data.groupby(by=[self.ghm, self.ghs]).sum()  # TO CHANGE
+        data = self.data.groupby(by=[self.ghm, self.ghs],
+                                as_index=False).sum()  # TO CHANGE
 
         dict_volume_economique = {
-            year: (data["prix"] * data[f"{self.stays_prefix}_{year}"]).sum()
+            year: (data[self.price] * data[f"{self.prefix_stays}{year}"]).sum()
             for year in self.years
         }
 
@@ -118,3 +119,20 @@ class HospitalActivity:
         )
 
         return data_activity
+
+    def effet_nombre_de_sejours(self)->pd.DataFrame:
+
+        data=self.data.groupby(by=[self.ghm, self.ghs]).sum()
+
+        dict_effet_nombre_de_sejours = {
+            year:data[f"{self.prefix_stays}{year}"].sum()/data[f"{self.prefix_stays}{year-1}"].sum()-1
+            for year in self.years[1:]
+        }
+
+        data_effet_nombre_de_sejours = pd.DataFrame(
+            {
+                "Effet nombre de séjours": dict_effet_nombre_de_sejours
+            }
+        )
+
+        return data_effet_nombre_de_sejours
