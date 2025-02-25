@@ -210,3 +210,9 @@ Indeed, according to studies conducted by *ATIH*, hospital activity on a non-wor
 We can then define for example adjusted *effet volume économique* : $\boxed{effet \\ volume \\ CJO_{n} = effet \\ volume_{n} - effet \\ CJO_{n}}$
 
 ## *HAD* and *SMR* activities
+
+*HAD* activity is measured by the evolution of the number of stays.
+
+*SMR* activity is measured by the evolution of the number of number of days of hospitalization that can be broken down into two categories:
+- *Hospitalisation complète ou de semaine (HC)*
+- *Hospitalisation de jour ou de nuit (HJ)*
