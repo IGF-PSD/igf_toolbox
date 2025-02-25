@@ -10,3 +10,4 @@ statsmodels
 linearmodels
 xlsxwriter
 pyarrow
+holidays
