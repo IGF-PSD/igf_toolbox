@@ -6,7 +6,9 @@ import pandas as pd
 
 class HospitalActivity:
     def __init__(self, data, ghm, ghs, prefix_stays, price=None, prefix_dms=None):
-        """ """
+        """ 
+        
+        """
 
         self.data = data
         self.ghm = ghm
@@ -130,8 +132,26 @@ class HospitalActivity:
             }
         )
 
+        # We compute the effet structure
         data_activity["Effet structure"] = (
             data_activity["Effet volume"] - data_activity["Effet nombre de séjours"]
+        )
+
+        # We compute the effet racine
+        data_racine = data_activity.copy(deep=True)
+        data_racine["racine"]=data_racine[self.ghm].apply(lambda x: x[:5])
+        data_racine=data_racine.drop(columns=self)
+
+        # We compute the effet bascule vers l'ambulatoire
+
+        # We compute the effet sévérité
+
+        # We compute the effet résiduel
+        data_activity["Effet résiduel"] = (
+            data_activity["Effet structure"] - (data_activity["Effet racine"] + 
+                                                data_activity["Effet bascule vers l'ambulatoire"] + 
+                                                data_activity["Effet sévérité"])
+            
         )
 
         return data_activity
