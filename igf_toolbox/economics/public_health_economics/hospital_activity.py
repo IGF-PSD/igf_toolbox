@@ -12,8 +12,8 @@ class HospitalActivity:
         self.ghs = ghs
         self.price = price
         self.prefix_stays = prefix_stays
-        self.prefix_dms=prefix_dms
-        
+        self.prefix_dms = prefix_dms
+
         self.years = sorted(
             [
                 int(re.search(r"\d+", col).group())
@@ -94,8 +94,9 @@ class HospitalActivity:
     def effet_volume(self) -> pd.DataFrame:
         """ """
 
-        data = self.data.groupby(by=[self.ghm, self.ghs],
-                                as_index=False).sum()  # TO CHANGE
+        data = self.data.groupby(
+            by=[self.ghm, self.ghs], as_index=False
+        ).sum()  # TO CHANGE
 
         dict_volume_economique = {
             year: (data[self.price] * data[f"{self.prefix_stays}{year}"]).sum()
@@ -113,7 +114,9 @@ class HospitalActivity:
         }
 
         dict_effet_nombre_de_sejours = {
-            year:data[f"{self.prefix_stays}{year}"].sum()/data[f"{self.prefix_stays}{year-1}"].sum()-1
+            year: data[f"{self.prefix_stays}{year}"].sum()
+            / data[f"{self.prefix_stays}{year - 1}"].sum()
+            - 1
             for year in self.years[1:]
         }
 
@@ -122,10 +125,12 @@ class HospitalActivity:
                 "Volume économique": dict_volume_economique,
                 "Effet volume": dict_effet_volume,
                 "Effet volume CJO": dict_effet_volume_cjo,
-                "Effet nombre de séjours": dict_effet_nombre_de_sejours
+                "Effet nombre de séjours": dict_effet_nombre_de_sejours,
             }
         )
 
-        data_activity["Effet structure"] = data_activity["Effet volume"] - data_activity["Effet nombre de séjours"] 
+        data_activity["Effet structure"] = (
+            data_activity["Effet volume"] - data_activity["Effet nombre de séjours"]
+        )
 
         return data_activity
