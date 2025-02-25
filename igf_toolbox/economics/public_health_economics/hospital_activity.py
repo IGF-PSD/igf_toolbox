@@ -18,7 +18,8 @@ def count_number_working_days(year:int)->int:
 
 def effet_cjo(year:int, activity:str="volume")->float:
     """
-    Returns the holiday adjustments to apply to yearly evolutions.
+    Returns the holiday adjustments to apply to yearly evolutions
+    between year and year - 1.
 
     Args:
 
