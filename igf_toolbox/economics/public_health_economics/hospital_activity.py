@@ -110,29 +110,20 @@ class HospitalActivity:
             for year in self.years[1:]
         }
 
-        data_activity = pd.DataFrame(
-            {
-                "Volume économique": dict_volume_economique,
-                "Effet volume": dict_effet_volume,
-                "Effet volume CJO": dict_effet_volume_cjo,
-            }
-        )
-
-        return data_activity
-
-    def effet_nombre_de_sejours(self)->pd.DataFrame:
-
-        data=self.data.groupby(by=[self.ghm, self.ghs]).sum()
-
         dict_effet_nombre_de_sejours = {
             year:data[f"{self.prefix_stays}{year}"].sum()/data[f"{self.prefix_stays}{year-1}"].sum()-1
             for year in self.years[1:]
         }
 
-        data_effet_nombre_de_sejours = pd.DataFrame(
+        data_activity = pd.DataFrame(
             {
+                "Volume économique": dict_volume_economique,
+                "Effet volume": dict_effet_volume,
+                "Effet volume CJO": dict_effet_volume_cjo,
                 "Effet nombre de séjours": dict_effet_nombre_de_sejours
             }
         )
 
-        return data_effet_nombre_de_sejours
+        data_activity["Effet structure"] = data_activity["Effet volume"] - data_activity["Effet nombre de séjours"] 
+
+        return data_activity
