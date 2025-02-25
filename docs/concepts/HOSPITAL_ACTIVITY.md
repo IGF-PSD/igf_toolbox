@@ -213,6 +213,6 @@ We can then define for example adjusted *effet volume économique* : $\boxed{eff
 
 *HAD* activity is measured by the evolution of the number of stays.
 
-*SMR* activity is measured by the evolution of the number of number of days of hospitalization that can be broken down into two categories:
+*SMR* activity is measured by the evolution of the number of days of hospitalization that can be broken down into two categories:
 - *Hospitalisation complète ou de semaine (HC)*
 - *Hospitalisation de jour ou de nuit (HJ)*
