@@ -140,7 +140,9 @@ class HospitalActivity:
         # We compute the effet racine
         data_racine = data_activity.copy(deep=True)
         data_racine["racine"]=data_racine[self.ghm].apply(lambda x: x[:5])
-        data_racine=data_racine.drop(columns=self)
+        data_racine=data_racine.drop(columns=self.ghs)
+        data_racine=data_racine.groupby("racine",
+                                       as_index=False).agg({})
 
         # We compute the effet bascule vers l'ambulatoire
 
