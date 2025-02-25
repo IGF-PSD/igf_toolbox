@@ -4,7 +4,7 @@ import pandas as pd
 
 
 class HospitalActivity:
-    def __init__(self, data, ghm, ghs, price, prefix_stays):
+    def __init__(self, data, ghm, ghs, prefix_stays, price=None, prefix_dms=None):
         """ """
 
         self.data = data
@@ -12,6 +12,8 @@ class HospitalActivity:
         self.ghs = ghs
         self.price = price
         self.prefix_stays = prefix_stays
+        self.prefix_dms=prefix_dms
+        
         self.years = sorted(
             [
                 int(re.search(r"\d+", col).group())
