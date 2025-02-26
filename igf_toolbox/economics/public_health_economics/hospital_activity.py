@@ -309,6 +309,13 @@ class HospitalActivity:
         data_3 = data[["Effet volume", "Effet nombre de séjours", "Effet racine",
                       "Effet bascule vers l'ambulatoire", "Effet sévérité", "Effet résiduel"]]
 
+        fig, axes = plt.subplots(1, 3)
+
+        data_1.plot(ax=axes[0], linestyle=["-", "--"], title="Effet volume et Effet volume CJO")
+        data_2.plot(ax=axes[1], linestyle=[""])
+
+        
+
         
 
         
