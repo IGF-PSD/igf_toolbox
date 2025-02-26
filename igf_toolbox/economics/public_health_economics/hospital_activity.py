@@ -333,5 +333,21 @@ class HospitalActivity:
         ax2.legend(loc="upper left")
         ax2_.legend(loc="upper right")
 
+        # We plot the effet volume breakdown by all components
+        ax3=axes[2]
+        ax3_=ax3.twinx()
+        ax3.plot(data_3.index, data_3["Effet volume"], marker="o", color="green", label="Effet volume")
+        ax3_.bar(data_3.index, data_3["Effet nombre de séjours"], alpha=1, label="Effet nombre de séjours")
+        ax3_.bar(data_3.index, data_3["Effet racine"], bottom=data_3["Effet nombre de séjours"], alpha=.5,
+                label="Effet racine")
+        ax3_.bar(data_3.index, data_3["Effet sévérité"], bottom=data_3["Effet nombre de séjours"]+data_3["Effet racine"], alpha=.5,
+                label="Effet sévérité")
+        ax3_.bar(data_3.index, data_3["Effet bascule vers l'ambulatoire"], bottom=data_3["Effet nombre de séjours"]+data_3["Effet racine"]+data_3["Effet sévérité"],
+                 alpha=.5,
+                 label="Effet bascule vers l'ambulatoire")
+        ax3_.bar(data_3.index, data_3["Effet résiduel"], bottom=data_3["Effet nombre de séjours"]+data_3["Effet racine"]+data_3["Effet sévérité"]+data_3["Effet bascule vers l'ambulatoire"],
+                 alpha=.5,
+                 label="Effet résiduel")
+        
         plt.tight_layout()
         plt.show()
