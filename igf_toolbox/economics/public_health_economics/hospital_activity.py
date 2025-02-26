@@ -309,18 +309,29 @@ class HospitalActivity:
         data_3 = data[["Effet volume", "Effet nombre de séjours", "Effet racine",
                       "Effet bascule vers l'ambulatoire", "Effet sévérité", "Effet résiduel"]]
 
-        fig, axes = plt.subplots(1, 3)
+        fig, axes = plt.subplots(1, 3, figsize=(20,10))
 
-        data_1.plot(ax=axes[0], linestyle=["-", "--"], title="Effet volume et Effet volume CJO")
-        data_2.plot(ax=axes[1], linestyle=[""])
+        # We plot effet volume and calendar adjustment
+        ax1=axes[0]
+        ax1.plot(data_1.index, data_1["Effet volume"], color="green", label="Effet volume")
+        ax1.plot(data_1.index, data_1["Effet volume CJO"], color="orange", label="Effet volume CJO",
+                linestyle="--", marker="x", alpha=.5)
 
+        ax1.set_title("Effet volume et effet volume CJO")
+        ax1.legend(loc="upper right")
+
+        # We plot the effet volume breakdown
+        ax2=axes[1]
+        ax2_=ax2.twinx()
+        ax2.plot(data_2.index, data_2["Effet volume"], marker="o", color="green", label="Effet volume")
+        ax2_.bar(data_2.index, data_2["Effet nombre de séjours"], alpha=1, label="Effet nombre de séjours")
+        ax2_.bar(data_2.index, data_2["Effet structure"], bottom=data_2["Effet nombre de séjours"], alpha=.5,
+                label="Effet structure")
         
 
-        
+        ax2.set_title("Décomposition de l'effet volume")
+        ax2.legend(loc="upper left")
+        ax2_.legend(loc="upper right")
 
-        
-
-    # def evolution_equivalents_journees(self, prefix_dms):
-    #     """ """
-
-    #     pass
+        plt.tight_layout()
+        plt.show()
