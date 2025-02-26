@@ -132,7 +132,8 @@ class HospitalActivity:
                                      )
         
         data_price["prix_apparent"]=data_price[["sum_stays_eps",
-                                               "sum_amount_eps"]].apply(lambda x: 0 if x[0]==0 else (1/x[0])*x[1])
+                                               "sum_amount_eps"]].apply(lambda x: 0 if x[0]==0 else (1/x[0])*x[1], axis=1)
+        
         return data_price
 
     def _preprocess_severite(self, x:str)->str:
@@ -200,10 +201,10 @@ class HospitalActivity:
             year:(
                 (
                 data_racine["prix_apparent"]*data_racine[f"{self.prefix_stays}{year}"]/data_racine[f"{self.prefix_stays}{year}"].sum()
-            )/(
+            ).sum()/(
                 data_racine["prix_apparent"]*data_racine[f"{self.prefix_stays}{year-1}"]/data_racine[f"{self.prefix_stays}{year-1}"].sum()
-            )
-                ).sum()-1
+            ).sum()
+                )-1
             for year in self.years[1:]
         }
 
@@ -216,7 +217,7 @@ class HospitalActivity:
                                                    type_hosp,
                                                    nber_stays_eps,
                                                    amount_eps,
-                                                   rate_eps)
+                                                   rate_eps)[[type_hosp, "prix_apparent"]]
         data_type_hosp = data_type_hosp.groupby(type_hosp,
                                                 as_index=False)[[col for col in data_type_hosp.columns
                                                                  if col.startswith(self.prefix_stays)]].sum()
@@ -227,10 +228,10 @@ class HospitalActivity:
             year:(
                 (
                 data_type_hosp["prix_apparent"]*data_type_hosp[f"{self.prefix_stays}{year}"]/data_type_hosp[f"{self.prefix_stays}{year}"].sum()
-            )/(
+            ).sum()/(
                 data_type_hosp["prix_apparent"]*data_type_hosp[f"{self.prefix_stays}{year-1}"]/data_type_hosp[f"{self.prefix_stays}{year-1}"].sum()
-            )
-                ).sum()-1
+            ).sum()
+                )-1
             for year in self.years[1:]
         }
 
@@ -244,7 +245,7 @@ class HospitalActivity:
                                                    "severite",
                                                    nber_stays_eps,
                                                    amount_eps,
-                                                   rate_eps)
+                                                   rate_eps)[["severite", "prix_apparent"]]
         data_severite = data_severite.groupby("severite",
                                             as_index=False)[[col for col in data_severite.columns
                                                             if col.startswith(self.prefix_stays)]].sum()
@@ -253,11 +254,11 @@ class HospitalActivity:
         dict_effet_severite = {
             year:(
                 (
-                data_severite["prix_apparent"]*data_severite[f"{self.prefix_stays}{year}"]/data_severite[f"{self.prefix_stays}{year}"].sum()
-            )/(
-                data_severite["prix_apparent"]*data_severite[f"{self.prefix_stays}{year-1}"]/data_severite[f"{self.prefix_stays}{year-1}"].sum()
-            )
-                ).sum()-1
+                data_severite["prix_apparent"]*data_severite[f"{self.prefix_stays}{year}"]/(data_severite[f"{self.prefix_stays}{year}"].sum())
+            ).sum()/(
+                data_severite["prix_apparent"]*data_severite[f"{self.prefix_stays}{year-1}"]/(data_severite[f"{self.prefix_stays}{year-1}"].sum())
+            ).sum()
+                )-1
             for year in self.years[1:]
         }
 
