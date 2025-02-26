@@ -1,4 +1,5 @@
 import re
+import gc
 
 import holidays
 import pandas as pd
@@ -112,7 +113,7 @@ class HospitalActivity:
 
         return data_price
 
-    def _prix_apparent_breakdown(by, nber_stays_eps, amount_eps, rate_eps)->pd.DataFrame:
+    def _prix_apparent_breakdown(self, data, by, nber_stays_eps, amount_eps, rate_eps)->pd.DataFrame:
         """
         Returns a dataframe with an average price for a given breakdown of effet volume.
 
@@ -122,7 +123,7 @@ class HospitalActivity:
         
         """
 
-        data_price=self.data.copy(deep=True)
+        data_price=data.copy(deep=True)
         
         data_price=data_price.groupby(by=by,
                                      as_index=False).agg(
@@ -130,14 +131,18 @@ class HospitalActivity:
             sum_amount_eps=(amount_eps,lambda x: ((x/data_price.loc[x.index, rate_eps]).where(data_price.loc[x.index,rate_eps]!=0, 0)).sum())
                                      )
         
-        data_price["prix_apparent"]=data_price[[sum_stays_eps,
-                                               sum_amount_eps]].apply(lambda x: 0 if x[0]==0 else (1/x[0])*x[1])
+        data_price["prix_apparent"]=data_price[["sum_stays_eps",
+                                               "sum_amount_eps"]].apply(lambda x: 0 if x[0]==0 else (1/x[0])*x[1])
         return data_price
 
-    def _effet_structure_components():
-        pass
+    def _preprocess_severite(self, x:str)->str:
+        """
+        """
+        dict_severite = {"A":"1", "B":"2", "C":"3", "D":"4"}
+        return dict_severite.get(x, x)
 
-    def effet_volume(self, ghs, nber_stays_eps, amount_eps, rate_eps) -> pd.DataFrame:
+
+    def effet_volume(self, ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp) -> pd.DataFrame:
         """ 
         Returns effet volume, its calendar adjustment and all its components.
 
@@ -178,20 +183,88 @@ class HospitalActivity:
             for year in self.years[1:]
         }
 
-
-
         # We compute the effet racine
         data_racine = self.data.copy(deep=True)
         data_racine["racine"] = data_racine[self.ghm].str[:5]
-        data_racine = self._prix_apparent_breakdown("racine",
+        data_price = self._prix_apparent_breakdown(data_racine,
+                                                   "racine",
+                                                   nber_stays_eps,
+                                                   amount_eps,
+                                                   rate_eps)[["racine", "prix_apparent"]]
+        data_racine = data_racine.groupby("racine",
+                                         as_index=False)[[col for col in data_racine.columns
+                                                         if col.startswith(self.prefix_stays)]].sum()
+        data_racine=data_racine.merge(data_price, how="inner", left_on="racine", right_on="racine")
+        
+        dict_effet_racine = {
+            year:(
+                (
+                data_racine["prix_apparent"]*data_racine[f"{self.prefix_stays}{year}"]/data_racine[f"{self.prefix_stays}{year}"].sum()
+            )/(
+                data_racine["prix_apparent"]*data_racine[f"{self.prefix_stays}{year-1}"]/data_racine[f"{self.prefix_stays}{year-1}"].sum()
+            )
+                ).sum()-1
+            for year in self.years[1:]
+        }
+
+        del data_racine
+        _ = gc.collect()
+
+        # We compute the effet bascule vers l'ambulatoire
+        data_type_hosp = self.data.copy(deep=True)
+        data_price = self._prix_apparent_breakdown(data_type_hosp,
+                                                   type_hosp,
                                                    nber_stays_eps,
                                                    amount_eps,
                                                    rate_eps)
+        data_type_hosp = data_type_hosp.groupby(type_hosp,
+                                                as_index=False)[[col for col in data_type_hosp.columns
+                                                                 if col.startswith(self.prefix_stays)]].sum()
+        data_type_hosp=data_type_hosp.merge(data_price, how="inner", left_on=type_hosp, right_on=type_hosp)
+        
 
-        # We compute the effet bascule vers l'ambulatoire
+        dict_effet_bascule_ambulatoire = {
+            year:(
+                (
+                data_type_hosp["prix_apparent"]*data_type_hosp[f"{self.prefix_stays}{year}"]/data_type_hosp[f"{self.prefix_stays}{year}"].sum()
+            )/(
+                data_type_hosp["prix_apparent"]*data_type_hosp[f"{self.prefix_stays}{year-1}"]/data_type_hosp[f"{self.prefix_stays}{year-1}"].sum()
+            )
+                ).sum()-1
+            for year in self.years[1:]
+        }
+
+        del data_type_hosp
+        _ = gc.collect()
 
         # We compute the effet sévérité
+        data_severite = self.data.copy(deep=True)
+        data_severite["severite"] = data_severite[self.ghm].apply(lambda x: self._preprocess_severite(x[-1]))
+        data_price = self._prix_apparent_breakdown(data_severite,
+                                                   "severite",
+                                                   nber_stays_eps,
+                                                   amount_eps,
+                                                   rate_eps)
+        data_severite = data_severite.groupby("severite",
+                                            as_index=False)[[col for col in data_severite.columns
+                                                            if col.startswith(self.prefix_stays)]].sum()
+        data_severite=data_severite.merge(data_price, how="inner", left_on="severite", right_on="severite")
+        
+        dict_effet_severite = {
+            year:(
+                (
+                data_severite["prix_apparent"]*data_severite[f"{self.prefix_stays}{year}"]/data_severite[f"{self.prefix_stays}{year}"].sum()
+            )/(
+                data_severite["prix_apparent"]*data_severite[f"{self.prefix_stays}{year-1}"]/data_severite[f"{self.prefix_stays}{year-1}"].sum()
+            )
+                ).sum()-1
+            for year in self.years[1:]
+        }
 
+        del data_severite
+        _ = gc.collect()
+
+        # We concatenate all the effects 
         data_activity = pd.DataFrame(
             {
                 "Volume économique": dict_volume_economique,
@@ -217,7 +290,11 @@ class HospitalActivity:
             
         )
 
-        return data_activity
+        return data_activity[["Volume économique",
+                             "Effet volume", "Effet volume CJO",
+                             "Effet nombre de séjours", "Effet structure",
+                             "Effet racine", "Effet bascule vers l'ambulatoire",
+                             "Effet sévérité", "Effet résiduel"]]
 
     # def evolution_equivalents_journees(self, prefix_dms):
     #     """ """
