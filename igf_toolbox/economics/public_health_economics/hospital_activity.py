@@ -3,6 +3,7 @@ import gc
 
 import holidays
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 class HospitalActivity:
@@ -296,6 +297,21 @@ class HospitalActivity:
                              "Effet nombre de séjours", "Effet structure",
                              "Effet racine", "Effet bascule vers l'ambulatoire",
                              "Effet sévérité", "Effet résiduel"]]
+
+    def plot_effet_volume(self, ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp) -> None:
+        """
+        """
+
+        data = self.effet_volume(ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp)
+        
+        data_1 = data[["Effet volume", "Effet volume CJO"]]
+        data_2 = data[["Effet volume", "Effet nombre de séjours", "Effet structure"]]
+        data_3 = data[["Effet volume", "Effet nombre de séjours", "Effet racine",
+                      "Effet bascule vers l'ambulatoire", "Effet sévérité", "Effet résiduel"]]
+
+        
+
+        
 
     # def evolution_equivalents_journees(self, prefix_dms):
     #     """ """
