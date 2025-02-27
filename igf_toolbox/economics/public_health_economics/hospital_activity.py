@@ -170,8 +170,7 @@ class HospitalActivity:
 
         return data
 
-
-    def effet_volume(self, ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp) -> pd.DataFrame:
+    def effet_volume(self, ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp, prefix_pop, age_class, hc_value="HC") -> pd.DataFrame:
         """ 
         Returns effet volume, its calendar adjustment and all its components.
 
@@ -273,7 +272,7 @@ class HospitalActivity:
 
         # For correlation purposes with effet bascule vers l'ambulatoire
         # effet sévérité is computed on the scope HC stays only, to reduce effet résiduel
-        data_severite=data_severite[data_severite[type_hosp]=="HC"]
+        data_severite=data_severite[data_severite[type_hosp]==hc_value]
         data_severite["severite"] = data_severite[self.ghm].apply(lambda x: self._preprocess_severite(x[-1]))
         data_price = self._prix_apparent_breakdown(data_severite,
                                                    "severite",
@@ -299,6 +298,52 @@ class HospitalActivity:
         del data_severite
         _ = gc.collect()
 
+        # We add effet augmentation de la population 
+        years_pop = sorted(
+            [
+                int(re.search(r"\d+", col).group())
+                for col in data.columns
+                if col.startswith(prefix_pop)
+            ]
+        )
+
+        if not set(self.years).issubset(set(years_pop)):
+            raise ValueError("""Stays and population time series are not given for the 
+            same years""")
+
+        dict_effet_augmentation_population = {
+            year:(
+                (data.drop_duplicates(subset=age_class)[f"{prefix_pop}{year}"].sum()/
+                data.drop_duplicates(subset=age_class)[f"{prefix_pop}{year-1}"].sum())-1
+            )
+            for year in self.years[1:]
+        }
+
+        # We add effet pyramide des âges
+
+        dict_effet_pyramide_ages = {
+            year:(
+
+                (data.groupby(age_class)[[f"{self.prefix_stays}{year-1}", 
+                                         f"{prefix_pop}{year-1}",
+                                         f"{prefix_pop}{year}"]].apply(lambda x: 
+                                                                       x[f"{self.prefix_stays}{year-1}"].sum() / 
+                                                                       x[f"{prefix_pop}{year-1}"].mean() * 
+                                                                       x[f"{prefix_pop}{year}"].mean()).sum() / data.drop_duplicates(subset=age_class)[].sum(f"{prefix_pop}{year}"))
+                /
+
+                (data.groupby(age_class)[[f"{self.prefix_stays}{year-1}", 
+                                         f"{prefix_pop}{year-1}",
+                                         f"{prefix_pop}{year}"]].apply(lambda x: 
+                                                                       x[f"{self.prefix_stays}{year-1}"].sum() / 
+                                                                       x[f"{prefix_pop}{year-1}"].mean() * 
+                                                                       x[f"{prefix_pop}{year-1}"].mean()).sum() / data.drop_duplicates(subset=age_class)[].sum(f"{prefix_pop}{year-1}"))
+                
+            )-1
+            for year in self.years[1:]
+        }
+        
+
         # We concatenate all the effects 
         data_activity = pd.DataFrame(
             {
@@ -308,7 +353,9 @@ class HospitalActivity:
                 "Effet nombre de séjours": dict_effet_nombre_de_sejours,
                 "Effet racine":dict_effet_racine,
                 "Effet bascule vers l'ambulatoire":dict_effet_bascule_ambulatoire,
-                "Effet sévérité":dict_effet_severite
+                "Effet sévérité":dict_effet_severite,
+                "Effet augmentation de la population":dict_effet_augmentation_population,
+                "Effet pyramide des âges":dict_effet_pyramide_ages
             }
         )
 
@@ -325,62 +372,74 @@ class HospitalActivity:
             
         )
 
+        # We compute the effet démographie and the effet modification du taux de recours
+        data_activity["Effet démographie"] = (
+            data_activity["Effet augmentation de la population"]+data_activity["Effet pyramide des âges"]
+        )
+        data_activity["Effet modification du recours à l'hospitalisation"] = (
+            data_activity["Effet nombre de séjours"] - data_activity["Effet démographie"]
+        )
+
+        # Return the data in a proper order
         return data_activity[["Volume économique",
                              "Effet volume", "Effet volume CJO",
-                             "Effet nombre de séjours", "Effet structure",
+                             "Effet nombre de séjours",
+                             "Effet modification du recours à l'hospitalisation","Effet démographie",
+                             "Effet augmentation de la population","Effet pyramide des âges",
+                             "Effet structure",
                              "Effet racine", "Effet bascule vers l'ambulatoire",
                              "Effet sévérité", "Effet résiduel"]]
 
-    def plot_effet_volume(self, ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp) -> None:
-        """
-        """
+    # def plot_effet_volume(self, ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp) -> None:
+    #     """
+    #     """
 
-        data = self.effet_volume(ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp)
+    #     data = self.effet_volume(ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp)
         
-        data_1 = data[["Effet volume", "Effet volume CJO"]]
-        data_2 = data[["Effet volume", "Effet nombre de séjours", "Effet structure"]]
-        data_3 = data[["Effet volume", "Effet nombre de séjours", "Effet racine",
-                      "Effet bascule vers l'ambulatoire", "Effet sévérité", "Effet résiduel"]]
+    #     data_1 = data[["Effet volume", "Effet volume CJO"]]
+    #     data_2 = data[["Effet volume", "Effet nombre de séjours", "Effet structure"]]
+    #     data_3 = data[["Effet volume", "Effet nombre de séjours", "Effet racine",
+    #                   "Effet bascule vers l'ambulatoire", "Effet sévérité", "Effet résiduel"]]
 
-        fig, axes = plt.subplots(1, 3, figsize=(20,10))
+    #     fig, axes = plt.subplots(1, 3, figsize=(20,10))
 
-        # We plot effet volume and calendar adjustment
-        ax1=axes[0]
-        ax1.plot(data_1.index, data_1["Effet volume"], color="green", label="Effet volume")
-        ax1.plot(data_1.index, data_1["Effet volume CJO"], color="orange", label="Effet volume CJO",
-                linestyle="--", marker="x", alpha=.5)
+    #     # We plot effet volume and calendar adjustment
+    #     ax1=axes[0]
+    #     ax1.plot(data_1.index, data_1["Effet volume"], color="green", label="Effet volume")
+    #     ax1.plot(data_1.index, data_1["Effet volume CJO"], color="orange", label="Effet volume CJO",
+    #             linestyle="--", marker="x", alpha=.5)
 
-        ax1.set_title("Effet volume et effet volume CJO")
-        ax1.legend(loc="upper right")
+    #     ax1.set_title("Effet volume et effet volume CJO")
+    #     ax1.legend(loc="upper right")
 
-        # We plot the effet volume breakdown
-        ax2=axes[1]
-        ax2_=ax2.twinx()
-        ax2.plot(data_2.index, data_2["Effet volume"], marker="o", color="green", label="Effet volume")
-        ax2_.bar(data_2.index, data_2["Effet nombre de séjours"], alpha=1, label="Effet nombre de séjours")
-        ax2_.bar(data_2.index, data_2["Effet structure"], bottom=data_2["Effet nombre de séjours"], alpha=.5,
-                label="Effet structure")
+    #     # We plot the effet volume breakdown
+    #     ax2=axes[1]
+    #     ax2_=ax2.twinx()
+    #     ax2.plot(data_2.index, data_2["Effet volume"], marker="o", color="green", label="Effet volume")
+    #     ax2_.bar(data_2.index, data_2["Effet nombre de séjours"], alpha=1, label="Effet nombre de séjours")
+    #     ax2_.bar(data_2.index, data_2["Effet structure"], bottom=data_2["Effet nombre de séjours"], alpha=.5,
+    #             label="Effet structure")
         
 
-        ax2.set_title("Décomposition de l'effet volume")
-        ax2.legend(loc="upper left")
-        ax2_.legend(loc="upper right")
+    #     ax2.set_title("Décomposition de l'effet volume")
+    #     ax2.legend(loc="upper left")
+    #     ax2_.legend(loc="upper right")
 
-        # We plot the effet volume breakdown by all components
-        ax3=axes[2]
-        ax3_=ax3.twinx()
-        ax3.plot(data_3.index, data_3["Effet volume"], marker="o", color="green", label="Effet volume")
-        ax3_.bar(data_3.index, data_3["Effet nombre de séjours"], alpha=1, label="Effet nombre de séjours")
-        ax3_.bar(data_3.index, data_3["Effet racine"], bottom=data_3["Effet nombre de séjours"], alpha=.5,
-                label="Effet racine")
-        ax3_.bar(data_3.index, data_3["Effet sévérité"], bottom=data_3["Effet nombre de séjours"]+data_3["Effet racine"], alpha=.5,
-                label="Effet sévérité")
-        ax3_.bar(data_3.index, data_3["Effet bascule vers l'ambulatoire"], bottom=data_3["Effet nombre de séjours"]+data_3["Effet racine"]+data_3["Effet sévérité"],
-                 alpha=.5,
-                 label="Effet bascule vers l'ambulatoire")
-        ax3_.bar(data_3.index, data_3["Effet résiduel"], bottom=data_3["Effet nombre de séjours"]+data_3["Effet racine"]+data_3["Effet sévérité"]+data_3["Effet bascule vers l'ambulatoire"],
-                 alpha=.5,
-                 label="Effet résiduel")
+    #     # We plot the effet volume breakdown by all components
+    #     ax3=axes[2]
+    #     ax3_=ax3.twinx()
+    #     ax3.plot(data_3.index, data_3["Effet volume"], marker="o", color="green", label="Effet volume")
+    #     ax3_.bar(data_3.index, data_3["Effet nombre de séjours"], alpha=1, label="Effet nombre de séjours")
+    #     ax3_.bar(data_3.index, data_3["Effet racine"], bottom=data_3["Effet nombre de séjours"], alpha=.5,
+    #             label="Effet racine")
+    #     ax3_.bar(data_3.index, data_3["Effet sévérité"], bottom=data_3["Effet nombre de séjours"]+data_3["Effet racine"], alpha=.5,
+    #             label="Effet sévérité")
+    #     ax3_.bar(data_3.index, data_3["Effet bascule vers l'ambulatoire"], bottom=data_3["Effet nombre de séjours"]+data_3["Effet racine"]+data_3["Effet sévérité"],
+    #              alpha=.5,
+    #              label="Effet bascule vers l'ambulatoire")
+    #     ax3_.bar(data_3.index, data_3["Effet résiduel"], bottom=data_3["Effet nombre de séjours"]+data_3["Effet racine"]+data_3["Effet sévérité"]+data_3["Effet bascule vers l'ambulatoire"],
+    #              alpha=.5,
+    #              label="Effet résiduel")
         
-        plt.tight_layout()
-        plt.show()
+    #     plt.tight_layout()
+    #     plt.show()
