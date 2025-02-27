@@ -109,7 +109,7 @@ class HospitalActivity:
         
         data_price["prix_apparent"]=data_price[[nber_stays_eps, 
                                               amount_eps, 
-                                              rate_eps]].apply(lambda x: 0 if x[0]==0 or x[2]==0 else (1/x[0])*(x[1]/x[2]), 
+                                              rate_eps]].apply(lambda x: 0 if x.iloc[0]==0 or x.iloc[2]==0 else (1/x.iloc[0])*(x.iloc[1]/x.iloc[2]), 
                                                                axis=1)
 
         return data_price
@@ -133,15 +133,24 @@ class HospitalActivity:
                                      )
         
         data_price["prix_apparent"]=data_price[["sum_stays_eps",
-                                               "sum_amount_eps"]].apply(lambda x: 0 if x[0]==0 else (1/x[0])*x[1], axis=1)
+                                               "sum_amount_eps"]].apply(lambda x: 0 if x.iloc[0]==0 else (1/x.iloc[0])*x.iloc[1], axis=1)
         
         return data_price
+
+    def _preprocess_ghm(self, x:str)->str:
+        """
+        """
+        x=x.split(" - ")[0]
+        return x[0:6]
 
     def _preprocess_severite(self, x:str)->str:
         """
         """
         dict_severite = {"A":"1", "B":"2", "C":"3", "D":"4"}
         return dict_severite.get(x, x)
+
+    def _preprocess_diamant_dataframe(self, ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp, dms) -> pd.DataFrame:
+        pass
 
 
     def effet_volume(self, ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp) -> pd.DataFrame:
@@ -241,6 +250,10 @@ class HospitalActivity:
 
         # We compute the effet sévérité
         data_severite = self.data.copy(deep=True)
+
+        # For correlation purposes with effet bascule vers l'ambulatoire
+        # effet sévérité is computed on the scope HC stays only, to reduce effet résiduel
+        data_sevrite=data_sevrite[data_severite[type_hosp]=="HC"]
         data_severite["severite"] = data_severite[self.ghm].apply(lambda x: self._preprocess_severite(x[-1]))
         data_price = self._prix_apparent_breakdown(data_severite,
                                                    "severite",
