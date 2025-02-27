@@ -298,11 +298,13 @@ class HospitalActivity:
         del data_severite
         _ = gc.collect()
 
+        data_demo = self.data.copy(deep=True)
+
         # We add effet augmentation de la population 
         years_pop = sorted(
             [
                 int(re.search(r"\d+", col).group())
-                for col in data.columns
+                for col in data_demo.columns
                 if col.startswith(prefix_pop)
             ]
         )
@@ -313,8 +315,8 @@ class HospitalActivity:
 
         dict_effet_augmentation_population = {
             year:(
-                (data.drop_duplicates(subset=age_class)[f"{prefix_pop}{year}"].sum()/
-                data.drop_duplicates(subset=age_class)[f"{prefix_pop}{year-1}"].sum())-1
+                (data_demo.drop_duplicates(subset=age_class)[f"{prefix_pop}{year}"].sum()/
+                data_demo.drop_duplicates(subset=age_class)[f"{prefix_pop}{year-1}"].sum())-1
             )
             for year in self.years[1:]
         }
@@ -322,27 +324,30 @@ class HospitalActivity:
         # We add effet pyramide des âges
 
         dict_effet_pyramide_ages = {
-            year:(
-
-                (data.groupby(age_class)[[f"{self.prefix_stays}{year-1}", 
-                                         f"{prefix_pop}{year-1}",
-                                         f"{prefix_pop}{year}"]].apply(lambda x: 
-                                                                       x[f"{self.prefix_stays}{year-1}"].sum() / 
-                                                                       x[f"{prefix_pop}{year-1}"].mean() * 
-                                                                       x[f"{prefix_pop}{year}"].mean()).sum() / data.drop_duplicates(subset=age_class)[].sum(f"{prefix_pop}{year}"))
-                /
-
-                (data.groupby(age_class)[[f"{self.prefix_stays}{year-1}", 
-                                         f"{prefix_pop}{year-1}",
-                                         f"{prefix_pop}{year}"]].apply(lambda x: 
-                                                                       x[f"{self.prefix_stays}{year-1}"].sum() / 
-                                                                       x[f"{prefix_pop}{year-1}"].mean() * 
-                                                                       x[f"{prefix_pop}{year-1}"].mean()).sum() / data.drop_duplicates(subset=age_class)[].sum(f"{prefix_pop}{year-1}"))
-                
-            )-1
+            year: (
+                (
+                    data_demo.groupby(age_class)[[f"{self.prefix_stays}{year-1}", 
+                                             f"{prefix_pop}{year-1}",
+                                             f"{prefix_pop}{year}"]]
+                    .apply(lambda x: (x[f"{self.prefix_stays}{year-1}"].sum() / 
+                                      x[f"{prefix_pop}{year-1}"].mean() * 
+                                      x[f"{prefix_pop}{year}"].mean()))
+                    .sum() / 
+                    data_demo.drop_duplicates(subset=age_class)[f"{prefix_pop}{year}"].sum()
+                ) /
+                (
+                    data_demo.groupby(age_class)[[f"{self.prefix_stays}{year-1}", 
+                                             f"{prefix_pop}{year-1}",
+                                             f"{prefix_pop}{year}"]]
+                    .apply(lambda x: (x[f"{self.prefix_stays}{year-1}"].sum() / 
+                                      x[f"{prefix_pop}{year-1}"].mean() * 
+                                      x[f"{prefix_pop}{year-1}"].mean()))
+                    .sum() / 
+                    data_demo.drop_duplicates(subset=age_class)[f"{prefix_pop}{year-1}"].sum()
+                )
+            ) - 1
             for year in self.years[1:]
         }
-        
 
         # We concatenate all the effects 
         data_activity = pd.DataFrame(
