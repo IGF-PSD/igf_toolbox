@@ -93,18 +93,18 @@ class HospitalActivity:
 
         return jours_activite_n / jours_activite_n_1 - 1
 
-    def _prix_apparent(self, ghs, nber_stays_eps, amount_eps, rate_eps)->pd.DataFrame:
+    def _prix_apparent(self, data, ghs, nber_stays_eps, amount_eps, rate_eps)->pd.DataFrame:
         """ 
         Returns the average price of a GHMxGHS.
 
         Args:
         """
 
-        data_price=self.data.groupby(by=[self.ghm, ghs],
+        data_price=data.groupby(by=[self.ghm, ghs],
                                     as_index=False)[[nber_stays_eps,
                                                     amount_eps,
                                                     rate_eps]+
-                                                    [col for col in self.data.columns
+                                                    [col for col in data.columns
                                                     if col.startswith(self.prefix_stays)]].sum()
         
         data_price["prix_apparent"]=data_price[[nber_stays_eps, 
@@ -149,8 +149,26 @@ class HospitalActivity:
         dict_severite = {"A":"1", "B":"2", "C":"3", "D":"4"}
         return dict_severite.get(x, x)
 
-    def _preprocess_diamant_dataframe(self, ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp, dms) -> pd.DataFrame:
-        pass
+    def _preprocess_effet_volume(self, data, ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp) -> pd.DataFrame:
+        """
+        """
+
+        # Fill with 0 missing values in stays and amouns
+        for col in [col for col in data.columns
+                   if col.startswith(self.prefix_stays)]:
+            data[col]=data[col].fillna(0)
+
+        for col in [nber_stays_eps, amount_eps, rate_eps]:
+            data[col]=data[col].fillna(0)
+
+        # Fill missing GHM, GHS, type_hosp
+        for col in [self.ghm, ghs, type_hosp]:
+            data[col]=data[col].ffill()
+
+        # Make the GHM in the right format to compute racine
+        data[self.ghm]=data[self.ghm].apply(self._preprocess_ghm)
+
+        return data
 
 
     def effet_volume(self, ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp) -> pd.DataFrame:
@@ -164,7 +182,9 @@ class HospitalActivity:
         Raises:
         """
 
-        data = self._prix_apparent(ghs, nber_stays_eps, amount_eps, rate_eps)
+        data = self.data.copy(deep=True)
+        data = self._preprocess_effet_volume(data, ghs, nber_stays_eps, amount_eps, rate_eps, type_hosp)
+        data = self._prix_apparent(data, ghs, nber_stays_eps, amount_eps, rate_eps)
 
         data = data.groupby(
             by=[self.ghm, ghs], as_index=False
@@ -253,7 +273,7 @@ class HospitalActivity:
 
         # For correlation purposes with effet bascule vers l'ambulatoire
         # effet sévérité is computed on the scope HC stays only, to reduce effet résiduel
-        data_sevrite=data_sevrite[data_severite[type_hosp]=="HC"]
+        data_severite=data_severite[data_severite[type_hosp]=="HC"]
         data_severite["severite"] = data_severite[self.ghm].apply(lambda x: self._preprocess_severite(x[-1]))
         data_price = self._prix_apparent_breakdown(data_severite,
                                                    "severite",
