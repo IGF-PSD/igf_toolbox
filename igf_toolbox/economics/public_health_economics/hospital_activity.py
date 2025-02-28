@@ -162,7 +162,7 @@ class HospitalActivity:
     ) -> pd.DataFrame:
         """ """
 
-        # Fill with 0 missing values in stays and amouns
+        # Fill with 0 missing values in stays and amounts
         for col in [col for col in data.columns if col.startswith(self.prefix_stays)]:
             data[col] = data[col].fillna(0)
 
@@ -483,7 +483,8 @@ class HospitalActivity:
         data = self.data.copy(deep=True)
         data = data[[self.ghm, type_hosp]+[col for col in data.columns
                                           if col.startswith(self.prefix_stays) or col.startswith(prefix_dms)]]
-        
+
+        # We preprocess the data
         for col in [col for col in data.columns
                    if col.startswith(prefix_dms)]:
             data[col]=data[col].fillna(1)
@@ -491,6 +492,10 @@ class HospitalActivity:
         for col in [col for col in data.columns
                    if col.startswith(self.prefix_stays)]:
             data[col]=data[col].fillna(0)
+
+        # Fill missing GHM, type_hosp
+        for col in [self.ghm, type_hosp]:
+            data[col] = data[col].ffill()
 
         dict_equivalents_journees_hp = {
             year:data[data[type_hosp]==hp_value][f"{self.prefix_stays}{year}"].sum()
