@@ -555,10 +555,10 @@ class HospitalActivity:
         ].pct_change()
 
         # We compute the calendar adjustments for this evolution
-        data_activity["Evolution équivalents-journées CJO"] = (
-            data_activity.apply(lambda x: x["Evolution équivalents-journées"] - self._effet_cjo(x.name, 
-                                                                                                "sejours"),
-                               axis=1)
+        data_activity["Evolution équivalents-journées CJO"] = data_activity.apply(
+            lambda x: x["Evolution équivalents-journées"]
+            - self._effet_cjo(x.name, "sejours"),
+            axis=1,
         )
 
         # We compute the contributions of HC and HP to this evolution
