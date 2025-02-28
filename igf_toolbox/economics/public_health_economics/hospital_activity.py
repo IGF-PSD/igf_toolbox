@@ -1,5 +1,5 @@
-import re
 import gc
+import re
 
 import holidays
 import pandas as pd
@@ -476,49 +476,61 @@ class HospitalActivity:
             ]
         ]
 
-    def evolution_equivalents_journees(self, prefix_dms, type_hosp, hc_value="HC", hp_value="Ambulatoire")->pd.DataFrame:
-        """
-        """
+    def evolution_equivalents_journees(
+        self, prefix_dms, type_hosp, hc_value="HC", hp_value="Ambulatoire"
+    ) -> pd.DataFrame:
+        """ """
 
         data = self.data.copy(deep=True)
-        data = data[[self.ghm, type_hosp]+[col for col in data.columns
-                                          if col.startswith(self.prefix_stays) or col.startswith(prefix_dms)]]
+        data = data[
+            [self.ghm, type_hosp]
+            + [
+                col
+                for col in data.columns
+                if col.startswith(self.prefix_stays) or col.startswith(prefix_dms)
+            ]
+        ]
 
         # We preprocess the data
-        for col in [col for col in data.columns
-                   if col.startswith(prefix_dms)]:
-            data[col]=data[col].fillna(1)
+        for col in [col for col in data.columns if col.startswith(prefix_dms)]:
+            data[col] = data[col].fillna(1)
 
-        for col in [col for col in data.columns
-                   if col.startswith(self.prefix_stays)]:
-            data[col]=data[col].fillna(0)
+        for col in [col for col in data.columns if col.startswith(self.prefix_stays)]:
+            data[col] = data[col].fillna(0)
 
         # Fill missing GHM, type_hosp
         for col in [self.ghm, type_hosp]:
             data[col] = data[col].ffill()
 
         dict_equivalents_journees_hp = {
-            year:data[data[type_hosp]==hp_value][f"{self.prefix_stays}{year}"].sum()
+            year: data[data[type_hosp] == hp_value][f"{self.prefix_stays}{year}"].sum()
             for year in self.years
         }
 
         dict_equivalents_journees_hc = {
             year: data[data[type_hosp] == hc_value]
             .groupby(self.ghm)[[f"{self.prefix_stays}{year}", f"{prefix_dms}{year}"]]
-            .apply(lambda x: (x[f"{self.prefix_stays}{year}"] * x[f"{prefix_dms}{year}"]).sum())
+            .apply(
+                lambda x: (
+                    x[f"{self.prefix_stays}{year}"] * x[f"{prefix_dms}{year}"]
+                ).sum()
+            )
             .sum()
             for year in self.years
         }
 
         dict_sejours_hc = {
-            year:data[data[type_hosp]==hc_value][f"{self.prefix_stays}{year}"].sum()
+            year: data[data[type_hosp] == hc_value][f"{self.prefix_stays}{year}"].sum()
             for year in self.years
         }
 
         dict_dms_moyenne = {
             year: (
-                (data[data[type_hosp] == hc_value][f"{self.prefix_stays}{year}"] * data[data[type_hosp] == hc_value][f"{prefix_dms}{year}"]).sum()
-                /data[data[type_hosp] == hc_value][f"{self.prefix_stays}{year}"].sum()
+                (
+                    data[data[type_hosp] == hc_value][f"{self.prefix_stays}{year}"]
+                    * data[data[type_hosp] == hc_value][f"{prefix_dms}{year}"]
+                ).sum()
+                / data[data[type_hosp] == hc_value][f"{self.prefix_stays}{year}"].sum()
             )
             for year in self.years
         }
@@ -528,36 +540,59 @@ class HospitalActivity:
                 "Equivalents-journées HP": dict_equivalents_journees_hp,
                 "Equivalents-journées HC": dict_equivalents_journees_hc,
                 "Séjours HC": dict_sejours_hc,
-                "DMS moyenne": dict_dms_moyenne
+                "DMS moyenne": dict_dms_moyenne,
             }
         )
 
         data_activity["Equivalents-journées"] = (
-            data_activity["Equivalents-journées HP"] + data_activity["Equivalents-journées HC"]
+            data_activity["Equivalents-journées HP"]
+            + data_activity["Equivalents-journées HC"]
         )
 
         # We compute the evolution of équivalents-journées
-        data_activity["Evolution équivalents-journées"]=data_activity["Equivalents-journées"].pct_change()
+        data_activity["Evolution équivalents-journées"] = data_activity[
+            "Equivalents-journées"
+        ].pct_change()
 
         # We compute the contributions of HC and HP to this evolution
-        data_activity["Contribution équivalents-journées HP"]=(
-            data_activity["Equivalents-journées HP"].diff()/data_activity["Equivalents-journées"].shift()
+        data_activity["Contribution équivalents-journées HP"] = (
+            data_activity["Equivalents-journées HP"].diff()
+            / data_activity["Equivalents-journées"].shift()
         )
-        data_activity["Contribution équivalents-journées HC"]=(
-            data_activity["Equivalents-journées HC"].diff()/data_activity["Equivalents-journées"].shift()
+        data_activity["Contribution équivalents-journées HC"] = (
+            data_activity["Equivalents-journées HC"].diff()
+            / data_activity["Equivalents-journées"].shift()
         )
 
         # We compute the contribution of HC stays, HP stays and DMS to this evolution
-        data_activity["Contribution séjours HP"]=data_activity["Contribution équivalents-journées HP"]
-        data_activity["Contribution séjours HC"]=data_activity["Séjours HC"].diff()/data_activity["Equivalents-journées"].shift()
-        data_activity["Contribution DMS"]=data_activity["DMS moyenne"].diff()/data_activity["Equivalents-journées"].shift()
-        data_activity["Effet résiduel"]=(
-            data_activity["Evolution équivalents-journées"] - data_activity[["Contribution séjours HP",
-                                                                            "Contribution séjours HC",
-                                                                            "Contribution DMS"]].sum(axis=1)
+        data_activity["Contribution séjours HP"] = data_activity[
+            "Contribution équivalents-journées HP"
+        ]
+        data_activity["Contribution séjours HC"] = (
+            data_activity["Séjours HC"].diff()
+            / data_activity["Equivalents-journées"].shift()
         )
+        data_activity["Contribution DMS"] = (
+            data_activity["DMS moyenne"].diff()
+            / data_activity["Equivalents-journées"].shift()
+        )
+        data_activity["Effet résiduel"] = data_activity[
+            "Evolution équivalents-journées"
+        ] - data_activity[
+            ["Contribution séjours HP", "Contribution séjours HC", "Contribution DMS"]
+        ].sum(axis=1)
 
-        return data_activity[["Equivalents-journées", "Equivalents-journées HP", "Equivalents-journées HC",
-                             "Evolution équivalents-journées", "Contribution équivalents-journées HP",
-                             "Contribution équivalents-journées HC",
-                             "Contribution séjours HP", "Contribution séjours HC", "Contribution DMS", "Effet résiduel"]]
+        return data_activity[
+            [
+                "Equivalents-journées",
+                "Equivalents-journées HP",
+                "Equivalents-journées HC",
+                "Evolution équivalents-journées",
+                "Contribution équivalents-journées HP",
+                "Contribution équivalents-journées HC",
+                "Contribution séjours HP",
+                "Contribution séjours HC",
+                "Contribution DMS",
+                "Effet résiduel",
+            ]
+        ]
