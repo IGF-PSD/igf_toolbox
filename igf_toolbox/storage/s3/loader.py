@@ -1,8 +1,8 @@
 # Importation des modules
 # Module de base
-from io import BytesIO
 # Modules de gestion de formats JSON, Excel et de données géographiques
-from json import load
+import json
+from io import BytesIO
 from typing import Optional
 
 import openpyxl
@@ -12,53 +12,62 @@ from geopandas import read_file
 # Importation du module de connection
 from ._connection import _S3Connection
 
-class S3Loader(_S3Connection):
-    """
-    A class for loading data from an Amazon S3 bucket using 'boto3' or 's3fs' as the underlying package.
 
-    This class extends the `_S3Connection` parent class and provides methods for establishing a connection to the S3 bucket
-    and loading data from a specified S3 object.
+class S3Loader(_S3Connection):
+    """A class for loading data from Amazon S3 buckets.
+
+    This class extends the `_S3Connection` parent class and provides methods for
+    establishing connections to S3 buckets and loading data from S3 objects.
 
     Args:
-        package (str):
-            The package to use for connecting to S3 ('s3fs' or 'boto3').
+        s3_package (str, optional): Package to use for S3 connections ('s3fs' or 'boto3').
+            Defaults to "boto3".
 
-    Methods:
-        connect(**kwargs):
-            Establishes a connection to the S3 bucket.
+    Attributes:
+        s3: The S3 connection object (initialized when needed)
+        s3_package (str): The package being used for S3 connectivity
 
-        load(bucket, key, **kwargs):
-            Loads data from a specified S3 object based on its file extension and returns it as a Pandas DataFrame, JSON object,
-            Pickle object, or GeoDataFrame, depending on the file extension.
+    Examples:
+        Load CSV from S3 using boto3:
+        >>> loader = S3Loader()
+        >>> loader.connect(
+        ...     aws_access_key_id='YOUR_KEY',
+        ...     aws_secret_access_key='YOUR_SECRET'
+        ... )
+        >>> data = loader.load(
+        ...     bucket='my-bucket',
+        ...     key='path/to/file.csv'
+        ... )
 
-    Example :
-    >>> s3_loader = S3Loader(package='boto3')
-    >>> s3_connection = s3_loader.connect(aws_access_key_id='your_access_key', aws_secret_access_key='your_secret_key')
-    >>> data = s3_loader.load(bucket='your_bucket', key='your_file.csv')
+        Load Excel file using s3fs:
+        >>> loader = S3Loader(s3_package='s3fs')
+        >>> loader.connect()  # Uses environment variables
+        >>> data = loader.load(
+        ...     bucket='my-bucket',
+        ...     key='path/to/file.xlsx',
+        ...     sheet_name='Data'
+        ... )
     """
 
-    def __init__(self, package: Optional[str] = "boto3") -> None:
-        """
-        Initialize the S3Loader class with the specified package.
+    def __init__(self, s3_package: Optional[str] = "boto3") -> None:
+        """Initialize the S3Loader with specified S3 package.
 
         Args:
-            package (str):
-                The package to use for connecting to S3 ('s3fs' or 'boto3').
+            s3_package (str, optional): Package to use for S3 connections.
+                Must be either 's3fs' or 'boto3'. Defaults to "boto3".
         """
         # Initialisation du parent
-        super().__init__(package=package)
+        super().__init__(s3_package=s3_package)
 
     def connect(self, **kwargs) -> None:
         """
         Establish a connection to the S3 bucket.
 
         Args:
-            **kwargs:
-                Additional keyword arguments for establishing the connection.
+            **kwargs: Additional keyword arguments for establishing the connection.
 
         Returns:
-            (obj):
-                The established S3 connection.
+            object: The established S3 connection.
 
         Example :
         >>> s3_loader = S3Loader(package='boto3')
@@ -72,16 +81,12 @@ class S3Loader(_S3Connection):
         Load data from a specified S3 object based on its file extension.
 
         Args:
-            bucket (str):
-                The name of the S3 bucket.
-            key (str):
-                The key of the S3 object to load.
-            **kwargs:
-                Additional keyword arguments for reading the data.
+            bucket (str): The name of the S3 bucket.
+            key (str): The key of the S3 object to load.
+            **kwargs: Additional keyword arguments for reading the data.
 
         Returns:
-            (obj):
-                The loaded data (Pandas DataFrame, JSON object, Pickle object, or GeoDataFrame).
+            object: The loaded data (Pandas DataFrame, JSON object, Pickle object, or GeoDataFrame).
 
         Example :
         >>> s3_loader = S3Loader(package='boto3')
@@ -96,7 +101,7 @@ class S3Loader(_S3Connection):
         extension = key.split(".")[-1]
 
         # Chargement des données
-        if self.package == "boto3":
+        if self.s3_package == "boto3":
             # Ouverture du fichier
             s3_file = self.s3.get_object(Bucket=bucket, Key=key)["Body"]
             # Test suivant l'extension du fichier à charger et lecture de ce-dernier
@@ -108,7 +113,7 @@ class S3Loader(_S3Connection):
                 data = pd.read_parquet(BytesIO(s3_file.read()), **kwargs)
             else:
                 data = self._read_data(s3_file=s3_file, extension=extension, **kwargs)
-        elif self.package == "s3fs":
+        elif self.s3_package == "s3fs":
             with self.s3.open(f"{bucket}/{key}", "rb") as s3_file:
                 # Test suivant l'extension du fichier à charger et lecture de ce-dernier
                 if extension == "xlsx":
@@ -124,33 +129,31 @@ class S3Loader(_S3Connection):
 
     # Fonction auxiliaire de lecture des données
     def _read_data(self, s3_file, extension: str, **kwargs):
-        """
-        Read data from an S3 file based on its extension.
+        """Read data from an S3 file based on its extension.
 
-        This function reads data from an S3 file based on its file extension and returns the data as a Pandas DataFrame,
-        JSON object, Pickle object, or GeoDataFrame, depending on the extension.
+        Internal method to handle reading of data from S3 files based on their format.
 
         Args:
-            s3_file (obj):
-                The S3 file object to read from.
-            extension (str):
-                The file extension indicating the file format ('csv', 'json', 'pkl', 'geojson', 'parquet').
-            **kwargs:
-                Additional keyword arguments specific to the file format's reading method.
+            s3_file: The S3 file object to read from (type varies by s3_package)
+            extension (str): File extension indicating format
+            **kwargs: Additional arguments passed to the reading function
 
         Returns:
-            (obj):
-                The read data (Pandas DataFrame, JSON object, Pickle object, or GeoDataFrame).
+            object: The loaded data in appropriate format:
+                - .csv -> pandas DataFrame
+                - .json -> dict or pandas DataFrame
+                - .pkl -> pickled object
+                - .geojson -> GeoDataFrame
+                - .parquet -> pandas DataFrame
 
         Raises:
-            ValueError:
-                If the 'extension' argument is not one of ['csv', 'json', 'pkl', 'geojson', 'parquet'].
+            ValueError: If the extension is not supported
+            pd.errors.EmptyDataError: If the file is empty
+            json.JSONDecodeError: If JSON file is invalid
 
-        Example :
-        >>> s3_connection = _S3Connection(package='boto3')
-        >>> s3_client = s3_connection._connect(aws_access_key_id='your_access_key', aws_secret_access_key='your_secret_key')
-        >>> s3_file = s3_client.get_object(Bucket='your_bucket', Key='your_file.csv')
-        >>> data = _read_data(s3_file, extension='csv')
+        Example:
+            >>> s3_file = s3.get_object(Bucket='bucket', Key='file.csv')['Body']
+            >>> data = loader._read_data(s3_file, 'csv', encoding='utf-8')
         """
         # Test sur l'extension et lecture du fichier
         if extension == "csv":

@@ -1,1 +1,0 @@
-::: igf_toolbox.s3.loaders.S3Loader

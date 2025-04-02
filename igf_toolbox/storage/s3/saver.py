@@ -16,57 +16,73 @@ from matplotlib.pyplot import close, savefig
 # Importation du module de connection
 from ._connection import _S3Connection
 
+
 # Classe de sauvegarde de données sur un Bucket S3
 class S3Saver(_S3Connection):
-    """
-    A class for saving data to an Amazon S3 bucket using 'boto3' or 's3fs' as the underlying package.
+    """A class for saving data to Amazon S3 buckets.
 
-    This class extends the `_S3Connection` parent class and provides methods for establishing a connection to the S3 bucket
-    and saving data to a specified S3 object.
+    This class extends the `_S3Connection` parent class and provides methods for
+    establishing connections to S3 buckets and saving data to S3 objects.
 
     Args:
-        package (str):
-            The package to use for connecting to S3 ('s3fs' or 'boto3').
+        s3_package (str, optional): Package to use for S3 connections ('s3fs' or 'boto3').
+            Defaults to "boto3".
 
-    Methods:
-        connect(**kwargs):
-            Establishes a connection to the S3 bucket.
+    Attributes:
+        s3: The S3 connection object (initialized when needed)
+        s3_package (str): The package being used for S3 connectivity
 
-        save(bucket, key, obj=None, **kwargs):
-            Saves an object to a specified S3 object based on its file extension and object type.
+    Examples:
+        Save DataFrame to S3 using boto3:
+        >>> saver = S3Saver()
+        >>> saver.connect(
+        ...     aws_access_key_id='YOUR_KEY',
+        ...     aws_secret_access_key='YOUR_SECRET'
+        ... )
+        >>> df = pd.DataFrame({'A': [1, 2], 'B': [3, 4]})
+        >>> saver.save(
+        ...     bucket='my-bucket',
+        ...     key='path/to/file.csv',
+        ...     obj=df
+        ... )
 
-    Example :
-    >>> s3_saver = S3Saver(package='boto3')
-    >>> s3_connection = s3_saver.connect(aws_access_key_id='your_access_key', aws_secret_access_key='your_secret_key')
-    >>> s3_saver.save(bucket='your_bucket', key='your_file.csv', obj=dataframe)
+        Save multiple DataFrames to Excel using s3fs:
+        >>> saver = S3Saver(s3_package='s3fs')
+        >>> saver.connect()  # Uses environment variables
+        >>> sheets = {'Sheet1': df1, 'Sheet2': df2}
+        >>> saver.save(
+        ...     bucket='my-bucket',
+        ...     key='path/to/file.xlsx',
+        ...     obj=sheets
+        ... )
     """
 
-    def __init__(self, package: Optional[str] = "boto3") -> None:
-        """
-        Initialize the S3Saver class with the specified package.
+    def __init__(self, s3_package: Optional[str] = "boto3") -> None:
+        """Initialize the S3Saver with specified S3 package.
 
         Args:
-            package (str):
-                The package to use for connecting to S3 ('s3fs' or 'boto3').
+            s3_package (str, optional): Package to use for S3 connections.
+                Must be either 's3fs' or 'boto3'. Defaults to "boto3".
         """
         # Initialisation du parent
-        super().__init__(package=package)
+        super().__init__(s3_package=s3_package)
 
     def connect(self, **kwargs) -> None:
         """
         Establish a connection to the S3 bucket.
 
         Args:
-            **kwargs:
-                Additional keyword arguments for establishing the connection.
+            **kwargs: Additional keyword arguments for establishing the connection.
 
         Returns:
-            (obj):
-                The established S3 connection.
+            object: The established S3 connection.
 
         Example usage:
         >>> s3_saver = S3Saver(package='boto3')
-        >>> s3_connection = s3_saver.connect(aws_access_key_id='your_access_key', aws_secret_access_key='your_secret_key')
+        >>> s3_connection = s3_saver.connect(
+            aws_access_key_id='your_access_key',
+            aws_secret_access_key='your_secret_key'
+        )
         """
         # Etablissement d'une connection
         return self._connect(**kwargs)
@@ -78,22 +94,21 @@ class S3Saver(_S3Connection):
         Save an object to a specified S3 object based on its file extension and object type.
 
         Args:
-            bucket (str):
-                The name of the S3 bucket.
-            key (str):
-                The key of the S3 object to save.
-            obj (obj):
-                The object to save (Pandas DataFrame, dictionary, Pickle object, Matplotlib figure, etc.).
-            **kwargs:
-                Additional keyword arguments for saving the object.
+            bucket (str): The name of the S3 bucket.
+            key (str): The key of the S3 object to save.
+            obj (object): The object to save (DataFrame, dictionary, etc.).
+            **kwargs: Additional keyword arguments for saving the object.
 
         Raises:
-            ValueError:
-                If the 'extension' argument is not one of ['csv', 'xlsx', 'xls', 'json', 'pkl', 'png', 'parquet'].
+            ValueError: If the file extension is not supported
+            TypeError: If the object type doesn't match the requirements
 
         Example :
         >>> s3_saver = S3Saver(package='boto3')
-        >>> s3_connection = s3_saver.connect(aws_access_key_id='your_access_key', aws_secret_access_key='your_secret_key')
+        >>> s3_connection = s3_saver.connect(
+            aws_access_key_id='your_access_key',
+            aws_secret_access_key='your_secret_key'
+        )
         >>> s3_saver.save(bucket='your_bucket', key='your_file.csv', obj=dataframe)
         """
         # Etablissement d'une connexion s'il n'en existe pas une nouvelle
@@ -104,7 +119,7 @@ class S3Saver(_S3Connection):
         extension = key.split(".")[-1]
 
         # Exportation de l'objet
-        if self.package == "boto3":
+        if self.s3_package == "boto3":
             if extension == "csv":
                 self.s3.put_object(Bucket=bucket, Key=key, Body=obj.to_csv(**kwargs))
             elif extension in ["xlsx", "xls"]:
@@ -114,7 +129,7 @@ class S3Saver(_S3Connection):
                     with BytesIO() as output:
                         with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
                             for key_obj, value_obj in obj.items():
-                                # La longueur d'une sheet_name est majorée à 31 caractères
+                                # La longueur d'une sheet_name est majoré à 31 caractères
                                 export_key = (
                                     key_obj if len(key_obj) <= 31 else key_obj[:31]
                                 )
@@ -163,7 +178,7 @@ class S3Saver(_S3Connection):
                     "File type should either be csv, xlsx, xls, json, pkl, geojson or png."
                 )
 
-        elif self.package == "s3fs":
+        elif self.s3_package == "s3fs":
             # Distinction suivant le format du fichier et export
             if extension in ["xlsx", "xls"]:
                 with self.s3.open(f"{bucket}/{key}", "wb") as s3_file:

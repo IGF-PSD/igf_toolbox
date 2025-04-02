@@ -118,13 +118,16 @@ nav:
         - AddConstante: api/AddConstante.md
         - AddFixedEffect: api/AddFixedEffect.md
         - AddInteraction: api/AddInteraction.md
-    - S3:
-      - Connection:
-        - _S3Connection: api/_S3Connection.md
-      - Loaders:
-        - S3Loader: api/S3Loader.md
-      - Savers:
-        - S3Saver: api/S3Saver.md
+    - Storage :
+      - Loader : api/storage/Loader.md
+      - Saver : api/storage/Saver.md
+      - Local :
+        - load_local : api/storage/local/load_local.md
+        - save_local : api/storage/local/save_local.md
+      - S3 :
+        - _S3Connection : api/storage/s3/_S3Connection.md
+        - S3Loader : api/storage/s3/S3Loader.md
+        - S3Saver : api/storage/s3/S3Saver.md
     - Descriptive statistics:
       - Control secret stat:
         - PrimarySecretStatController: api/PrimarySecretStatController.md
