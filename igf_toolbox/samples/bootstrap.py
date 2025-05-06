@@ -76,8 +76,10 @@ class Bootstrap:
             self.lower_bound_ci, self.upper_bound_ci = np.percentile(self.bootstrap_means, 
                                                                      [100*(alpha/2), 100*(1-alpha/2)])
         elif type_ci == "basic":
-
-        elif type_ci == "studentized":
+            self.upper_bound_ci, self.lower_bound_ci = np.percentile(self.bootstrap_means, 
+                                                                     [100*(alpha/2), 100*(1-alpha/2)])
+            self.lower_bound_ci = 2*self.empiric_mean-self.lower_bound_ci
+            self.upper_bound_ci = 2*self.empiric_mean-self.upper_bound_ci
 
         else:
             raise ValueError(f"Unsupported confidence interval type : {type_ci}")
