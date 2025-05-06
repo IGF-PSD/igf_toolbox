@@ -14,6 +14,9 @@ class Bootstrap:
     empiric_stat: float = field(init=False)
 
     def __post_init__(self):
+
+        self.data = np.asarray(self.data).flatten()
+        
         distribution = self._fit_distribution()
         self.bootstrap_stats = np.array([
             self.statistic(distribution(size=len(self.data)))
