@@ -169,6 +169,9 @@ class S3Saver(_S3Connection):
                 # Construction de l'objet à exporter
                 with BytesIO() as output:
                     obj.to_parquet(output, **kwargs)
+                    output_data = output.getvalue()
+                # Exportation de l'objet
+                self.s3.put_object(Bucket=bucket, Key=key, Body=output_data)
             elif extension == "geojson":
                 self.s3.put_object(
                     Bucket=bucket, Key=key, Body=obj.to_json().encode("utf-8")
