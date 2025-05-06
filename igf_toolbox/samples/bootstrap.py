@@ -53,13 +53,16 @@ class Bootstrap:
         self.empiric_variance = np.mean((np.array(self.bootstrap_means) - self.empiric_mean) ** 2)
         return float(self.empiric_variance)
 
-    def compute_confidence_interval(self, alpha: float = .05) -> Tuple[float, float]:
+    def compute_confidence_interval(self, 
+                                    alpha: float = .05,
+                                    type_ci: str = "percentile") -> Tuple[float, float]:
         """
         Return the lower and upper bounds of he bootstrap estimate
         of the sample mean for a given level.
 
         Args:
             alpha (float): Level of the confidence interval, defaults to 5%.
+            type_ci (str): Type of confidence interval, defaults to `percentile`.
 
         Returns: 
             Tuple[float, float]: A tuple of lower and upper bounds.
@@ -69,7 +72,14 @@ class Bootstrap:
             warnings.warn("`num_iters` should be superior to 1000 to have good confidence intervals", 
                           UserWarning)
 
-        self.lower_bound_ci, self.upper_bound_ci = np.percentile(self.bootstrap_means, 
-                                                                 [100*(alpha/2), 100*(1-alpha/2)])
+        if type_ci == "percentile":
+            self.lower_bound_ci, self.upper_bound_ci = np.percentile(self.bootstrap_means, 
+                                                                     [100*(alpha/2), 100*(1-alpha/2)])
+        elif type_ci == "basic":
+
+        elif type_ci == "studentized":
+
+        else:
+            raise ValueError(f"Unsupported confidence interval type : {type_ci}")
 
         return float(self.lower_bound_ci), float(self.upper_bound_ci)
