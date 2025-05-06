@@ -9,7 +9,7 @@ class Bootstrap:
     data: np.ndarray
     num_iters: int = 10000
     distribution_name: str = "empirical"
-    statistic: Callable = np.mean  # Can be np.median, np.std, etc.
+    statistic: Callable = np.mean  
     bootstrap_stats: np.ndarray = field(init=False)
     empiric_stat: float = field(init=False)
 
@@ -19,7 +19,8 @@ class Bootstrap:
             self.statistic(distribution(size=len(self.data)))
             for _ in range(self.num_iters)
         ])
-        self.empiric_stat = float(np.mean(self.bootstrap_stats))
+        self.sample_stat = self.statistic(self.data)
+        self.empiric_mean = float(np.mean(self.bootstrap_stats))
 
     def _fit_distribution(self) -> Callable:
         """
@@ -39,17 +40,23 @@ class Bootstrap:
         else:
             raise ValueError(f"Unsupported distribution: {self.distribution_name}")
 
-    def compute_empiric_stat(self) -> float:
+    def return_bootstraped_statistic(self) -> np.ndarray:
         """
-        Return the bootstrap estimate of the statistic.
+        Return the bootstraped statistics.
         """
-        return self.empiric_stat
+        return self.bootstrap_stats
+
+    def compute_empiric_mean(self) -> float:
+        """
+        Return the bootstrap mean of the statistic.
+        """
+        return self.empiric_mean
 
     def compute_empiric_variance(self) -> float:
         """
         Return the variance of the bootstrap estimate of the statistic.
         """
-        return float(np.mean((self.bootstrap_stats - self.empiric_stat) ** 2))
+        return float(np.mean((self.bootstrap_stats - self.empiric_mean) ** 2))
 
     def compute_confidence_interval(self, 
                                     alpha: float = .05,
@@ -73,8 +80,8 @@ class Bootstrap:
             lower, upper = np.percentile(self.bootstrap_stats, [100 * (alpha / 2), 100 * (1 - alpha / 2)])
         elif type_ci == "basic":
             lower_p, upper_p = np.percentile(self.bootstrap_stats, [100 * (alpha / 2), 100 * (1 - alpha / 2)])
-            lower = 2 * self.empiric_stat - upper_p
-            upper = 2 * self.empiric_stat - lower_p
+            lower = 2 * self.sample_stat - upper_p
+            upper = 2 * self.sample_stat - lower_p
         else:
             raise ValueError(f"Unsupported confidence interval type: {type_ci}")
 
