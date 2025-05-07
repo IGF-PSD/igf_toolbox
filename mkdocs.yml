@@ -145,6 +145,8 @@ nav:
         - assign_quantile: api/assign_quantile.md
         - _assign_quantile_array: api/_assign_quantile_array.md
         - create_pond_data: api/create_pond_data.md
+    - Samples:
+        - Bootstrap: api/Bootstrap.md
     - Utils:
       - Auxiliary:
         - _separate_category_modality_from_dummy: api/_separate_category_modality_from_dummy.md
