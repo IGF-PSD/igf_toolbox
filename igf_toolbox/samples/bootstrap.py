@@ -8,6 +8,30 @@ from .utils import bootstrap_preprocess_data
 
 @dataclass
 class Bootstrap:
+    """
+    A class for performing bootstrap resampling and statistical inference.
+
+    Args:
+        data (Sequence[float]): Input data sample to bootstrap.
+        num_iters (int): Number of bootstrap iterations. Defaults to 10000.
+        distribution_name (str): Distribution type - "empirical", "normal", "poisson", or "uniform".
+        statistic (Callable): Statistical function to apply. Defaults to numpy.mean.
+
+    Attributes:
+        bootstrap_stats (np.ndarray): Statistics from bootstrap samples.
+        sample_stat (float): Statistic on the original sample.
+        empiric_mean (float): Mean of the bootstrap statistics.
+
+    Examples:
+        >>> from igf_toolbox.samples.bootstrap import Bootstrap
+        >>> data = [1.2, 2.3, 3.1, 4.0, 5.2]
+        >>> bs = Bootstrap(data, num_iters=5000, distribution_name="empirical", statistic = np.mean)
+        >>> bs.compute_sample_statistic()
+        3.16
+        >>> bs.compute_confidence_interval(alpha=0.05)
+        (2.1, 4.2)
+    """
+
     data: Sequence[float]
     num_iters: int = 10000
     distribution_name: str = "empirical"
@@ -17,6 +41,9 @@ class Bootstrap:
     empiric_mean: float = field(init=False)
 
     def __post_init__(self):
+        """
+        Preprocess the data, perform bootstrap resampling, and compute initial statistics.
+        """
         self.data = bootstrap_preprocess_data(self.data)
         distribution = self._fit_distribution()
         self.bootstrap_stats = np.array([
@@ -28,7 +55,10 @@ class Bootstrap:
 
     def _fit_distribution(self) -> Callable:
         """
-        Fit the distribution specified by distribution_name and return a sampling function.
+        Fit the specified distribution and return a function that generates random samples.
+
+        Returns:
+            Callable: A function that takes a size argument and returns a sample.
         """
         if self.distribution_name == "empirical":
             return lambda size: np.random.choice(self.data, size=size, replace=True)
@@ -44,27 +74,39 @@ class Bootstrap:
         else:
             raise ValueError(f"Unsupported distribution: {self.distribution_name}")
             
-    def compute_sample_statistic(self) -> np.ndarray:
+    def compute_sample_statistic(self) -> float:
         """
-        Return the sample statistic.
+        Return the statistic computed on the original data sample.
+
+        Returns:
+            float: The sample statistic.
         """
         return float(self.sample_stat)
 
     def compute_bootstraped_statistics(self) -> np.ndarray:
         """
-        Return the bootstraped statistics.
+        Return the array of statistics computed on the bootstrap samples.
+
+        Returns:
+            np.ndarray: Bootstrap statistics.
         """
         return self.bootstrap_stats
 
     def compute_empiric_mean(self) -> float:
         """
-        Return the bootstrap mean of the statistic.
+        Return the mean of the bootstrap statistics.
+
+        Returns:
+            float: Empirical mean from bootstrap samples.
         """
         return self.empiric_mean
 
     def compute_empiric_variance(self) -> float:
         """
-        Return the variance of the bootstrap estimate of the statistic.
+        Return the variance of the bootstrap statistics.
+
+        Returns:
+            float: Empirical variance from bootstrap samples.
         """
         return float(np.mean((self.bootstrap_stats - self.empiric_mean) ** 2))
 
@@ -72,15 +114,19 @@ class Bootstrap:
                                     alpha: float = .05,
                                     type_ci: str = "percentile") -> Tuple[float, float]:
         """
-        Return the lower and upper bounds of the bootstrap estimate
-        of the statistic for a given confidence level.
+        Compute a confidence interval for the statistic based on bootstrap results.
 
         Args:
-            alpha (float): Level of the confidence interval, defaults to 5%.
-            type_ci (str): Type of confidence interval, one of "percentile" or "basic".
+            alpha (float): Significance level for the confidence interval. Default is 0.05.
+            type_ci (str): Type of confidence interval. Options:
+                - "percentile": Uses empirical percentiles of the bootstrap distribution.
+                - "basic": Reflects percentiles around the sample statistic.
 
-        Returns: 
-            Tuple[float, float]: A tuple of lower and upper bounds.
+        Returns:
+            Tuple[float, float]: Lower and upper bounds of the confidence interval.
+
+        Raises:
+            ValueError: If the type_ci is not supported.
         """
         if self.num_iters < 1000:
             warnings.warn("`num_iters` should be greater than 1000 to ensure reliable confidence intervals",
