@@ -39,6 +39,8 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
   - markdown.extensions.sane_lists
+  - pymdownx.arithmatex:
+      generic: true
 
 plugins:
   - search
