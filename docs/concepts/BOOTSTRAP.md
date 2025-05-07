@@ -7,3 +7,6 @@ A titre d'exemple, si l'on désire estimer l'espérance d'une loi, on procède c
     - on tire un échantillon bootstrap $X_{1}^{\*}, X_{2}^{\*}, ..., X_{n}^{\*}$ selon une loi connue $\hat{F}$ (bootstrap paramétrique) ou selon un tirage avec remise à partir de l'échantillon initial (bootstrap non paramétrique)
     - on calcule à partir de l'échantillon bootstrap $X_{1}^{\*}, X_{2}^{\*}, ..., X_{n}^{\*}$ la statistique d'intérêt, par exemple pour l'espérance : $\hat{\theta_{b}}=\frac{\sum_{i=1}^{n}X_{i}^{*}}{n}$
 - La moyenne des ces $B$ statistiques peut être alors calculée, notée $\bar{\hat{\theta}}$, ainsi que leur variance donnée par : $\frac{1}{B}\sum_{b=1}^{B}(\hat{\theta_{b}} - \bar{\hat{\theta}})^{2}$
+
+Le module Bootstrap permet d'implémenter à la fois des bootstraps non paramétriques, ou empiriques, et des bootstraps paramétriques pour des lois normale, de Poisson et uniforme. Les estimations peuvent être conduites pour la moyenne, la médiane, la variance, l'écart-type, des quartiles, ... Les intervalles de confiance à un niveau $\alpha$ fournis par le module, le sont selon deux méthodes différentes:
+- Méthode dite "percentile" : l'intervalle de confiance correspond à $(\theta_{b (\frac{}{2})})$
