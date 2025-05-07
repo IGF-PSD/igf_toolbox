@@ -6,4 +6,4 @@ A titre d'exemple, si l'on désire estimer l'espérance d'une loi, on procède c
 - Boucle: pour $b$ allant de 1 à $B$:
     - on tire un échantillon bootstrap $X_{1}^{\*}, X_{2}^{\*}, ..., X_{n}^{\*}$ selon une loi connue $\hat{F}$ (bootstrap paramétrique) ou selon un tirage avec remise à partir de l'échantillon initial (bootstrap non paramétrique)
     - on calcule à partir de l'échantillon bootstrap $X_{1}^{\*}, X_{2}^{\*}, ..., X_{n}^{\*}$ la statistique d'intérêt, par exemple pour l'espérance : $\hat{\theta_{b}}=\frac{\sum_{i=1}^{n}X_{i}^{*}}{n}$
-- La moyenne des ces $B$ statistiques peut être alors calculée, notée $\bar{\hat{\theta}}$
+- La moyenne des ces $B$ statistiques peut être alors calculée, notée $\bar{\hat{\theta}}$, ainsi que leur variance donnée par : $\frac{1}{B}\sum_{b=1}^{B}(\hat{\theta_{b}} - \bar{\hat{\theta}})^{2}$
