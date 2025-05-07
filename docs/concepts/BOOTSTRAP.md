@@ -3,8 +3,8 @@
 Bootstrap is a statistical inference technique based on resampling methods, aiming to provide, from a single sample, a confidence interval for the estimation of a given statistic.
 
 As an example, if we want to estimate the expected value of a distribution, we proceed as follows:
-- Loop: for $b$ from 1 to $B$:
-    - draw a bootstrap sample $X_{1}^{\*}, X_{2}^{\*}, ..., X_{n}^{\*}$ from a known distribution $\hat{F}$ (parametric bootstrap) or by sampling with replacement from the initial sample (non-parametric bootstrap)
+- Loop: for b from 1 to B:
+    - draw a bootstrap sample X_{1}^{\*}, X_{2}^{\*}, ..., X_{n}^{\*} from a known distribution \hat{F} (parametric bootstrap) or by sampling with replacement from the initial sample (non-parametric bootstrap)
     - compute the statistic of interest from the bootstrap sample $X_{1}^{\*}, X_{2}^{\*}, ..., X_{n}^{\*}$, for example for the mean: $\hat{\theta_{b}}=\frac{\sum_{i=1}^{n}X_{i}^{*}}{n}$
 - The average of these $B$ statistics can then be calculated, denoted $\bar{\hat{\theta}}$, as well as their variance given by: $\frac{1}{B}\sum_{b=1}^{B}(\hat{\theta_{b}} - \bar{\hat{\theta}})^{2}$
 
