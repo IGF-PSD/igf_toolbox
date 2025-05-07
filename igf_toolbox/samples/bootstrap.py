@@ -48,7 +48,7 @@ class Bootstrap:
         """
         Return the sample statistic.
         """
-        return self.sample_stat
+        return float(self.sample_stat)
 
     def compute_bootstraped_statistics(self) -> np.ndarray:
         """
