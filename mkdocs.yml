@@ -84,6 +84,8 @@ extra_javascript:
 
 nav:
   - Package description: index.md
+  - Concepts:
+      - Bootstrap: concepts/BOOTSTRAP.md
   - API Documentation:
     - Estimators:
       - Classifiers:
