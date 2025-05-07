@@ -7,3 +7,4 @@ A `weights` argument has been introduced in most `numpy` operators in version 2.
 - New class-based API for bootstrap resampling
 - Support for percentile and basic bootstrap confidence intervals
 - Support for the statistic variance computation
+- Add pymdownx.arithmatex to md extensions in mkdocs.yml
