@@ -1,12 +1,14 @@
 import random
 import numpy as np
-from typing import Tuple, Callable
+from typing import Tuple, Callable, Sequence
 import warnings
 from dataclasses import dataclass, field
 
+from .utils import bootstrap_preprocess_data
+
 @dataclass
 class Bootstrap:
-    data: np.ndarray
+    data: Sequence[float]
     num_iters: int = 10000
     distribution_name: str = "empirical"
     statistic: Callable = np.mean  
@@ -15,7 +17,7 @@ class Bootstrap:
     empiric_mean: float = field(init=False)
 
     def __post_init__(self):
-        self.data = np.asarray(self.data).flatten()
+        self.data = bootstrap_preprocess_data(self.data)
         distribution = self._fit_distribution()
         self.bootstrap_stats = np.array([
             self.statistic(distribution(size=len(self.data)))
