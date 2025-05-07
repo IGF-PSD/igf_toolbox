@@ -11,12 +11,11 @@ class Bootstrap:
     distribution_name: str = "empirical"
     statistic: Callable = np.mean  
     bootstrap_stats: np.ndarray = field(init=False)
-    empiric_stat: float = field(init=False)
+    sample_stat: float = field(init=False)
+    empiric_mean: float = field(init=False)
 
     def __post_init__(self):
-
         self.data = np.asarray(self.data).flatten()
-        
         distribution = self._fit_distribution()
         self.bootstrap_stats = np.array([
             self.statistic(distribution(size=len(self.data)))
@@ -42,8 +41,14 @@ class Bootstrap:
             return lambda size: np.random.uniform(low=a, high=b, size=size)
         else:
             raise ValueError(f"Unsupported distribution: {self.distribution_name}")
+            
+    def compute_sample_statistic(self) -> np.ndarray:
+        """
+        Return the sample statistic.
+        """
+        return self.sample_stat
 
-    def return_bootstraped_statistic(self) -> np.ndarray:
+    def compute_bootstraped_statistics(self) -> np.ndarray:
         """
         Return the bootstraped statistics.
         """
