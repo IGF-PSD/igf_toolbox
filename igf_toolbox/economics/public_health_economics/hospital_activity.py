@@ -13,13 +13,13 @@ class HospitalActivity:
 
         self.data_valorisations = pd.read_excel(
             file_path,
-            sheetname="Valorisations",
+            sheet_name="Valorisations",
             header=4
 
         )
         self.data_casemix = pd.read_excel(
             file_path,
-            sheetname="Volume économique",
+            sheet_name="Volume économique",
             header=1
         )
 
@@ -130,7 +130,7 @@ class HospitalActivity:
 
         # Fill NaNs in GHM and preprocess to only keep 6-character code
         data_prix_apparents[self.ghm] = (
-            data_prix_apparents[self.ghm].ffill().apply(lambda x: self._preprocess_ghm(x)
+            data_prix_apparents[self.ghm].ffill().apply(lambda x: self._preprocess_ghm(x))
         )
 
         # Impute data under statistical secret
@@ -162,7 +162,7 @@ class HospitalActivity:
         # given by: (1/sejour) * (Montant AM / Taux AM)
         data_prix_apparents["prix_apparent"] = (
             (1/data_prix_apparents[self.sejours_prix])
-            * (data_prix_apparents[self.montants_am]/self.data_prix_apparents[self.taux_am])
+            * (data_prix_apparents[self.montants_am]/data_prix_apparents[self.taux_am])
         )
 
         return data_prix_apparents[[self.ghm, self.ghs, "prix_apparent"]]
@@ -181,6 +181,24 @@ class HospitalActivity:
         data_volume_eco[self.ghs] = (
             data_volume_eco[self.ghs].ffill()
         )
+
+        data_volume_eco = data_volume_eco.drop(columns = [
+            self.type_hosp,
+            self.tranche_age
+        ])
+
+        data_volume_eco = data_volume_eco.groupby(
+            by = [self.ghm, self.ghs],
+            as_index = False
+        ).sum()
+
+        data_volume_eco = (
+            data_volume_eco.merge(self.data_prix_apparents,
+                                 on = [self.ghm, self.ghs],
+                                 how = "right")
+        )
+
+        return data_volume_eco
 
         
         
