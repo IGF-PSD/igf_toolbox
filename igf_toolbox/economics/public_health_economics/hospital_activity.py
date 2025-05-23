@@ -7,11 +7,18 @@ import pandas as pd
 
 class HospitalActivity:
     def __init__(self, file_path):
-        """ """
+        """ 
+        
+        """
 
-        self.data_prix = pd.read_excel(file_path,
-                                      sheetname="prix",
-                                      header=4)
+        self.data_valorisations = pd.read_excel(file_path,
+                                              sheetname="Valorisations",
+                                              header=4)
+
+        self.ghm = "PMSI MCO - GHM"
+        self.ghs = "PMSI MCO - GHS"
+        self.montants_am = "Montant AM GHS"
+        self.taux_am = "Taux de remboursement AM"
 
     def _count_number_working_days(self, year: int) -> tuple[int]:
         """
@@ -92,17 +99,59 @@ class HospitalActivity:
         dict_severite = {"A": "1", "B": "2", "C": "3", "D": "4"}
         return dict_severite.get(x, x)
 
-    def effet_volume(
-        self,
-
+    def _compute_prix_apparents(
+        self
     ) -> pd.DataFrame:
         """
-        Returns effet volume, its calendar adjustment and all its components.
 
-        Args:
-
-        Returns:
-
-        Raises:
         """
+
+        self.data_prix_apparents = self.data_valorisations.copy()
+
+        # Fill NaNs in GHM and preprocess to only keep 6-character code
+        self.data_prix_apparents[self.ghm] = (
+            self.data_prix_apparents[self.ghm].ffill().apply(lambda x: self._preprocess_ghm(x)
+        )
+
+        # Impute data under statistical secret
+        self.data_prix_apparents["ACTIVITE - Nb Séjours Hors Séances"] = (
+            self.data_prix_apparents["ACTIVITE - Nb Séjours Hors Séances"].replace("1 à 5", 2.5)
+        )
+
+        self.data_prix_apparents[["ACTIVITE - Nb Séjours Hors Séances",
+                                 self.taux_am,
+                                 self.montants_am]] = (
+            self.data_prix_apparents[["ACTIVITE - Nb Séjours Hors Séances",
+                                     self.taux_am,
+                                     self.montants_am]].astype(float)
+                                 )
+
+        # Only keep data with reimbursement rates superior to 0 and stays superior to 0
+        self.data_prix_apparents = (
+            self.data_prix_apparents[
+                (self.data_prix_apparents[self.taux_am] > 0)
+                & (self.data_prix_apparents["ACTIVITE - Nb Séjours Hors Séances"] > 0)
+                ]
+        )
+        
+        self.data_prix_apparents[self.montants_am] = (
+            self.data_prix_apparents[self.montants_am].fillna(0)
+        )
+
+        # Compute the average price for a GHMxGHS
+        # given by: (1/sejour) * (Montant AM / Taux AM)
+        self.data_prix_apparents["prix_apparent"] = (
+            (1/self.data_prix_apparents["ACTIVITE - Nb Séjours Hors Séances"])
+            * (self.data_prix_apparents[self.montants_am]/self.data_prix_apparents[self.taux_am])
+        )
+
+        self.data_prix_apparents = (
+            self.data_prix_apparents[[self.ghm, self.ghs, "prix_apparent"]]
+        )
+
+        return self.data_prix_apparents
+        
+        
+        
+        
 
