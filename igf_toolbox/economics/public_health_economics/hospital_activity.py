@@ -11,14 +11,32 @@ class HospitalActivity:
         
         """
 
-        self.data_valorisations = pd.read_excel(file_path,
-                                              sheetname="Valorisations",
-                                              header=4)
+        self.data_valorisations = pd.read_excel(
+            file_path,
+            sheetname="Valorisations",
+            header=4
+
+        )
+        self.data_casemix = pd.read_excel(
+            file_path,
+            sheetname="Volume économique",
+            header=1
+        )
 
         self.ghm = "PMSI MCO - GHM"
         self.ghs = "PMSI MCO - GHS"
+        self.sejours_prix = "ACTIVITE - Nb Séjours Hors Séances"
         self.montants_am = "Montant AM GHS"
         self.taux_am = "Taux de remboursement AM"
+        self.type_hosp = "PMSI MCO - Activité - Type Hospitalisation"
+        self.tranche_age = "PMSI - Tranche Age INSEE"
+
+    def __post_init__(self):
+        """
+
+        """
+
+        self.data_prix_apparents = self._compute_prix_apparents()
 
     def _count_number_working_days(self, year: int) -> tuple[int]:
         """
@@ -90,12 +108,14 @@ class HospitalActivity:
         return jours_activite_n / jours_activite_n_1 - 1
 
     def _preprocess_ghm(self, x: str) -> str:
-        """ """
+        """ 
+        """
         x = x.split(" - ")[0]
         return x[0:6]
 
     def _preprocess_severite(self, x: str) -> str:
-        """ """
+        """ 
+        """
         dict_severite = {"A": "1", "B": "2", "C": "3", "D": "4"}
         return dict_severite.get(x, x)
 
@@ -106,50 +126,64 @@ class HospitalActivity:
 
         """
 
-        self.data_prix_apparents = self.data_valorisations.copy()
+        data_prix_apparents = self.data_valorisations.copy()
 
         # Fill NaNs in GHM and preprocess to only keep 6-character code
-        self.data_prix_apparents[self.ghm] = (
-            self.data_prix_apparents[self.ghm].ffill().apply(lambda x: self._preprocess_ghm(x)
+        data_prix_apparents[self.ghm] = (
+            data_prix_apparents[self.ghm].ffill().apply(lambda x: self._preprocess_ghm(x)
         )
 
         # Impute data under statistical secret
-        self.data_prix_apparents["ACTIVITE - Nb Séjours Hors Séances"] = (
-            self.data_prix_apparents["ACTIVITE - Nb Séjours Hors Séances"].replace("1 à 5", 2.5)
+        data_prix_apparents[self.sejours_prix] = (
+            data_prix_apparents[self.sejours_prix].replace("1 à 5", 2.5)
         )
 
-        self.data_prix_apparents[["ACTIVITE - Nb Séjours Hors Séances",
-                                 self.taux_am,
-                                 self.montants_am]] = (
-            self.data_prix_apparents[["ACTIVITE - Nb Séjours Hors Séances",
+        data_prix_apparents[[self.sejours_prix,
+                             self.taux_am,
+                             self.montants_am]] = (
+            data_prix_apparents[[self.sejours_prix,
                                      self.taux_am,
                                      self.montants_am]].astype(float)
                                  )
 
         # Only keep data with reimbursement rates superior to 0 and stays superior to 0
-        self.data_prix_apparents = (
-            self.data_prix_apparents[
-                (self.data_prix_apparents[self.taux_am] > 0)
-                & (self.data_prix_apparents["ACTIVITE - Nb Séjours Hors Séances"] > 0)
+        data_prix_apparents = (
+            data_prix_apparents[
+                (data_prix_apparents[self.taux_am] > 0)
+                & (data_prix_apparents[self.sejours_prix] > 0)
                 ]
         )
         
-        self.data_prix_apparents[self.montants_am] = (
-            self.data_prix_apparents[self.montants_am].fillna(0)
+        data_prix_apparents[self.montants_am] = (
+            data_prix_apparents[self.montants_am].fillna(0)
         )
 
         # Compute the average price for a GHMxGHS
         # given by: (1/sejour) * (Montant AM / Taux AM)
-        self.data_prix_apparents["prix_apparent"] = (
-            (1/self.data_prix_apparents["ACTIVITE - Nb Séjours Hors Séances"])
-            * (self.data_prix_apparents[self.montants_am]/self.data_prix_apparents[self.taux_am])
+        data_prix_apparents["prix_apparent"] = (
+            (1/data_prix_apparents[self.sejours_prix])
+            * (data_prix_apparents[self.montants_am]/self.data_prix_apparents[self.taux_am])
         )
 
-        self.data_prix_apparents = (
-            self.data_prix_apparents[[self.ghm, self.ghs, "prix_apparent"]]
+        return data_prix_apparents[[self.ghm, self.ghs, "prix_apparent"]]
+
+    def effet_volume(self) -> pd.DataFrame:
+        """
+
+        """
+
+        data_volume_eco = self.data_casemix.copy()
+
+        data_volume_eco[self.ghm] = (
+            data_volume_eco[self.ghm].ffill().apply(lambda x: self._preprocess_ghm(x))
         )
 
-        return self.data_prix_apparents
+        data_volume_eco[self.ghs] = (
+            data_volume_eco[self.ghs].ffill()
+        )
+
+        
+        
         
         
         
