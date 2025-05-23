@@ -31,13 +31,6 @@ class HospitalActivity:
         self.type_hosp = "PMSI MCO - Activité - Type Hospitalisation"
         self.tranche_age = "PMSI - Tranche Age INSEE"
 
-    def __post_init__(self):
-        """
-
-        """
-
-        self.data_prix_apparents = self._compute_prix_apparents()
-
     def _count_number_working_days(self, year: int) -> tuple[int]:
         """
         Returns the number of working and non working days in a given year.
@@ -172,6 +165,7 @@ class HospitalActivity:
 
         """
 
+        # We compute first the effet volume and effet volume CJO
         data_volume_eco = self.data_casemix.copy()
 
         data_volume_eco[self.ghm] = (
@@ -193,17 +187,58 @@ class HospitalActivity:
         ).sum()
 
         data_volume_eco = (
-            data_volume_eco.merge(self.data_prix_apparents,
+            data_volume_eco.merge(self._compute_prix_apparents(),
                                  on = [self.ghm, self.ghs],
                                  how = "right")
         )
 
-        return data_volume_eco
+        list_years = [
+            col for col in data_volume_eco.columns
+            if col.isdigit()
+        ]
+        list_sorted_years = sorted(
+            map(
+                int, list_years
+            )
+        )
 
+        dict_nb_sejours = {}
         
-        
-        
-        
-        
-        
+        for year in list_sorted_years:
+            data_volume_eco[year] = (
+                data_volume_eco[str(year)]*data_volume_eco["prix_apparent"]
+            )
+            dict_nb_sejours[year] = data_volume_eco[str(year)].sum()
+
+        data_volume_eco = (
+            data_volume_eco[
+                list_sorted_years
+            ].sum().to_frame("volume_economique")
+        )
+
+        data_volume_eco["effet_volume"] = (
+            data_volume_eco["volume_economique"].pct_change()
+        )
+
+        data_volume_eco["effet_cjo"] = (
+            data_volume_eco.index.map(lambda x: self._effet_cjo(x))
+        )
+
+        data_volume_eco["effet_volume_cjo"] = (
+            data_volume_eco["effet_volume"] - data_volume_eco["effet_cjo"]
+        )
+
+        # We can add now the effet nombre de séjours and effet structure
+        data_volume_eco["nombre_sejours"] = pd.DataFrame.from_dict(dict_nb_sejours, 
+                                                                   orient="index", 
+                                                                   columns=["nombre_sejours"])
+        data_volume_eco["effet_nombre_sejours"] = (
+            data_volume_eco["nombre_sejours"].pct_change()
+        )
+
+        data_volume_eco["effet_structure"] = (
+            data_volume_eco["effet_volume"] - data_volume_eco["effet_nombre_sejours"]
+        )
+
+        return data_volume_eco
 
