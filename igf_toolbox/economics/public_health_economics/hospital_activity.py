@@ -15,7 +15,21 @@ class HospitalActivity:
             file_path,
             sheet_name="Valorisations",
             header=4
-
+        )
+        self.data_valorisations_racine = pd.read_excel(
+            file_path,
+            sheet_name="Valorisations - racine",
+            header=4
+        )
+        self.data_valorisations_severite = pd.read_excel(
+            file_path,
+            sheet_name="Valorisations - severite",
+            header=4
+        )
+        self.data_valorisations_type_hosp = pd.read_excel(
+            file_path,
+            sheet_name="Valorisations - type hosp",
+            header=4
         )
         self.data_casemix = pd.read_excel(
             file_path,
@@ -239,6 +253,9 @@ class HospitalActivity:
         data_volume_eco["effet_structure"] = (
             data_volume_eco["effet_volume"] - data_volume_eco["effet_nombre_sejours"]
         )
+
+        # We breakdown effet structure: effet racine, effet severite and effet type de prise en charge
+        
 
         return data_volume_eco
 
