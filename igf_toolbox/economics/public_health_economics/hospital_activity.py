@@ -124,6 +124,12 @@ class HospitalActivity:
         """
         x = x.split(" - ")[0]
         return x[0:6]
+        
+    def _preprocess_racine(self, x: str) -> str:
+        """ 
+        """
+        x = x.split(" - ")[0]
+        return x[0:5]
 
     def _preprocess_severite(self, x: str) -> str:
         """ 
@@ -343,8 +349,30 @@ class HospitalActivity:
             )
 
         # We breakdown effet structure : effet racine
+        data_effet_racine = self.data_casemix[[self.ghm]+list_years].copy()
+        data_effet_racine[self.ghm] = data_effet_racine[self.ghm].ffill()
+        data_effet_racine[self.racine] = (
+            data_effet_racine[self.ghm].apply(lambda x: self._preprocess_racine(x))
+        )
+        data_effet_racine = (
+            data_effet_racine.groupby(self.racine,
+                                     as_index = False).sum()
+        )
+        data_effet_racine = data_effet_racine.merge(
+            self._compute_prix_apparents_breakdown("racine"),
+            on = self.racine,
+            how = "right"
+        )
+
+        for year in data_volume_eco.index[1:]:
+            numerator = (data_effet_racine["prix_apparent"]*data_effet_racine[str(year)]/data_effet_racine[str(year)].sum()).sum()
+            denominator = (data_effet_racine["prix_apparent"]*data_effet_racine[str(year-1)]/data_effet_racine[str(year-1)].sum()).sum()
+            data_volume_eco.loc[year, "effet_racine"] = (
+                numerator/denominator-1
+            ) 
 
         # We breakdown effet structure : effet sévérité
+        data_effet_severite = 
 
         # We breakdown effet structure : effet résiduel
         data_volume_eco["effet_residuel"] = (
