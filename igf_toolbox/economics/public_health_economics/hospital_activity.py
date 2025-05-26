@@ -334,7 +334,33 @@ class HospitalActivity:
             on = self.type_hosp,
             how = "right"
         )
-        
 
-        return data_effet_prise_charge, data_volume_eco
+        for year in data_volume_eco.index[1:]:
+            numerator = (data_effet_prise_charge["prix_apparent"]*data_effet_prise_charge[str(year)]/data_effet_prise_charge[str(year)].sum()).sum()
+            denominator = (data_effet_prise_charge["prix_apparent"]*data_effet_prise_charge[str(year-1)]/data_effet_prise_charge[str(year-1)].sum()).sum()
+            data_volume_eco.loc[year, "effet_type_prise_en_charge"] = (
+                numerator/denominator-1
+            )
+
+        # We breakdown effet structure : effet racine
+
+        # We breakdown effet structure : effet sévérité
+
+        # We breakdown effet structure : effet résiduel
+        data_volume_eco["effet_residuel"] = (
+            data_volume_eco["effet_structure"] - (data_volume_eco["effet_type_prise_en_charge"] + data_volume_eco["effet_racine"] + data_volume_eco["effet_severite"])
+        )
+        
+        return data_volume_eco[["volume_economique",
+                               "nombre_sejours",
+                               "effet_volume",
+                               "effet_volume_cjo",
+                               "effet_nombre_sejours",
+                               "effet_nombre_sejours_cjo",
+                               "effet_structure",
+                               "effet_type_prise_en_charge",
+                               "effet_racine",
+                               "effet_severite",
+                               "effet_residuel"
+                               ]]
 
