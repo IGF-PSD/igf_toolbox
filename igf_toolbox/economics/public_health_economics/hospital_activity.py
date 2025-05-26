@@ -5,7 +5,11 @@ import holidays
 import pandas as pd
 
 
-class HospitalActivity:
+class HospitalActivityDiamant:
+    """
+
+    """
+    
     def __init__(self, file_path):
         """ 
         
@@ -119,23 +123,26 @@ class HospitalActivity:
 
         return jours_activite_n / jours_activite_n_1 - 1
 
-    def _preprocess_ghm(self, x: str) -> str:
+    @staticmethod
+    def _preprocess_ghm(x: str) -> str:
         """ 
         """
         x = x.split(" - ")[0]
         return x[0:6]
-        
-    def _preprocess_racine(self, x: str) -> str:
+
+    @staticmethod
+    def _preprocess_racine(x: str) -> str:
         """ 
         """
         x = x.split(" - ")[0]
         return x[0:5]
 
-    def _preprocess_severite(self, x: str) -> str:
-        """ 
+    @staticmethod
+    def _preprocess_severite(x: str) -> str:
         """
-        dict_severite = {"A": "1", "B": "2", "C": "3", "D": "4"}
-        return dict_severite.get(x, x)
+        """
+        x = x.split(" - ")[0]
+        return x[-1]
 
     def _compute_prix_apparents(
         self
@@ -354,6 +361,7 @@ class HospitalActivity:
         data_effet_racine[self.racine] = (
             data_effet_racine[self.ghm].apply(lambda x: self._preprocess_racine(x))
         )
+        data_effet_racine = data_effet_racine[[self.racine]+list_years]
         data_effet_racine = (
             data_effet_racine.groupby(self.racine,
                                      as_index = False).sum()
@@ -372,14 +380,37 @@ class HospitalActivity:
             ) 
 
         # We breakdown effet structure : effet sévérité
-        data_effet_severite = 
+        data_effet_severite = self.data_casemix[[self.ghm, self.type_hosp]+list_years].copy()
+        data_effet_severite[self.ghm] = data_effet_severite[self.ghm].ffill()
+        data_effet_severite[self.type_hosp] = data_effet_severite[self.type_hosp].ffill()
+        data_effet_severite = data_effet_severite[data_effet_severite[self.type_hosp] == self.hosp_hc]
+        data_effet_severite[self.severite] = (
+            data_effet_severite[self.ghm].apply(lambda x: self._preprocess_severite(x))
+        )
+        data_effet_severite = data_effet_severite[[self.severite]+list_years]
+        data_effet_severite = data_effet_severite[data_effet_severite[self.severite].isin(self.list_severite)]
+        data_effet_severite = data_effet_severite.groupby(self.severite,
+                                                         as_index = False).sum()
+        data_effet_severite = data_effet_severite.merge(
+            self._compute_prix_apparents_breakdown("severite"),
+            on = self.severite,
+            how = "right"
+        )
+
+        for year in data_volume_eco.index[1:]:
+            numerator = (data_effet_severite["prix_apparent"]*data_effet_severite[str(year)]/data_effet_severite[str(year)].sum()).sum()
+            denominator = (data_effet_severite["prix_apparent"]*data_effet_severite[str(year-1)]/data_effet_severite[str(year-1)].sum()).sum()
+            data_volume_eco.loc[year, "effet_severite"] = (
+                numerator/denominator-1
+            )
 
         # We breakdown effet structure : effet résiduel
         data_volume_eco["effet_residuel"] = (
             data_volume_eco["effet_structure"] - (data_volume_eco["effet_type_prise_en_charge"] + data_volume_eco["effet_racine"] + data_volume_eco["effet_severite"])
         )
         
-        return data_volume_eco[["volume_economique",
+        return data_volume_eco[[
+                               "volume_economique",
                                "nombre_sejours",
                                "effet_volume",
                                "effet_volume_cjo",
