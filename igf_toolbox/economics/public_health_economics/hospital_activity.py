@@ -397,6 +397,21 @@ class HospitalActivityDiamant:
             + data_volume_eco["effet_severite"]
         )
 
+        # We breakdown effet nombre de séjours: effet augmentation de la population 
+
+        # We breakdown effet nombre de séjours: effet pyramide des âges
+
+        # We breakdown effet nombre de séjours: effet démographie
+        data_volume_eco["effet_demographie"] = (
+            data_volume_eco["effet_augmentation_population"]
+            + data_volume_eco["effet_pyramide_ages"]
+        )
+        
+        # We breakdown effet nombre de séjours: effet modification du recours à l'hospitalisation
+        data_volume_eco["effet_modification_recours"] = (
+            data_volume_eco["effet_nombre_sejours"] - data_volume_eco["effet_demographie"]
+        )
+
         return data_volume_eco[
             [
                 "volume_economique",
@@ -410,5 +425,9 @@ class HospitalActivityDiamant:
                 "effet_racine",
                 "effet_severite",
                 "effet_residuel",
+                "effet_demographie",
+                "effet_modification_recours",
+                "effet_augmentation_population",
+                "effet_pyramide_ages"
             ]
         ]
