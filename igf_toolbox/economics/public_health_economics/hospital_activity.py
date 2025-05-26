@@ -28,7 +28,7 @@ class HospitalActivityDiamant:
         self.data_valorisations_severite = pd.read_excel(
             file_path,
             sheet_name="Valorisations - sévérité",
-            header=4
+            header=5
         )
         self.data_valorisations_type_hosp = pd.read_excel(
             file_path,
