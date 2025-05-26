@@ -215,6 +215,10 @@ class HospitalActivityDiamant:
             )
             return data_prix_apparents[[self.severite, "prix_apparent"]]
 
+    def compute_population_by_age_class(self) -> pd.DataFrame:
+        """ """
+        
+
     def effet_volume(self) -> pd.DataFrame:
         """ """
 
