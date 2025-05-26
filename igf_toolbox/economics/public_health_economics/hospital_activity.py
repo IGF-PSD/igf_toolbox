@@ -23,7 +23,7 @@ class HospitalActivity:
         )
         self.data_valorisations_severite = pd.read_excel(
             file_path,
-            sheet_name="Valorisations - severite",
+            sheet_name="Valorisations - sévérité",
             header=4
         )
         self.data_valorisations_type_hosp = pd.read_excel(
@@ -47,6 +47,8 @@ class HospitalActivity:
         self.hosp_hp = "Ambulatoire"
         self.hosp_hc = "HC"
         self.racine = "PMSI MCO - GHM - Code Racine"
+        self.severite = "PMSI MCO - GHM - Niveau de sévérité"
+        self.list_severite = ["1", "2", "3", "4", "A", "B", "C", "D"]
 
     def _count_number_working_days(self, year: int) -> tuple[int]:
         """
@@ -210,7 +212,20 @@ class HospitalActivity:
                 * (data_prix_apparents[self.montants_am]/data_prix_apparents[self.taux_am])
             )
             return data_prix_apparents[[self.type_hosp, "prix_apparent"]]
-            
+
+        elif breakdown == "severite":
+            data_prix_apparents = self.data_valorisations_severite.copy()
+            data_prix_apparents = (
+                data_prix_apparents[data_prix_apparents[self.severite].isin(self.list_severite)]
+            )
+            data_prix_apparents = (
+                data_prix_apparents[data_prix_apparents[self.taux_am] > 0]
+            )
+            data_prix_apparents["prix_apparent"] = (
+                (1/data_prix_apparents[self.sejours_prix])
+                * (data_prix_apparents[self.montants_am]/data_prix_apparents[self.taux_am])
+            )
+            return data_prix_apparents[[self.severite, "prix_apparent"]]
 
     def effet_volume(self) -> pd.DataFrame:
         """
@@ -272,12 +287,12 @@ class HospitalActivity:
             data_volume_eco["volume_economique"].pct_change()
         )
 
-        data_volume_eco["effet_cjo"] = (
+        data_volume_eco["effet_cjo_volume_economique"] = (
             data_volume_eco.index.map(lambda x: self._effet_cjo(x))
         )
 
         data_volume_eco["effet_volume_cjo"] = (
-            data_volume_eco["effet_volume"] - data_volume_eco["effet_cjo"]
+            data_volume_eco["effet_volume"] - data_volume_eco["effet_cjo_volume_economique"]
         )
 
         # We can add now the effet nombre de séjours and effet structure
@@ -292,6 +307,15 @@ class HospitalActivity:
             data_volume_eco["effet_volume"] - data_volume_eco["effet_nombre_sejours"]
         )
 
+        # We also add effet nombre de séjours CJO
+        data_volume_eco["effet_cjo_nombre_sejours"] = (
+            data_volume_eco.index.map(lambda x: self._effet_cjo(x, "sejours"))
+        )
+
+        data_volume_eco["effet_nombre_sejours_cjo"] = (
+            data_volume_eco["effet_nombre_sejours"] - data_volume_eco["effet_cjo_nombre_sejours"]
+        )
+        
         # We breakdown effet structure: effet type de prise en charge
         data_effet_prise_charge = self.data_casemix[[self.type_hosp]+list_years].copy()
         data_effet_prise_charge[self.type_hosp] = (
@@ -305,7 +329,12 @@ class HospitalActivity:
             data_effet_prise_charge.groupby(self.type_hosp,
                                            as_index = False).sum()
         )
+        data_effet_prise_charge = data_effet_prise_charge.merge(
+            self._compute_prix_apparents_breakdown("type_hosp"),
+            on = self.type_hosp,
+            how = "right"
+        )
         
 
-        return data_volume_eco
+        return data_effet_prise_charge, data_volume_eco
 
