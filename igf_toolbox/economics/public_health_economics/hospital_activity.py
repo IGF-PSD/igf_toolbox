@@ -44,6 +44,9 @@ class HospitalActivity:
         self.taux_am = "Taux de remboursement AM"
         self.type_hosp = "PMSI MCO - Activité - Type Hospitalisation"
         self.tranche_age = "PMSI - Tranche Age INSEE"
+        self.hosp_hp = "Ambulatoire"
+        self.hosp_hc = "HC"
+        self.racine = "PMSI MCO - GHM - Code Racine"
 
     def _count_number_working_days(self, year: int) -> tuple[int]:
         """
@@ -174,6 +177,41 @@ class HospitalActivity:
 
         return data_prix_apparents[[self.ghm, self.ghs, "prix_apparent"]]
 
+    def _compute_prix_apparents_breakdown(
+        self,
+        breakdown:str="racine"
+    ) -> pd.DataFrame:
+        """
+
+        """
+
+        if breakdown == "racine":
+            data_prix_apparents = self.data_valorisations_racine.copy()
+            data_prix_apparents = (
+                data_prix_apparents[data_prix_apparents[self.taux_am] > 0]
+            )
+            data_prix_apparents["prix_apparent"] = (
+                (1/data_prix_apparents[self.sejours_prix])
+                * (data_prix_apparents[self.montants_am]/data_prix_apparents[self.taux_am])
+            )
+            return data_prix_apparents[[self.racine, "prix_apparent"]]
+
+        elif breakdown == "type_hosp":
+            data_prix_apparents = self.data_valorisations_type_hosp.copy()
+            data_prix_apparents = (
+                data_prix_apparents[data_prix_apparents[self.type_hosp].isin([self.hosp_hp,
+                                                                             self.hosp_hc])]
+            )
+            data_prix_apparents = (
+                data_prix_apparents[data_prix_apparents[self.taux_am] > 0]
+            )
+            data_prix_apparents["prix_apparent"] = (
+                (1/data_prix_apparents[self.sejours_prix])
+                * (data_prix_apparents[self.montants_am]/data_prix_apparents[self.taux_am])
+            )
+            return data_prix_apparents[[self.type_hosp, "prix_apparent"]]
+            
+
     def effet_volume(self) -> pd.DataFrame:
         """
 
@@ -254,7 +292,19 @@ class HospitalActivity:
             data_volume_eco["effet_volume"] - data_volume_eco["effet_nombre_sejours"]
         )
 
-        # We breakdown effet structure: effet racine, effet severite and effet type de prise en charge
+        # We breakdown effet structure: effet type de prise en charge
+        data_effet_prise_charge = self.data_casemix[[self.type_hosp]+list_years].copy()
+        data_effet_prise_charge[self.type_hosp] = (
+            data_effet_prise_charge[self.type_hosp].ffill()
+        )
+        data_effet_prise_charge = (
+            data_effet_prise_charge[data_effet_prise_charge[self.type_hosp].isin([self.hosp_hp,
+                                                                                 self.hosp_hc])]
+        )
+        data_effet_prise_charge = (
+            data_effet_prise_charge.groupby(self.type_hosp,
+                                           as_index = False).sum()
+        )
         
 
         return data_volume_eco
