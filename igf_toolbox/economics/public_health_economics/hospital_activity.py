@@ -5,23 +5,23 @@ import pandas as pd
 class HospitalActivityDiamant:
     """ """
 
-    def __init__(self, file_path):
+    def __init__(self, file_path_activity):
         """ """
 
         self.data_valorisations = pd.read_excel(
-            file_path, sheet_name="Valorisations", header=4
+            file_path_activity, sheet_name="Valorisations", header=4
         )
         self.data_valorisations_racine = pd.read_excel(
-            file_path, sheet_name="Valorisations - racine", header=4
+            file_path_activity, sheet_name="Valorisations - racine", header=4
         )
         self.data_valorisations_severite = pd.read_excel(
-            file_path, sheet_name="Valorisations - sévérité", header=5
+            file_path_activity, sheet_name="Valorisations - sévérité", header=5
         )
         self.data_valorisations_type_hosp = pd.read_excel(
-            file_path, sheet_name="Valorisations - type hosp", header=4
+            file_path_activity, sheet_name="Valorisations - type hosp", header=4
         )
         self.data_casemix = pd.read_excel(
-            file_path, sheet_name="Volume économique", header=1
+            file_path_activity, sheet_name="Volume économique", header=1
         )
 
         self.ghm = "PMSI MCO - GHM"
