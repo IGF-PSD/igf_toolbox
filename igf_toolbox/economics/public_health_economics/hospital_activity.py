@@ -1,11 +1,13 @@
 import holidays
+import numpy as np
 import pandas as pd
+from openpyxl import load_workbook
 
 
 class HospitalActivityDiamant:
     """ """
 
-    def __init__(self, file_path_activity):
+    def __init__(self, file_path_activity, file_path_demography):
         """ """
 
         self.data_valorisations = pd.read_excel(
@@ -23,6 +25,7 @@ class HospitalActivityDiamant:
         self.data_casemix = pd.read_excel(
             file_path_activity, sheet_name="Volume économique", header=1
         )
+        self.file_path_demography = file_path_demography
 
         self.ghm = "PMSI MCO - GHM"
         self.ghs = "PMSI MCO - GHS"
@@ -215,10 +218,25 @@ class HospitalActivityDiamant:
             )
             return data_prix_apparents[[self.severite, "prix_apparent"]]
 
-    def compute_population_by_age_class(self) -> pd.DataFrame:
-        """ """
+    def get_total_population_from_insee_estimations_by_region(self, year):
+        """
+        """
         
-
+        wb = load_workbook(self.file_path_demography)
+        
+        ws = wb[f"{year}"]
+        
+        if year >= 2014:
+            cell_total = "V26"
+        elif year >= 1999:
+            cell_total = "V25"
+        elif year >= 1990:
+            cell_total = "V28"
+        else:
+            cell_total = "V19"
+                
+        return ws[cell_total].value
+        
     def effet_volume(self) -> pd.DataFrame:
         """ """
 
@@ -402,6 +420,13 @@ class HospitalActivityDiamant:
         )
 
         # We breakdown effet nombre de séjours: effet augmentation de la population 
+        data_volume_eco["effet_augmentation_population"] = (
+            data_volume_eco.index.map(lambda x: 
+                                     self.get_total_population_from_insee_estimations_by_region(x)
+                                     /self.get_total_population_from_insee_estimations_by_region(x-1)-1)
+        )
+        data_volume_eco.loc[data_volume_eco.index[0], 
+            "effet_augmentation_population"] = np.nan
 
         # We breakdown effet nombre de séjours: effet pyramide des âges
 
