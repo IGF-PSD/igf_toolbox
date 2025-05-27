@@ -266,7 +266,8 @@ class HospitalActivityDiamant:
         return dict_pop_age_class
         
     def effet_volume(self) -> pd.DataFrame:
-        """ """
+        """ 
+        """
 
         # We compute first the effet volume and effet volume CJO
         data_volume_eco = self.data_casemix.copy()
@@ -457,8 +458,20 @@ class HospitalActivityDiamant:
             "effet_augmentation_population"] = np.nan
 
         # We breakdown effet nombre de séjours: effet pyramide des âges
-        data_volume_eco["effet_pyramide_ages"] = np.nan
+        data_pyramide_ages = self.data_casemix[[self.tranche_age]+list_years]
+        data_pyramide_ages[self.tranche_age] = data_pyramide_ages[self.tranche_age].ffill()
+        data_pyramide_ages = (
+            data_pyramide_ages.groupby(self.tranche_age,
+                                      as_index = False).sum()
+        )
 
+        for year in data_volume_eco.index[1:]:
+            numerator = (
+
+            )
+            denominator =
+            data_volume_eco.loc[year, "effet_pyramide_ages"] = numerator.sum()/denominator.sum()-1
+        
         # We breakdown effet nombre de séjours: effet démographie
         data_volume_eco["effet_demographie"] = (
             data_volume_eco["effet_augmentation_population"]
