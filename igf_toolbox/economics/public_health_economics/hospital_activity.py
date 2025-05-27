@@ -465,11 +465,22 @@ class HospitalActivityDiamant:
                                       as_index = False).sum()
         )
 
+        for year in list_sorted_years:
+            data_pyramide_ages[f"pop_{year}"] = (
+                data_pyramide_ages[self.tranche_age].apply(lambda x: 
+                                                          self.get_age_class_population_from_insee_estimations_by_region(year)[x])
+            )
+
+        data_volume_eco["effet_pyramide_ages"] = np.nan
         for year in data_volume_eco.index[1:]:
             numerator = (
-
+                (data_pyramide_ages[str(year - 1)]/data_pyramide_ages[f"pop_{year-1}"])
+                *(data_pyramide_ages[f"pop_{year}"]/data_pyramide_ages[f"pop_{year}"].sum())
             )
-            denominator =
+            denominator = (
+                (data_pyramide_ages[str(year - 1)]/data_pyramide_ages[f"pop_{year-1}"])
+                *(data_pyramide_ages[f"pop_{year-1}"]/data_pyramide_ages[f"pop_{year-1}"].sum())
+            )
             data_volume_eco.loc[year, "effet_pyramide_ages"] = numerator.sum()/denominator.sum()-1
         
         # We breakdown effet nombre de séjours: effet démographie
