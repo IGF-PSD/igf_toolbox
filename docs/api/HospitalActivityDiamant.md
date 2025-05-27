@@ -1,0 +1,1 @@
+::: igf_toolbox.economics.public_health_economics.hospital_activity.HospitalActivityDiamant
