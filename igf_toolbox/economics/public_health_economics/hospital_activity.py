@@ -218,7 +218,7 @@ class HospitalActivityDiamant:
             )
             return data_prix_apparents[[self.severite, "prix_apparent"]]
 
-    def get_total_population_from_insee_estimations_by_region(self, year):
+    def get_total_population_from_insee_estimations_by_region(self, year: int) -> float:
         """
         """
         
@@ -236,6 +236,34 @@ class HospitalActivityDiamant:
             cell_total = "V19"
                 
         return ws[cell_total].value
+
+    def get_age_class_population_from_insee_estimations_by_region(self, year: int) -> dict[str, int]:
+        """
+        """
+        wb = load_workbook(self.file_path_demography)
+        
+        ws = wb[f"{year}"]
+        
+        if year >= 2014:
+            row = "26"
+        elif year >= 1999:
+            row = "25"
+        elif year >= 1990:
+            row = "28"
+        else:
+            row = "19"
+    
+        dict_pop_age_class = {}
+    
+        dict_pop_age_class["0-14 ans"] = sum(x for x in [ws["B"+row].value, ws["C"+row].value, ws["D"+row].value] if x is not None)
+        dict_pop_age_class["15-29 ans"] = sum(x for x in [ws["E"+row].value, ws["F"+row].value, ws["G"+row].value] if x is not None)
+        dict_pop_age_class["30-44 ans"] = sum(x for x in [ws["H"+row].value, ws["I"+row].value, ws["J"+row].value] if x is not None)
+        dict_pop_age_class["45-59 ans"] = sum(x for x in [ws["K"+row].value, ws["L"+row].value, ws["M"+row].value] if x is not None)
+        dict_pop_age_class["60-74 ans"] = sum(x for x in [ws["N"+row].value, ws["O"+row].value, ws["P"+row].value] if x is not None)
+        dict_pop_age_class["75-89 ans"] = sum(x for x in [ws["Q"+row].value, ws["R"+row].value, ws["S"+row].value] if x is not None)
+        dict_pop_age_class[">= 90 ans"] = sum(x for x in [ws["T"+row].value, ws["U"+row].value] if x is not None)
+        
+        return dict_pop_age_class
         
     def effet_volume(self) -> pd.DataFrame:
         """ """
