@@ -121,6 +121,16 @@ nav:
         - AddConstante: api/AddConstante.md
         - AddFixedEffect: api/AddFixedEffect.md
         - AddInteraction: api/AddInteraction.md
+    - Economics:
+        - Industrial Economics:
+            - concentration_ratio: api/concentration_ratio.md
+            - gini_index: api/gini_index.md
+            - lorenz_curve: api/lorenz_curve.md
+            - hhi: api/hhi.md
+            - shannon_entropy: api/shannon_entropy.md
+            - theil_index: api/theil_index.md
+        - Public Health Economics:
+            - HospitalActivityDiamant: api/HospitalActivityDiamant.md
     - S3:
       - Connection:
         - _S3Connection: api/_S3Connection.md
