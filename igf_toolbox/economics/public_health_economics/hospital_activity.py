@@ -429,6 +429,7 @@ class HospitalActivityDiamant:
             "effet_augmentation_population"] = np.nan
 
         # We breakdown effet nombre de séjours: effet pyramide des âges
+        data_volume_eco["effet_pyramide_ages"] = np.nan
 
         # We breakdown effet nombre de séjours: effet démographie
         data_volume_eco["effet_demographie"] = (
