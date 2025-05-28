@@ -5,7 +5,7 @@ from openpyxl import load_workbook
 from itertools import product
 
 
-class HospitalActivityDiamant:
+class HospitalActivityDiamantMCO:
     """ 
     A class for computing hospital activity from DIAMANT data and INSEE regional demographic estimations.
     DIAMANT data should be in a proper format as given in the documentation.
@@ -187,7 +187,7 @@ class HospitalActivityDiamant:
         # Impute data under statistical secret
         data_prix_apparents[self.sejours_prix] = data_prix_apparents[
             self.sejours_prix
-        ].replace("1 à 5", 2.5)
+        ].apply(lambda x: 2.5 if x == "1 à 5" else x)
 
         data_prix_apparents[[self.sejours_prix, self.taux_am, self.montants_am]] = (
             data_prix_apparents[
@@ -595,11 +595,101 @@ class HospitalActivityDiamant:
 
     def evolution_equivalents_journees(self) -> pd.DataFrame:
         """
-        Computes the evolution of the number of équivalents journées and breaks it downs to itsd components.
+        Computes the evolution of the number of équivalents journées and breaks it downs to its components.
 
         Returns:
-            pd.DataFrame: 
+            pd.DataFrame: DataFrame with the evolution of équivalents journées and a breakdown between HP and HC hospitalizations.
         """
-        
 
+        df = self.data_equivalents_journees.copy()
+
+        idx_sej = df.columns.get_loc(self.sejours_prix)
+        idx_dms = df.columns.get_loc(self.dms)
         
+        df_sej = df[list(df.columns[:idx_dms])]
+        df_dms = df[list(df.columns[:idx_sej])+list(df.columns[idx_dms:])]
+        
+        df_sej.columns = [str(int(col)) if isinstance(col, float) else col for col in df_sej.iloc[0]]
+        df_sej = df_sej.iloc[1:]
+        df_dms.columns = [str(int(col)) if isinstance(col, float) else col for col in df_dms.iloc[0]]
+        df_dms = df_dms.iloc[1:]
+        
+        for df, col in product([df_sej, df_dms], [self.ghm, self.type_hosp]):
+            df[col] = df[col].ffill()
+        
+        for col in [col for col in df_sej.columns if col.isdigit()]:
+            
+            df_sej[col]=df_sej[col].apply(lambda x: 2.5 if x == "1 à 5" else x)
+            df_sej[col]=df_sej[col].astype(float).fillna(0)
+            
+            df_dms[col]=df_dms[col].apply(lambda x: 2.5 if x == "1 à 5" else x)
+            df_dms[col]=df_dms[col].astype(float).fillna(0)
+        
+        df_dms = df_dms[df_dms[self.type_hosp] == self.hosp_hc].drop(columns=self.type_hosp)
+        df_sej_hp = df_sej[df_sej[self.type_hosp] == self.hosp_hp].drop(columns=self.type_hosp)
+        df_sej_hc = df_sej[df_sej[self.type_hosp] == self.hosp_hc].drop(columns=self.type_hosp)
+        
+        list_sorted_years = sorted(map(int, [col for col in df_dms.columns if col.isdigit()]))
+        
+        # We compute for each year the number of stays in HP and HC, the equivalents journees in HC, the weighted DMS
+        dict_sej_hp, dict_sej_hc, dict_equivalent_journees_hc, dict_dms_hc = {}, {}, {}, {}
+        for year in list_sorted_years:
+            
+            # Stays in HP = Equivalents journées in HP
+            dict_sej_hp[year] = float(df_sej_hp[str(year)].sum())
+        
+            # Stays in HC
+            dict_sej_hc[year] = float(df_sej_hc[str(year)].sum())
+        
+            # Equivalents journées in HC
+            df_equivalents_journees_hc = (
+                df_sej_hc[[self.ghm, f"{year}"]].merge(df_dms[[self.ghm, f"{year}"]].rename(columns={f"{year}":f"dms_{year}"}), 
+                                                    how="outer", 
+                                                    on=self.ghm)
+            )
+            dict_equivalent_journees_hc[year] = float(
+                (df_equivalents_journees_hc[f"{year}"]*df_equivalents_journees_hc[f"dms_{year}"]).sum()
+            )
+        
+            # Weighted DMS by year in HC
+            dict_dms_hc[year] = (
+                float((df_equivalents_journees_hc[f"{year}"]*df_equivalents_journees_hc[f"dms_{year}"]).sum())
+                /float(df_equivalents_journees_hc[f"{year}"].sum())
+            )
+        
+        df_equivalents_journees = (
+            pd.DataFrame.from_dict(
+                {
+                    "nb_sejours_hp":dict_sej_hp,
+                    "nb_sejours_hc":dict_sej_hc,
+                    "nb_equivalents_journees_hc":dict_equivalent_journees_hc,
+                    "dms_hc":dict_dms_hc
+                },
+                orient = "columns"
+            )
+        )
+        
+        df_equivalents_journees["equivalents_journees"] = (
+            df_equivalents_journees["nb_sejours_hp"] + df_equivalents_journees["nb_equivalents_journees_hc"]
+        )
+        
+        df_equivalents_journees["evolution_equivalents_journees"] = (
+            df_equivalents_journees["equivalents_journees"].pct_change()
+        )
+        
+        # We breakdown the evolution between HP and HC
+        df_equivalents_journees["contribution_sejours_hp"] = (
+            df_equivalents_journees["nb_sejours_hp"].diff()/df_equivalents_journees["equivalents_journees"].shift()
+        )
+        df_equivalents_journees["contribution_equivalents_journees_hc"] = (
+            df_equivalents_journees["nb_equivalents_journees_hc"].diff()/df_equivalents_journees["equivalents_journees"].shift()
+        )
+        
+        return df_equivalents_journees[
+            [
+               "equivalents_journees",
+                "evolution_equivalents_journees",
+                "contribution_sejours_hp",
+                "contribution_equivalents_journees_hc"
+            ]
+        ]
