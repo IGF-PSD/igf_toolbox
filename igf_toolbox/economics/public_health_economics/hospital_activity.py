@@ -2,6 +2,7 @@ import holidays
 import numpy as np
 import pandas as pd
 from openpyxl import load_workbook
+from itertools import product
 
 
 class HospitalActivityDiamant:
@@ -36,6 +37,9 @@ class HospitalActivityDiamant:
         self.data_casemix = pd.read_excel(
             file_path_activity, sheet_name="Volume économique", header=1
         )
+        self.data_equivalents_journees = pd.read_excel(
+            file_path_activity, sheet_name="Equivalents journées", header=1
+        )
         self.file_path_demography = file_path_demography
 
         self.ghm = "PMSI MCO - GHM"
@@ -50,6 +54,7 @@ class HospitalActivityDiamant:
         self.racine = "PMSI MCO - GHM - Code Racine"
         self.severite = "PMSI MCO - GHM - Niveau de sévérité"
         self.list_severite = ["1", "2", "3", "4", "A", "B", "C", "D"]
+        self.dms = "ACTIVITE - DMS"
 
     def _count_number_working_days(self, year: int) -> tuple[int]:
         """
@@ -587,3 +592,14 @@ class HospitalActivityDiamant:
                 "effet_pyramide_ages"
             ]
         ]
+
+    def evolution_equivalents_journees(self) -> pd.DataFrame:
+        """
+        Computes the evolution of the number of équivalents journées and breaks it downs to itsd components.
+
+        Returns:
+            pd.DataFrame: 
+        """
+        
+
+        
