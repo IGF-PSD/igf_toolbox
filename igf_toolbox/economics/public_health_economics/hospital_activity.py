@@ -537,7 +537,7 @@ class HospitalActivityDiamantMCO:
             "effet_augmentation_population"] = np.nan
 
         # We breakdown effet nombre de séjours: effet pyramide des âges
-        data_pyramide_ages = self.data_casemix[[self.tranche_age]+list_years]
+        data_pyramide_ages = self.data_casemix[[self.tranche_age]+list_years].copy()
         data_pyramide_ages[self.tranche_age] = data_pyramide_ages[self.tranche_age].ffill()
         data_pyramide_ages = (
             data_pyramide_ages.groupby(self.tranche_age,
