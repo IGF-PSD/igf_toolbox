@@ -5,10 +5,21 @@ from openpyxl import load_workbook
 
 
 class HospitalActivityDiamant:
-    """ """
+    """ 
+    A class for computing hospital activity from DIAMANT data and INSEE regional demographic estimations.
+    DIAMANT data should be in a proper format as given in the documentation.
+    INSEE data should be the regional population estimations with age classes of 5 years.
+    """
 
-    def __init__(self, file_path_activity, file_path_demography):
-        """ """
+    def __init__(self, file_path_activity: str, file_path_demography: str):
+        """ 
+        Initializes the HospitalActivityDiamant object by loading various Excel sheets
+        containing activity data and valuation data.
+
+        Args:
+            file_path_activity (str): Path to Excel file with activity and valuation DIAMANT data.
+            file_path_demography (str): Path to Excel file with demographic data from INSEE.
+        """
 
         self.data_valorisations = pd.read_excel(
             file_path_activity, sheet_name="Valorisations", header=4
@@ -111,24 +122,53 @@ class HospitalActivityDiamant:
 
     @staticmethod
     def _preprocess_ghm(x: str) -> str:
-        """ """
+        """ 
+        Extracts the 6-character GHM code from a full string with format 'GHM - Label'.
+
+        Args:
+            x (str): Full GHM string in format 'GHM - Label'.
+
+        Returns:
+            str: 6-character GHM code.
+        """
         x = x.split(" - ")[0]
         return x[0:6]
 
     @staticmethod
     def _preprocess_racine(x: str) -> str:
-        """ """
+        """ 
+        Extracts the 5-character GHM root code from a full string with format 'GHM - Label'.
+
+        Args:
+            x (str): Full GHM string in format 'GHM - Label'.
+
+        Returns:
+            str: 5-character root code.
+        """
         x = x.split(" - ")[0]
         return x[0:5]
 
     @staticmethod
     def _preprocess_severite(x: str) -> str:
-        """ """
+        """ 
+        Extracts the severity level (typically a single letter or digit) from a full GHM string.
+
+        Args:
+            x (str): Full GHM string.
+
+        Returns:
+            str: Severity code.
+        """
         x = x.split(" - ")[0]
         return x[-1]
 
     def _compute_prix_apparents(self) -> pd.DataFrame:
-        """ """
+        """ 
+        Compute average prices by GHM-GHS pair using valorisation and reimbursement data.
+
+        Returns:
+            pd.DataFrame: DataFrame with columns [GHM, GHS, prix_apparent]
+        """
 
         data_prix_apparents = self.data_valorisations.copy()
 
@@ -171,7 +211,9 @@ class HospitalActivityDiamant:
     def _compute_prix_apparents_breakdown(
         self, breakdown: str = "racine"
     ) -> pd.DataFrame:
-        """ """
+        """ 
+        
+        """
 
         if breakdown == "racine":
             data_prix_apparents = self.data_valorisations_racine.copy()
