@@ -88,6 +88,7 @@ nav:
   - Package description: index.md
   - Concepts:
       - Bootstrap: concepts/BOOTSTRAP.md
+      - Market concentration indicators: concepts/MARKET_CONCENTRATION.md
   - API Documentation:
     - Estimators:
       - Classifiers:
@@ -149,6 +150,15 @@ nav:
         - create_pond_data: api/create_pond_data.md
     - Samples:
         - Bootstrap: api/Bootstrap.md
+    - Economics:
+        - Industrial Economics:
+            - Market concentration indicators:
+                - concentration_ratio: api/concentration_ratio.md
+                - gini_index: api/gini_index.md
+                - lorenz_curve: api/lorenz_curve.md
+                - hhi: api/hhi.md
+                - shannon_entropy: api/shannon_entropy.md
+                - theil_index: api/theil_index.md
     - Utils:
       - Auxiliary:
         - _separate_category_modality_from_dummy: api/_separate_category_modality_from_dummy.md
@@ -163,4 +173,3 @@ nav:
         - count_effectif_modalite: api/count_effectif_modalite.md
       - Logger:
         - _init_logger: api/_init_logger.md
-
