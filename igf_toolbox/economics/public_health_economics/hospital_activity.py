@@ -211,8 +211,17 @@ class HospitalActivityDiamant:
     def _compute_prix_apparents_breakdown(
         self, breakdown: str = "racine"
     ) -> pd.DataFrame:
-        """ 
-        
+        """
+        Computes average prices broken down a given dimension (racine, severity, type of hospitalization).
+
+        Args:
+            breakdown (str): One of `racine`, `type_hosp` or `severite`.
+
+        Returns:
+            pd.DataFrame: DataFrame with the breakdown dimension and average price.
+
+        Raises:
+            ValueError: If an unsupported breakdown type is given.
         """
 
         if breakdown == "racine":
@@ -260,8 +269,19 @@ class HospitalActivityDiamant:
             )
             return data_prix_apparents[[self.severite, "prix_apparent"]]
 
+        else:
+            raise ValueError(f"Unsupported `breakdown` type : {breakdown}")
+
     def get_total_population_from_insee_estimations_by_region(self, year: int) -> float:
         """
+        Retrieves total regional population from the INSEE demographic Excel file for a given year.
+        INSEE data should be given by region and for 5-year age classes.
+
+        Args:
+            year (int): Year of interest.
+
+        Returns:
+            float: Total population over all regions for a given year.
         """
         
         wb = load_workbook(self.file_path_demography)
@@ -281,6 +301,13 @@ class HospitalActivityDiamant:
 
     def get_age_class_population_from_insee_estimations_by_region(self, year: int) -> dict[str, int]:
         """
+        Retrieves total population over all regions, by age classes of 15 years, to match with DIAMANT demographic data.
+
+        Args:
+            year (int) Year of interest.
+
+        Returns:
+            dict[str, int]: Dictionary with age class labels as keys and population counts as values.
         """
         wb = load_workbook(self.file_path_demography)
         
@@ -309,6 +336,11 @@ class HospitalActivityDiamant:
         
     def effet_volume(self) -> pd.DataFrame:
         """ 
+        Computes the hospital activity using effet volume model by ATIH and its subeffects, from the casemix DIAMANT data
+        and INSEE demographic data.
+
+        Returns:
+            pd.DataFrame: DataFrame containing over a period of time the total activity of French hospitals and its components.
         """
 
         # We compute first the effet volume and effet volume CJO
