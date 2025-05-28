@@ -8,3 +8,7 @@ A `weights` argument has been introduced in most `numpy` operators in version 2.
 - Support for percentile and basic bootstrap confidence intervals
 - Support for the statistic variance computation
 - Add pymdownx.arithmatex to md extensions in mkdocs.yml
+
+## **2025-05-28**
+### Added
+- Industrial Economics concentration metrics 
