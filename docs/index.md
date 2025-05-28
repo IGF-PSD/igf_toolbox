@@ -18,6 +18,7 @@ The repository is organized as follow :
 - the `model_selection` module contains functions for training a prediction model or estimating a regression model
 - the `estimators` module contains  econometric models that can be integrated into a `sklearn.pipeline`
 - the `samples` module contains methods for sample weighting and statistical inference
+- the `economics` module contains functions to compute metrics, for industrial economics and concentration for instance
 - the `utils` module contains  a set of utility functions on which other functions in this module depend, or for calculating weighted statistics, for example
 
 ## Installation
