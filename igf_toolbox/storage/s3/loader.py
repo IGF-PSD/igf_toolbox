@@ -106,9 +106,9 @@ class S3Loader(_S3Connection):
             s3_file = self.s3.get_object(Bucket=bucket, Key=key)["Body"]
             # Test suivant l'extension du fichier à charger et lecture de ce-dernier
             if extension == "xlsx":
-                data = pd.read_excel(s3_file.read(), engine="openpyxl", **kwargs)
+                data = pd.read_excel(BytesIO(s3_file.read()), engine="openpyxl", **kwargs)
             elif extension == "xls":
-                data = pd.read_excel(s3_file.read(), engine="xlrd", **kwargs)
+                data = pd.read_excel(BytesIO(s3_file.read()), engine="xlrd", **kwargs)
             elif extension == "parquet":
                 data = pd.read_parquet(BytesIO(s3_file.read()), **kwargs)
             else:
