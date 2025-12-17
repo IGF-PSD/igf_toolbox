@@ -54,21 +54,24 @@ class StatDesGroupBy(object):
         self.var_count = var_count if isinstance(var_count, list) or var_count is None else [var_count]
         self.var_weights = var_weights
 
+        # Garder une copie du DataFrame original pour accéder aux colonnes supplémentaires si nécessaire
+        if dropna:
+            self._data_source_full = data_source.copy().dropna(how="any")
+        else:
+            self._data_source_full = data_source.copy()
+
         # Initialisation de la liste des variables à conserver
         list_var_keep = list_var_groupby + list_var_of_interest
         if var_weights is not None:
             list_var_keep.append(var_weights)
         if self.var_count is not None:
             list_var_keep.extend([v for v in self.var_count if v not in list_var_keep])
-        
+
         # Suppression des doublons
         list_var_keep = list(dict.fromkeys(list_var_keep))
 
-        # Copie indépendante du jeu de données
-        if dropna:
-            self.data_source = data_source[list_var_keep].copy().dropna(how="any")
-        else:
-            self.data_source = data_source[list_var_keep].copy()
+        # Copie filtrée du jeu de données (pour les opérations optimisées)
+        self.data_source = self._data_source_full[list_var_keep].copy()
 
     # Méthode de calcul de statistiques descriptives avec totaux
     def iterate_with_total(
@@ -173,7 +176,13 @@ class StatDesGroupBy(object):
             # Parcours des opérations dans le dictionnaire
             for operation, vars_list in iterable_operations.items():
                 # Filtre des variables qui sont dans list_var_of_interest
-                vars_to_process = [v for v in vars_list if v in self.list_var_of_interest]
+                # SAUF pour les opérations spéciales qui peuvent s'appliquer à n'importe quelle colonne
+                if isinstance(operation, str) and operation in ['majority']:
+                    # Pour 'majority', ne pas filtrer - accepter toutes les variables demandées
+                    vars_to_process = vars_list
+                else:
+                    vars_to_process = [v for v in vars_list if v in self.list_var_of_interest]
+
                 # Distinction suivant le type d'opération
                 if isinstance(operation, str):
                     if operation in pandas_agg_ops:
@@ -182,7 +191,7 @@ class StatDesGroupBy(object):
                             if var not in agg_dict:
                                 agg_dict[var] = []
                             agg_dict[var].append((f"{var}_{operation}", operation))
-                    
+
                     elif operation == 'median':
                         # Médiane = quantile 0.5
                         if self.var_weights:
@@ -192,7 +201,7 @@ class StatDesGroupBy(object):
                                 if var not in agg_dict:
                                     agg_dict[var] = []
                                 agg_dict[var].append((f"{var}_q0.5", 'median'))
-                    
+
                     elif operation == 'count_effectif':
                         # Comptage des entités uniques
                         if self.var_count:
@@ -200,7 +209,7 @@ class StatDesGroupBy(object):
                                 if var not in agg_dict:
                                     agg_dict[var] = []
                                 agg_dict[var].append((f"{var}_nunique", 'nunique'))
-                    
+
                     elif operation in ['majority', 'max_sum_effectif']:
                         special_ops[operation] = vars_to_process
                         
@@ -208,21 +217,33 @@ class StatDesGroupBy(object):
                     # Opérations avec paramètres
                     op_name = operation[0]
                     op_params = operation[1]
-                    
+
+                    # Convertir op_params en tuple de tuples si c'est un dict
+                    if isinstance(op_params, dict):
+                        op_params_tuple = tuple(sorted(op_params.items()))
+                    else:
+                        # Déjà un tuple de tuples
+                        op_params_tuple = op_params
+
                     if op_name == 'quantile':
                         # Quantiles
                         if self.var_weights:
-                            weighted_ops[operation] = vars_to_process
+                            # Créer une version hashable du tuple
+                            hashable_op = (op_name, op_params_tuple)
+                            weighted_ops[hashable_op] = vars_to_process
                         else:
-                            q = op_params['q']
+                            # Récupérer q depuis le dict ou le tuple
+                            q = op_params['q'] if isinstance(op_params, dict) else dict(op_params)['q']
                             for var in vars_to_process:
                                 if var not in agg_dict:
                                     agg_dict[var] = []
                                 agg_dict[var].append((f"{var}_q{q}", lambda x: x.quantile(q)))
-                    
+
                     elif op_name in ['prop', 'inf_threshold']:
                         # Opérations spéciales
-                        special_ops[operation] = vars_to_process
+                        # Créer une version hashable du tuple
+                        hashable_op = (op_name, op_params_tuple)
+                        special_ops[hashable_op] = vars_to_process
         
         else:  # Liste d'opérations
             # Parcours des opérations
@@ -261,21 +282,33 @@ class StatDesGroupBy(object):
                     # Cas des opérations à paramètres
                     op_name = operation[0]
                     op_params = operation[1]
-                    
+
+                    # Convertir op_params en tuple de tuples si c'est un dict
+                    if isinstance(op_params, dict):
+                        op_params_tuple = tuple(sorted(op_params.items()))
+                    else:
+                        # Déjà un tuple de tuples
+                        op_params_tuple = op_params
+
                     if op_name == 'quantile':
                         # Quantiles
                         if self.var_weights:
-                            weighted_ops[operation] = self.list_var_of_interest
+                            # Créer une version hashable du tuple
+                            hashable_op = (op_name, op_params_tuple)
+                            weighted_ops[hashable_op] = self.list_var_of_interest
                         else:
-                            q = op_params['q']
+                            # Récupérer q depuis le dict ou le tuple
+                            q = op_params['q'] if isinstance(op_params, dict) else dict(op_params)['q']
                             for var in self.list_var_of_interest:
                                 if var not in agg_dict:
                                     agg_dict[var] = []
                                 agg_dict[var].append((f"{var}_q{q}", lambda x: x.quantile(q)))
-                    
+
                     elif op_name in ['prop', 'inf_threshold']:
                         # Opérations spéciales
-                        special_ops[operation] = self.list_var_of_interest
+                        # Créer une version hashable du tuple
+                        hashable_op = (op_name, op_params_tuple)
+                        special_ops[hashable_op] = self.list_var_of_interest
         
         return agg_dict, weighted_ops, special_ops
 
@@ -314,14 +347,24 @@ class StatDesGroupBy(object):
             # Aplatir les colonnes multi-niveaux
             result.columns = [col[0] if col[1] == '' else col[1] for col in result.columns]
         else:
-            result = data.agg(agg_dict)
-            if isinstance(result, pd.Series):
-                result = result.to_frame().T
-            else:
-                result = result.T
-            # Aplatir les colonnes
-            result.columns = [col[0] if col[1] == '' else col[1] for col in result.columns] if isinstance(result.columns, pd.MultiIndex) else result.columns
-        
+            # Pour le cas sans groupby, on doit calculer chaque opération et reformater le résultat
+            # pour avoir une seule ligne avec des colonnes nommées 'var_operation'
+            results_dict = {}
+
+            for var, operations in agg_dict.items():
+                for col_name, func in operations:
+                    # Calculer l'agrégation pour cette variable et cette opération
+                    if isinstance(func, str):
+                        # Fonction standard pandas
+                        value = getattr(data[var], func)()
+                    else:
+                        # Fonction lambda ou callable
+                        value = func(data[var])
+                    results_dict[col_name] = value
+
+            # Créer un DataFrame avec une seule ligne
+            result = pd.DataFrame([results_dict])
+
         return result
 
     # Méthode auxiliaire de calcul des aggrégats pondérés avec pandas.agg si possible
@@ -396,8 +439,14 @@ class StatDesGroupBy(object):
             # Quantiles
             elif operation == 'median' or (isinstance(operation, tuple) and operation[0] == 'quantile'):
                 # Quantiles pondérés - nécessite la fonction spéciale
-                q = 0.5 if operation == 'median' else operation[1]['q']
-                suffix = 'q0.5' if operation == 'median' else f'q{q}'
+                if operation == 'median':
+                    q = 0.5
+                    suffix = 'q0.5'
+                else:
+                    # Reconvertir le tuple de tuples en dict
+                    op_params = dict(operation[1])
+                    q = op_params['q']
+                    suffix = f'q{q}'
                 
                 if list_var_groupby:
                     result = data.groupby(list_var_groupby, as_index=True, observed=True).apply(
@@ -473,15 +522,16 @@ class StatDesGroupBy(object):
             elif isinstance(operation, tuple):
                 # Cas des opérations à paramètres
                 op_name = operation[0]
-                op_params = operation[1]
-                
+                # Reconvertir le tuple de tuples en dict
+                op_params = dict(operation[1])
+
                 if op_name == 'prop':
                     result = self._compute_prop(
-                        data, list_var_groupby, vars_list, 
+                        data, list_var_groupby, vars_list,
                         op_params['var_ref']
                     )
                     results.append(result)
-                
+
                 elif op_name == 'inf_threshold':
                     result = self._compute_inf_threshold(
                         data, list_var_groupby, vars_list,
@@ -661,9 +711,9 @@ class StatDesGroupBy(object):
     # Méthodes auxiliaires pour les opérations spéciales
     # Méthode de calcul de la modalité majoritaire
     def _compute_majority(
-        self, 
-        data: pd.DataFrame, 
-        list_var_groupby: Optional[List[str]], 
+        self,
+        data: pd.DataFrame,
+        list_var_groupby: Optional[List[str]],
         vars_list: List[str]
     ) -> pd.DataFrame:
         """
@@ -671,39 +721,52 @@ class StatDesGroupBy(object):
         """
         # Initialisation de la liste résultat
         results = []
-        
+
         # Parcours des variables
         for var in vars_list:
+            # Utiliser le DataFrame complet si la variable n'est pas dans data
+            if var not in data.columns:
+                # Créer un DataFrame combiné avec les colonnes nécessaires
+                if list_var_groupby:
+                    cols_needed = list_var_groupby + [var]
+                else:
+                    cols_needed = [var]
+                if self.var_weights:
+                    cols_needed.append(self.var_weights)
+                data_for_var = self._data_source_full[cols_needed].copy()
+            else:
+                data_for_var = data
+
             if list_var_groupby:
                 if self.var_weights:
-                    result = data.groupby(list_var_groupby, as_index=True, observed=True).apply(
+                    result = data_for_var.groupby(list_var_groupby, as_index=True, observed=True).apply(
                         lambda x: x.groupby(var)[self.var_weights].sum().idxmax()
                     ).to_frame(f"{var}_majority")
                 else:
-                    result = data.groupby(list_var_groupby, as_index=True, observed=True)[var].apply(
+                    result = data_for_var.groupby(list_var_groupby, as_index=True, observed=True)[var].apply(
                         lambda x: x.value_counts().idxmax()
                     ).to_frame(f"{var}_majority")
             else:
                 if self.var_weights:
                     result = pd.DataFrame(
-                        [data.groupby(var)[self.var_weights].sum().idxmax()],
+                        [data_for_var.groupby(var)[self.var_weights].sum().idxmax()],
                         columns=[f"{var}_majority"]
                     )
                 else:
                     result = pd.DataFrame(
-                        [data[var].value_counts().idxmax()],
+                        [data_for_var[var].value_counts().idxmax()],
                         columns=[f"{var}_majority"]
                     )
-            
+
             results.append(result)
-        
+
         return pd.concat(results, axis=1)
 
     # Méthode de calcul du max/sum
     def _compute_max_sum_effectif(
-        self, 
-        data: pd.DataFrame, 
-        list_var_groupby: Optional[List[str]], 
+        self,
+        data: pd.DataFrame,
+        list_var_groupby: Optional[List[str]],
         vars_list: List[str],
         var_id: str
     ) -> pd.DataFrame:
@@ -715,16 +778,18 @@ class StatDesGroupBy(object):
             weighted_data = data[vars_list].multiply(data[self.var_weights], axis=0)
         else:
             weighted_data = data[vars_list]
-        
+
         if list_var_groupby:
-            max_vals = weighted_data.groupby(data[list_var_groupby].values.tolist()).max()
-            sum_vals = weighted_data.groupby(data[list_var_groupby].values.tolist()).sum()
+            # Ajouter les colonnes de groupby aux données pondérées
+            weighted_data_with_groups = pd.concat([data[list_var_groupby], weighted_data], axis=1)
+            max_vals = weighted_data_with_groups.groupby(list_var_groupby, as_index=True, observed=True).max()
+            sum_vals = weighted_data_with_groups.groupby(list_var_groupby, as_index=True, observed=True).sum()
             result = max_vals / sum_vals
         else:
             max_vals = weighted_data.max()
             sum_vals = weighted_data.sum()
             result = (max_vals / sum_vals).to_frame().T
-        
+
         result.columns = [f"{var}_{var_id}_max/sum" for var in vars_list]
         return result
 
@@ -746,17 +811,23 @@ class StatDesGroupBy(object):
         else:
             weighted_data = data[vars_list]
             weighted_ref = data[var_ref]
-        
+
         # Calcul des proportions
         if list_var_groupby:
-            sum_vals = weighted_data.groupby(data[list_var_groupby].values.tolist()).sum()
-            sum_ref = weighted_ref.groupby(data[list_var_groupby].values.tolist()).sum()
+            # Ajouter les colonnes de groupby aux données pondérées
+            weighted_data_with_groups = pd.concat([data[list_var_groupby], weighted_data], axis=1)
+            sum_vals = weighted_data_with_groups.groupby(list_var_groupby, as_index=True, observed=True).sum()
+
+            # Pour weighted_ref (qui est une Series), créer un DataFrame temporaire
+            weighted_ref_df = pd.concat([data[list_var_groupby], weighted_ref.to_frame()], axis=1)
+            sum_ref = weighted_ref_df.groupby(list_var_groupby, as_index=True, observed=True).sum().iloc[:, 0]
+
             result = sum_vals.divide(sum_ref, axis=0)
         else:
             sum_vals = weighted_data.sum()
             sum_ref = weighted_ref.sum()
             result = (sum_vals / sum_ref).to_frame().T
-        
+
         result.columns = [f"{var}_{var_ref}_prop" for var in vars_list]
         return result
 
@@ -772,18 +843,26 @@ class StatDesGroupBy(object):
         """
         Compute proportion of unique values below threshold.
         """
+        # Utiliser le DataFrame complet si var_threshold n'est pas dans data
+        if var_threshold not in data.columns:
+            # Créer un DataFrame combiné avec les colonnes nécessaires
+            cols_needed = list(set(list_var_groupby + vars_list + [var_threshold]))
+            data_for_threshold = self._data_source_full[cols_needed].copy()
+        else:
+            data_for_threshold = data
+
         # Filtre des données sous le seuil
-        data_below = data[data[var_threshold] < threshold]
-        
+        data_below = data_for_threshold[data_for_threshold[var_threshold] < threshold]
+
         # Comptage des modalités
         if list_var_groupby:
             nunique_below = data_below.groupby(list_var_groupby, as_index=True, observed=True)[vars_list].nunique()
-            nunique_total = data.groupby(list_var_groupby, as_index=True, observed=True)[vars_list].nunique()
+            nunique_total = data_for_threshold.groupby(list_var_groupby, as_index=True, observed=True)[vars_list].nunique()
             result = nunique_below / nunique_total
         else:
             nunique_below = data_below[vars_list].nunique()
-            nunique_total = data[vars_list].nunique()
+            nunique_total = data_for_threshold[vars_list].nunique()
             result = (nunique_below / nunique_total).to_frame().T
-        
+
         result.columns = [f"{var}_inf_{threshold}" for var in vars_list]
         return result
