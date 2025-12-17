@@ -23,8 +23,13 @@ dependencies = [
     'scikit-learn',
     'statsmodels',
     'linearmodels',
-    'xlsxwriter'
+    'xlsxwriter',
+    'ibis-framework>=8.0.0',
+    'duckdb>=0.10.0'
 ]
+
+[project.optional-dependencies]
+polars = ['polars>=0.20.0']
 
 [tool.setuptools.packages.find]
 include = ["igf_toolbox"]
